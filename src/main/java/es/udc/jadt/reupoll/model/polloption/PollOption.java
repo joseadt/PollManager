@@ -39,17 +39,15 @@ public class PollOption implements Serializable {
 	public PollOption() {
 	}
 
-	public PollOption(Poll poll, String description, List<Vote> votes) {
+	public PollOption(Poll poll, String description) {
 		this.poll = poll;
 		this.description = description;
-		this.votes = votes;
 		this.addedBy = null;
 	}
 
-	public PollOption(Poll poll, String description, List<Vote> votes, UserProfile addedBy) {
+	public PollOption(Poll poll, String description, UserProfile addedBy) {
 		this.poll = poll;
 		this.description = description;
-		this.votes = votes;
 		this.addedBy = addedBy;
 	}
 

@@ -9,8 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.resource.WebJarsResourceResolver;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
@@ -21,6 +23,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import es.udc.jadt.reupoll.BaseApplication;
 
 @Configuration
+@EnableWebMvc
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackageClasses = BaseApplication.class)
 public class MvcConfiguration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
@@ -57,6 +60,8 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter implements Applica
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+		registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/").resourceChain(true)
+				.addResolver(new WebJarsResourceResolver());
 	}
 
 	

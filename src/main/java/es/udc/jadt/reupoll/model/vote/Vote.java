@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import es.udc.jadt.reupoll.model.group.UserGroup;
 import es.udc.jadt.reupoll.model.polloption.PollOption;
 import es.udc.jadt.reupoll.model.userprofile.UserProfile;
 
@@ -23,10 +24,19 @@ public class Vote implements Serializable {
 	@ManyToMany
 	private List<PollOption> selectedOptions;
 
+	private String token;
+
 	private String comment;
 
 	@ManyToOne
 	private UserProfile user;
+
+	/**
+	 * The user group. Voto realizado como miembro de un grupo Registrado para poder
+	 * recompilar datos del resultado o participacion sobre grupos.
+	 */
+	@ManyToOne
+	private UserGroup userGroup;
 
 	public Vote() {
 	}

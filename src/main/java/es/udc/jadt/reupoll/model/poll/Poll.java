@@ -2,7 +2,8 @@ package es.udc.jadt.reupoll.model.poll;
 
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -10,11 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import es.udc.jadt.reupoll.model.group.UserGroup;
+import es.udc.jadt.reupoll.model.participantsgroup.ParticipantsGroup;
 import es.udc.jadt.reupoll.model.polloption.PollOption;
 import es.udc.jadt.reupoll.model.userprofile.UserProfile;
 
@@ -28,33 +28,33 @@ public class Poll implements Serializable {
 	@ManyToOne
 	private UserProfile author;
 
+	private String name;
+
+	private String description;
+
 	@OneToMany(mappedBy = "poll", fetch = FetchType.EAGER)
 	private List<PollOption> options;
 
 	private PollType pollType;
 
-	private Date creationDate;
+	private Timestamp creationDate;
 
-	private Date endDate;
+	private Timestamp endDate;
 
-	@ManyToMany
-	private List<UserGroup> groups;
-
-	@ManyToMany
-	private List<UserProfile> independantParticipants;
-
+	@OneToMany(mappedBy = "poll", fetch = FetchType.LAZY)
+	private List<ParticipantsGroup> participantsGroups;
 
 	public Poll() {
 
 	}
 
-	public Poll(UserProfile author, List<PollOption> options, PollType pollType, Date creationDate,
-			Date endDate) {
+	public Poll(UserProfile author, List<PollOption> options, PollType pollType,
+			Timestamp endDate) {
 
 		this.author = author;
 		this.options = options;
 		this.pollType = pollType;
-		this.creationDate = creationDate;
+		this.creationDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		this.endDate = endDate;
 	}
 
@@ -90,20 +90,45 @@ public class Poll implements Serializable {
 		this.pollType = pollType;
 	}
 
-	public Date getCreationDate() {
+	public Timestamp getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
 	}
 
-	public Date getEndDate() {
+	public Timestamp getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<ParticipantsGroup> getParticipantsGroups() {
+		return participantsGroups;
+	}
+
+	public void setParticipantsGroups(List<ParticipantsGroup> participantsGroups) {
+		this.participantsGroups = participantsGroups;
+	}
+
 
 }

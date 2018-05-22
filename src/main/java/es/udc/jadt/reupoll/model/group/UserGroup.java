@@ -1,5 +1,6 @@
 package es.udc.jadt.reupoll.model.group;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -13,8 +14,9 @@ import javax.persistence.ManyToOne;
 import es.udc.jadt.reupoll.model.poll.Poll;
 import es.udc.jadt.reupoll.model.userprofile.UserProfile;
 
+@SuppressWarnings("serial")
 @Entity
-public class UserGroup {
+public class UserGroup implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
