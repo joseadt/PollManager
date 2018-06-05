@@ -3,11 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>es.udc.jadt</groupId>
-	<artifactId>reupoll</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>reupoll</name>
+	<name>arbitrium</name>
 	<url>http://maven.apache.org</url>
 
 
@@ -243,6 +242,13 @@
 		   <version>3.18.2-GA</version>
 		</dependency>
 		
+		
+		<!-- HSQLDB -->
+		<dependency>
+		    <groupId>org.hsqldb</groupId>
+		    <artifactId>hsqldb</artifactId>
+		</dependency>
+		
 		<!-- JDBC Drivers -->
 		
 		<!-- POSTGRESQL -->
@@ -252,7 +258,8 @@
 		    <artifactId>postgresql</artifactId>
 		    <version>42.2.2</version>
 		</dependency>
-
+		
+		
 
 	</dependencies>
 
@@ -265,7 +272,7 @@
 	</repositories>
 
 	<build>
-		<finalName>reupoll</finalName>
+		<finalName>arbitrium</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -283,6 +290,53 @@
 		        <version>2.0</version>
 	      	</plugin>
 	      	
+	      	<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<!-- specify UTF-8, ISO-8859-1 or any other file encoding -->
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+	      	
 		</plugins>
+		
+		<filters>
+			<filter>
+				persistence/${persistence.folder}/persistence.properties
+			</filter>
+		</filters>
+		
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources-filtered</directory>
+				<filtering>true</filtering>
+			</resource>
+			
+		</resources>
 	</build>
+	
+	
+	
+	<profiles>
+			<profile>
+				<id>hsqldb</id>
+				<activation>
+					<property>
+						<name>use_hsql</name>
+						<value>true</value>
+					</property>
+				</activation>
+				<properties>
+					<persistence.folder>hsql</persistence.folder>
+				</properties>
+			</profile>
+	</profiles>
+		
+	<artifactId>arbitrium</artifactId>
 </project>

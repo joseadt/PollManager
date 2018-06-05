@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Poll</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}" />
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+</head>
+<body style="background-color:white">
+<div th:replace="fragments/layout :: header"></div>
+<form class="form-narrow form-horizontal" method="post" th:action="@{/signup}" th:object="${pollForm}" th:fragment="pollForm">
+    <!--/* Show general error message when form contains errors */-->
+    <th:block th:if="${#fields.hasErrors('${pollForm.*}')}">
+        <div th:replace="fragments/components :: alert (type='danger', message='Form contains errors. Please try again.')">Alert</div>
+    </th:block>
+    <fieldset>
+        <legend>Create Poll</legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('title')}? 'has-error'">
+            <label for="title" class="col-lg-2 control-label">Title</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="title" placeholder="Poll Title" th:field="*{title}" />
+                <span class="help-block" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</span>
+            </div>
+        </div>
+        <div class="form-group" >
+            <label for="description" class="col-lg-2 control-label">Description</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="description" placeholder="Poll Description" th:field="*{description}"/>
+            </div>
+        </div>
+        <div class="form-group">
+	        <input type="text" class="form-control" id="optionInput" placeholder="Poll Description"/>
+			<button type="button" class="btn btn-primary" id="addButton">Add Option</button>
+        </div>
+        <div class="form-group" id="addOption">
+        </div>
+        
+       
+        <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+                <button type="submit" class="btn btn-default">Create!</button>
+            </div>
+        </div>
+    </fieldset>
+
+<script th:inline="javascript" type="text/javascript">
+    /* Fill in modal with content loaded with Ajax */
+    $(function () {
+    	var addOption = $('#addOption');
+    	var i=$('#addOption p').size();
+    	
+        $('#addButton').on('click', function () {
+        	$('<p><label>'+ $('#optionInput').val()+ '</label><input type="hidden" name="options'+i
+        			+'" id="options'+i+'" value="'+$('#optionInput').val()+'"></input>'
+        			+'<button type="button" name="removeButton" id="removeButton'+i+'" class="btn btn-danger"></button></p>').appendTo(addOption);
+        	$('#optionInput').val('');
+        	$('#removeButton'+i).click(function(){
+        		if( i > 0 ){
+        			$(this).parents('p').remove();
+        			i--;
+        		}
+        		return false;
+        	});
+        	i++;
+            });
+        });
+    
+    	
+    
+</script>
+
+</form>
+
+
+<div th:replace="fragments/layout :: footer"></div>
+</body>
+</html>
