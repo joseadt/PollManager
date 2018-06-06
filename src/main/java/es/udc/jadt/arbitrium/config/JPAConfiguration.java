@@ -23,11 +23,12 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import es.udc.jadt.arbitrium.BaseApplication;
+import es.udc.jadt.arbitrium.model.entities.BaseEntity;
 
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:persistence.properties")
-@EnableJpaRepositories(basePackageClasses = BaseApplication.class)
+@EnableJpaRepositories(basePackageClasses = BaseEntity.class)
 public class JPAConfiguration {
 
 	@Value("${dataSource.driverClassName}")
