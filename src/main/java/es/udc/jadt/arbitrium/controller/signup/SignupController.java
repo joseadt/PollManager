@@ -2,6 +2,7 @@ package es.udc.jadt.arbitrium.controller.signup;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -11,32 +12,38 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.service.user.UserService;
 import es.udc.jadt.arbitrium.support.web.Ajax;
 import es.udc.jadt.arbitrium.support.web.MessageHelper;
 
 @Controller
 class SignupController {
 
-    private static final String SIGNUP_VIEW_NAME = "signup/signup";
+	private static final String SIGNUP_VIEW_NAME = "signup/signup";
 
+	@Autowired
+	private UserService userService;
 
-
-    @GetMapping("signup")
-    String signup(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
-	model.addAttribute(new SignupForm());
-	if (Ajax.isAjaxRequest(requestedWith)) {
-	    return SIGNUP_VIEW_NAME.concat(" :: signupForm");
+	@GetMapping("signup")
+	String signup(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
+		model.addAttribute(new SignupForm());
+		if (Ajax.isAjaxRequest(requestedWith)) {
+			return SIGNUP_VIEW_NAME.concat(" :: signupForm");
+		}
+		return SIGNUP_VIEW_NAME;
 	}
-	return SIGNUP_VIEW_NAME;
-    }
 
-    @PostMapping("signup")
-    String signup(@Valid @ModelAttribute SignupForm signupForm, Errors errors, RedirectAttributes ra) {
-	if (errors.hasErrors()) {
-	    return SIGNUP_VIEW_NAME;
+	@PostMapping("signup")
+	String signup(@Valid @ModelAttribute SignupForm signupForm, Errors errors, RedirectAttributes ra) {
+		if (errors.hasErrors()) {
+			return SIGNUP_VIEW_NAME;
+		}
+
+		UserProfile userProfile = userService.save(signupForm.createUser());
+		userService.signin(userProfile);
+
+		MessageHelper.addSuccessAttribute(ra, "signup.success");
+		return "redirect:/";
 	}
-	// see /WEB-INF/i18n/messages.properties and /WEB-INF/views/homeSignedIn.html
-	MessageHelper.addSuccessAttribute(ra, "signup.success");
-	return "redirect:/";
-    }
 }

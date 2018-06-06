@@ -1,20 +1,24 @@
-package es.udc.jadt.arbitrium.model.userprofile;
+package es.udc.jadt.arbitrium.model.entities.userprofile;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import es.udc.jadt.arbitrium.model.group.UserGroup;
+import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 
 @Entity
 public class UserProfile implements Serializable {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@Column(unique = true)
@@ -23,19 +27,24 @@ public class UserProfile implements Serializable {
 	@Column(unique = true)
 	private String userName;
 
-	private String encryptedPassword;
+	private String password;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<UserGroup> userGroups;
+
+	private Instant created;
+
+	private String role = "ROLE_USER";
 
 
 	public UserProfile() {
 	}
 
-	public UserProfile(String email, String userName, String encryptedPassword) {
+	public UserProfile(String email, String userName, String password) {
 		this.email = email;
 		this.userName = userName;
-		this.encryptedPassword = encryptedPassword;
+		this.password = password;
+		this.created = Instant.now();
 	}
 
 	public Long getId() {
@@ -70,12 +79,28 @@ public class UserProfile implements Serializable {
 		this.userName = userName;
 	}
 
-	public String getEncryptedPassword() {
-		return encryptedPassword;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setEncryptedPassword(String encryptedPassword) {
-		this.encryptedPassword = encryptedPassword;
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public Instant getCreated() {
+		return created;
+	}
+
+	public void setCreated(Instant created) {
+		this.created = created;
 	}
 
 	@Override

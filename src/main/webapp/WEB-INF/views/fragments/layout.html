@@ -28,22 +28,31 @@
 						href="#" th:href="@{/}" style="color: white">Home</a></li>
 					<li th:classappend="${module == 'about' ? 'active' : ''}"><a
 						href="#about" th:href="@{/about}" style="color: white">About</a></li>
-					<li th:classappend="${module == 'find' ? 'active' : ''}">
+					<li th:if="${#authorization.expression('isAuthenticated()')}" th:classappend="${module == 'find' ? 'active' : ''}">
                     	<a  id="create-poll" style="color: white">New Poll</a>
                     </li>
 					
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li >
+					<li th:if="${#authorization.expression('!isAuthenticated()')}">
 						<a href="/signin" th:href="@{/signin}" style="color: white"> <span
 							class="glyphicon glyphicon-log-in" style="color: white"
 							aria-hidden="true"></span>&nbsp;Sign in
-					</a>
+						</a>
+					</li>
+					<li th:if="${#authorization.expression('isAuthenticated()')}">
+						<a href="/logout" th:href="@{#}" onclick="$('#form').submit();"
+							style="color: white"> 
+								<span class="glyphicon glyphicon-log-out" aria-hidden="true" style="color: white"></span>
+								&nbsp;Logout
+						</a>
+						<form style="visibility: hidden" id="form" method="post"
+							action="#" th:action="@{/logout}"></form>
 					</li>
 					
 				</ul>
 			</div>
-			<script th:inline="javascript" type="text/javascript">
+			<script th:if="${#authorization.expression('isAuthenticated()')}" th:inline="javascript" type="text/javascript">
 				$(document).ready(function () {
 				        $('#create-poll').on('click', function () {
 				            $("#poll-modal").modal();

@@ -41,6 +41,6 @@
 </script>
 <!-- Signup modal -->
 <div th:replace="fragments/components :: modal(id='signup-modal', title='Signup')"></div>
-<div th:replace="fragments/components :: modal(id='poll-modal', title='Create Poll')"></div>
+<div th:if="${#authorization.expression('isAuthenticated()')}" th:replace="fragments/components :: modal(id='poll-modal', title='Create Poll')"></div>
   </body>
 </html>
