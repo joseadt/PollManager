@@ -1,9 +1,9 @@
-package es.udc.jadt.arbitrium.model.voteopinion;
+package es.udc.jadt.arbitrium.model.entities.voteopinion;
 
 import java.io.Serializable;
 
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
-import es.udc.jadt.arbitrium.model.vote.Vote;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 
 public class VoteOpinionPK implements Serializable {
 

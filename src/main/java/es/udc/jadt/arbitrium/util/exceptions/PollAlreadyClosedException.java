@@ -1,6 +1,6 @@
 package es.udc.jadt.arbitrium.util.exceptions;
 
-import es.udc.jadt.arbitrium.model.poll.Poll;
+import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 
 public class PollAlreadyClosedException extends Exception {
 

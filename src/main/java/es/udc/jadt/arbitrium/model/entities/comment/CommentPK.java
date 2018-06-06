@@ -1,8 +1,8 @@
-package es.udc.jadt.arbitrium.model.comment;
+package es.udc.jadt.arbitrium.model.entities.comment;
 
 import java.io.Serializable;
 
-import es.udc.jadt.arbitrium.model.discussion.Discussion;
+import es.udc.jadt.arbitrium.model.entities.discussion.Discussion;
 
 @SuppressWarnings("serial")
 public class CommentPK implements Serializable {

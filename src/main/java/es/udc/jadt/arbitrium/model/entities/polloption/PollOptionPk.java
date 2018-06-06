@@ -1,8 +1,8 @@
-package es.udc.jadt.arbitrium.model.polloption;
+package es.udc.jadt.arbitrium.model.entities.polloption;
 
 import java.io.Serializable;
 
-import es.udc.jadt.arbitrium.model.poll.Poll;
+import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 
 public class PollOptionPk implements Serializable {
 

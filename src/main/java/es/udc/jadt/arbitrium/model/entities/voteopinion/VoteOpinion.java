@@ -1,12 +1,12 @@
-package es.udc.jadt.arbitrium.model.voteopinion;
+package es.udc.jadt.arbitrium.model.entities.voteopinion;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
-import es.udc.jadt.arbitrium.model.vote.Vote;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 
 @Entity
 @IdClass(VoteOpinionPK.class)

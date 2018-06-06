@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.participantsgroup;
+package es.udc.jadt.arbitrium.model.entities.participantsgroup;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,9 +13,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import es.udc.jadt.arbitrium.model.poll.Poll;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
-import es.udc.jadt.arbitrium.model.vote.Vote;
+import es.udc.jadt.arbitrium.model.entities.poll.Poll;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 
 /**
  * The Class ParticipantsGroup. Gestion de censos separados para una misma

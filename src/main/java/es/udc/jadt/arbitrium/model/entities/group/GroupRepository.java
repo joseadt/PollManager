@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.group;
+package es.udc.jadt.arbitrium.model.entities.group;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

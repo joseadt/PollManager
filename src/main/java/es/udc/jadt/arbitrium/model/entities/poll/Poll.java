@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.poll;
+package es.udc.jadt.arbitrium.model.entities.poll;
 
 
 import java.io.Serializable;
@@ -14,9 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import es.udc.jadt.arbitrium.model.participantsgroup.ParticipantsGroup;
-import es.udc.jadt.arbitrium.model.polloption.PollOption;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.participantsgroup.ParticipantsGroup;
+import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
 @Entity
 public class Poll implements Serializable {

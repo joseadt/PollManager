@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.comment;
+package es.udc.jadt.arbitrium.model.entities.comment;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,8 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 
-import es.udc.jadt.arbitrium.model.discussion.Discussion;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.discussion.Discussion;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
 @Entity
 @IdClass(CommentPK.class)

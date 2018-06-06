@@ -1,6 +1,6 @@
 package es.udc.jadt.arbitrium.util.exceptions;
 
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
 public class UserWithoutPermisionException extends Exception {
 

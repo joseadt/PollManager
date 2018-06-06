@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.poll;
+package es.udc.jadt.arbitrium.model.entities.poll;
 
 public enum PollType {
 

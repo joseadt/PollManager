@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.discussion;
+package es.udc.jadt.arbitrium.model.entities.discussion;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import es.udc.jadt.arbitrium.model.comment.Comment;
-import es.udc.jadt.arbitrium.model.group.UserGroup;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.comment.Comment;
+import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
 @Entity
 public class Discussion {

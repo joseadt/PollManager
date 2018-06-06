@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.group;
+package es.udc.jadt.arbitrium.model.entities.group;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import es.udc.jadt.arbitrium.model.poll.Poll;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.poll.Poll;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
 @SuppressWarnings("serial")
 @Entity

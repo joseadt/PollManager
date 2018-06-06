@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.vote;
+package es.udc.jadt.arbitrium.model.entities.vote;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,9 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import es.udc.jadt.arbitrium.model.group.UserGroup;
-import es.udc.jadt.arbitrium.model.polloption.PollOption;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
+import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
 @Entity
 public class Vote implements Serializable {

@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.request;
+package es.udc.jadt.arbitrium.model.entities.request;
 
 import java.sql.Date;
 import java.util.Calendar;
@@ -9,8 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import es.udc.jadt.arbitrium.model.group.UserGroup;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
 @Entity
 public class Request {

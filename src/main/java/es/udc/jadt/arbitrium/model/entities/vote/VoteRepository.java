@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.vote;
+package es.udc.jadt.arbitrium.model.entities.vote;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

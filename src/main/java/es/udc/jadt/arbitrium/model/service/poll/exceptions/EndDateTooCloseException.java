@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.service.pollservice.exceptions;
+package es.udc.jadt.arbitrium.model.service.poll.exceptions;
 
 import java.util.Calendar;
 

@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.polloption;
+package es.udc.jadt.arbitrium.model.entities.polloption;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,9 +12,9 @@ import javax.persistence.IdClass;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import es.udc.jadt.arbitrium.model.poll.Poll;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
-import es.udc.jadt.arbitrium.model.vote.Vote;
+import es.udc.jadt.arbitrium.model.entities.poll.Poll;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 
 @Entity
 @IdClass(PollOptionPk.class)

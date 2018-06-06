@@ -20,15 +20,15 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import es.udc.jadt.arbitrium.model.poll.Poll;
-import es.udc.jadt.arbitrium.model.poll.PollRepository;
-import es.udc.jadt.arbitrium.model.poll.PollType;
-import es.udc.jadt.arbitrium.model.polloption.PollOption;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfile;
-import es.udc.jadt.arbitrium.model.userprofile.UserProfileRepository;
-import es.udc.jadt.arbitrium.service.pollservice.PollServiceImpl;
-import es.udc.jadt.arbitrium.service.pollservice.exceptions.EndDateInThePastException;
-import es.udc.jadt.arbitrium.service.pollservice.exceptions.EndDateTooCloseException;
+import es.udc.jadt.arbitrium.model.entities.poll.Poll;
+import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
+import es.udc.jadt.arbitrium.model.entities.poll.PollType;
+import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
+import es.udc.jadt.arbitrium.model.service.poll.PollService;
+import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
+import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateTooCloseException;
 import es.udc.jadt.arbitrium.util.exceptions.PollAlreadyClosedException;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 
@@ -42,7 +42,7 @@ public class PollServiceTest {
 	private UserProfileRepository userRepo;
 
 	@InjectMocks
-	private PollServiceImpl service;
+	private PollService service;
 
 	private final static String DEFAULT_EMAIL = "user@email.com";
 
@@ -59,6 +59,7 @@ public class PollServiceTest {
 
 		when(userRepo.findOne(userProfile.getId())).thenReturn(userProfile);
 		when(pollRepo.save(any(Poll.class))).thenAnswer(new Answer<Poll>() {
+			@Override
 			public Poll answer(InvocationOnMock invocation) {
 				Object[] args = invocation.getArguments();
 				Poll poll = (Poll) args[0];
@@ -67,7 +68,7 @@ public class PollServiceTest {
 			}
 		});
 		Calendar endDate = Calendar.getInstance();
-		endDate.set(Calendar.MINUTE, endDate.get(Calendar.MINUTE) + (int) PollServiceImpl.MINIMUM_DURATION + 3);
+		endDate.set(Calendar.MINUTE, endDate.get(Calendar.MINUTE) + (int) PollService.MINIMUM_DURATION + 3);
 		Poll returnedPoll = service.createPoll(userProfile.getId(), options, PollType.PROPOSAL, endDate);
 		assertEquals(defaultId, returnedPoll.getId());
 	}
@@ -86,21 +87,6 @@ public class PollServiceTest {
 		service.createPoll(userProfile.getId(), options, PollType.PROPOSAL, endDate);
 	}
 
-	@Test(expected = EndDateTooCloseException.class)
-	public void CreatePollWithEndDateLessThanMinimumTest() throws EndDateInThePastException, EndDateTooCloseException {
-
-		UserProfile userProfile = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
-		final Long defaultId = new Long(1);
-		userProfile.setId(defaultId);
-		List<String> options = Arrays.asList("OPTION1", "OPTION2", "OPTION3");
-
-		when(userRepo.findOne(userProfile.getId())).thenReturn(userProfile);
-
-		Calendar endDate = Calendar.getInstance();
-		endDate.set(Calendar.MINUTE, endDate.get(Calendar.MINUTE) + 4);
-		service.createPoll(userProfile.getId(), options, PollType.PROPOSAL, endDate);
-
-	}
 
 	@Test
 	public void ClosePollTest() throws UserWithoutPermisionException, PollAlreadyClosedException {

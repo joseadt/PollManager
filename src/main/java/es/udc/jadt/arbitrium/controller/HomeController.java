@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class HomeController {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/")
-    public String test(HttpServletResponse response) {
-	return "home/homeNotSignedIn";
-    }
+	@RequestMapping(method = RequestMethod.GET, value = "/")
+	public String test(HttpServletResponse response) {
+
+		return "home/homeNotSignedIn";
+	}
 }
