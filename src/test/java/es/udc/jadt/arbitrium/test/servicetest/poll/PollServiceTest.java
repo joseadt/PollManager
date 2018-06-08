@@ -11,7 +11,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,6 +31,8 @@ import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.service.poll.PollService;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateTooCloseException;
+import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
+import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
 import es.udc.jadt.arbitrium.util.exceptions.PollAlreadyClosedException;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 
@@ -44,11 +48,16 @@ public class PollServiceTest {
 	@InjectMocks
 	private PollService service;
 
+	private static Long POLL_ID = Long.valueOf(456);
+
 	private final static String DEFAULT_EMAIL = "user@email.com";
 
 	private final static String USER_NAME = "John Doe";
 
 	private final static String PASSWORD = "12345";
+
+	@Rule
+	public final ExpectedException exception = ExpectedException.none();
 
 	@Test
 	public void CreatePollTest() throws EndDateInThePastException, EndDateTooCloseException {
@@ -159,5 +168,93 @@ public class PollServiceTest {
 		when(pollRepo.findOne(defaultId)).thenReturn(poll);
 
 		service.closePoll(defaultId, defaultId);
+	}
+
+	@Test
+	public void FindByIdTest() {
+		Poll poll = new Poll();
+		Poll otherPoll = new Poll();
+
+		poll.setId(POLL_ID);
+		
+		Mockito.when(pollRepo.findOne(POLL_ID)).thenReturn(poll);
+
+		Poll returnedPoll = service.findPollById(POLL_ID);
+
+		assertEquals(poll, returnedPoll);
+	}
+
+	@Test
+	public void SavePollTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
+		Poll poll = new Poll();
+		poll.setId(POLL_ID);
+		UserProfile user = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
+		poll.setAuthor(user);
+
+		Long userId = Long.valueOf(1);
+		
+		user.setId(userId);
+		
+		Mockito.when(pollRepo.findOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(userRepo.findOne(userId)).thenReturn(user);
+		service.savePoll(poll, userId);
+		
+		Mockito.verify(pollRepo).save(poll);
+	}
+
+	@Test
+	public void SavePollEntityNotFound() throws EntityNotFoundException, UserIsNotTheAuthorException {
+		Poll poll = new Poll();
+		poll.setId(POLL_ID);
+
+		Long userId = Long.valueOf(1);
+		
+		Mockito.when(pollRepo.findOne(POLL_ID)).thenReturn(null);
+
+		exception.expect(EntityNotFoundException.class);
+		exception.expectMessage(
+				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, poll.getId(),
+						Poll.class.getName()));
+
+		service.savePoll(poll, userId);
+		
+	}
+
+	@Test
+	public void SavePollUserNotFoundException() throws EntityNotFoundException, UserIsNotTheAuthorException {
+		Poll poll = new Poll();
+		poll.setId(POLL_ID);
+
+		Long userId = Long.valueOf(1);
+
+		Mockito.when(pollRepo.findOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(userRepo.findOne(userId)).thenReturn(null);
+
+		exception.expect(EntityNotFoundException.class);
+		exception.expectMessage(
+				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, userId, UserProfile.class.getName()));
+		service.savePoll(poll, userId);
+		
+	}
+
+	@Test
+	public void SavePollUserIsNotTheAuthor() throws EntityNotFoundException, UserIsNotTheAuthorException {
+		Poll poll = new Poll();
+		poll.setId(POLL_ID);
+		UserProfile user = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
+		poll.setAuthor(null);
+
+		Long userId = Long.valueOf(1);
+
+		user.setId(userId);
+
+		Mockito.when(pollRepo.findOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(userRepo.findOne(userId)).thenReturn(user);
+
+		exception.expect(UserIsNotTheAuthorException.class);
+		exception.expectMessage(
+				String.format(UserIsNotTheAuthorException.DEFAULT_MESSAGE_FORMAT, userId.toString(), POLL_ID.toString()));
+
+		service.savePoll(poll, userId);
 	}
 }
