@@ -50,8 +50,14 @@
 			<button type="button" class="btn btn-primary" id="addButton">Add</button>
         </div>
         <div class="form-group" id="addOption">
+        	<p th:each="option,stat : ${pollForm.options}">
+        		<label th:text="${option}"></label>
+        		<input type="hidden" th:field="*{options[__${stat.index}__]}"/>
+        		<button type="button" name="${'removebutton'+'__${stat.index}__'}" id="${'removebutton'+'__${stat.index}__'}"
+        		 class="btn btn-danger"></button>
+        	</p>
         </div>
-        
+        	
        
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">

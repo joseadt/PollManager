@@ -1,5 +1,6 @@
 package es.udc.jadt.arbitrium.controller.poll;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,7 +8,9 @@ import java.util.List;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollType;
+import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 
 public class PollForm {
 
@@ -25,7 +28,19 @@ public class PollForm {
 
 	public PollForm() {
 		this.options = new ArrayList<String>();
-		options.add("Opcion1");
+	}
+
+	public PollForm(Poll poll) {
+		this.title = poll.getName();
+		this.description = poll.getDescription();
+		this.options = new ArrayList<String>();
+		for (PollOption option : poll.getOptions()) {
+			options.add(option.getDescription());
+		}
+
+		this.pollType = poll.getPollType();
+		this.endDate = Date.from(poll.getEndDate());
+
 	}
 
 	public String getTitle() {
@@ -71,6 +86,16 @@ public class PollForm {
 	public PollType[] getPollTypes() {
 
 		return PollType.values();
+	}
+
+	public Poll getPoll() {
+		Poll poll = new Poll();
+		poll.setDescription(this.description);
+		poll.setPollType(this.pollType);
+		poll.setEndDate(Instant.ofEpochMilli(this.endDate.getTime()));
+		poll.setName(this.title);
+
+		return poll;
 	}
 
 }

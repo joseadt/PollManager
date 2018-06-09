@@ -1,10 +1,7 @@
 package es.udc.jadt.arbitrium.model.service.poll;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
-import es.udc.jadt.arbitrium.model.entities.poll.PollType;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
+import es.udc.jadt.arbitrium.model.entities.polloption.PollOptionRepository;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
@@ -33,65 +30,57 @@ public class PollService {
 	@Autowired
 	private PollRepository pollRepository;
 
+	@Autowired
+	private PollOptionRepository pollOptionRepository;
+
 	public static final long MINIMUM_DURATION = 20L;
 
 	@Transactional
-	public Poll createPoll(Long userId, List<String> pollOptions, PollType type, Calendar endDate)
+	public Poll createPoll(Long userId, Poll poll)
 			throws EndDateInThePastException, EndDateTooCloseException {
-		Poll poll = new Poll();
+
 		UserProfile user = userRepository.findOne(userId);
 
 		poll.setAuthor(user);
 		
-		List<PollOption> pollOption = new ArrayList<PollOption>();
+		poll.setCreationDate(Instant.now());
 		
-		for (String optionName : pollOptions) {
-			PollOption option = new PollOption(poll, optionName);
-			pollOption.add(option);
+		if (poll.getCreationDate().isAfter(poll.getEndDate())) {
 			
-		}
-		Calendar currentCalendar = Calendar.getInstance();
-		if (endDate.before(currentCalendar)) {
-			
-			throw new EndDateInThePastException(endDate);
+			throw new EndDateInThePastException(poll.getEndDate());
 		}
 
+		poll = pollRepository.save(poll);
 
-		poll.setCreationDate(new Timestamp(currentCalendar.getTimeInMillis()));
-		poll.setEndDate(new Timestamp(endDate.getTimeInMillis()));
-		poll.setOptions(pollOption);
-		
-		return pollRepository.save(poll);
+		return poll;
 
 	}
 
 	@Transactional
-	public Poll createPoll(String email, List<String> pollOptions, PollType type, Date endDate)
+	public Poll createPoll(String email, Poll poll, List<String> pollOptions)
 			throws EndDateInThePastException {
-		Poll poll = new Poll();
+
 		UserProfile user = userRepository.findOneByEmail(email);
-
 		poll.setAuthor(user);
-
-		List<PollOption> pollOption = new ArrayList<PollOption>();
-
-		for (String optionName : pollOptions) {
-			PollOption option = new PollOption(poll, optionName);
-			pollOption.add(option);
-
+		
+		Instant currentCalendar = Instant.now();
+		if (currentCalendar.isAfter(poll.getEndDate())) {
+			throw new EndDateInThePastException(poll.getEndDate());
 		}
-		Date currentCalendar = Date.from(Instant.now());
-		if (endDate.before(currentCalendar)) {
+		
+		List<PollOption> options = new ArrayList<PollOption>();
 
-			throw new EndDateInThePastException(endDate);
+		for (String option : pollOptions) {
+			if (option != null) {
+				options.add(new PollOption(poll, option));
+			}
 		}
 
-		poll.setCreationDate(new Timestamp(currentCalendar.getTime()));
-		poll.setEndDate(new Timestamp(endDate.getTime()));
-		poll.setOptions(pollOption);
+		poll.setOptions(options);
+		poll.setCreationDate(currentCalendar);
+		poll = pollRepository.save(poll);
 
-		return pollRepository.save(poll);
-
+		return poll;
 	}
 
 	@Transactional
@@ -105,18 +94,26 @@ public class PollService {
 			throw new UserWithoutPermisionException(user, poll);
 		}
 
-		if (poll.getEndDate().before(new Timestamp(Calendar.getInstance().getTimeInMillis()))) {
+		if (poll.getEndDate().isBefore(Instant.now())) {
 			throw new PollAlreadyClosedException(poll);
 		}
-		poll.setEndDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+		poll.setEndDate(Instant.now());
 		pollRepository.save(poll);
 
 	}
 
-	public Poll findPollById(Long pollId) {
-		return pollRepository.findOne(pollId);
+	@Transactional
+	public Poll findPollById(Long pollId) throws EntityNotFoundException {
+		Poll poll = pollRepository.findOne(pollId);
+		
+		if(poll==null) {
+			throw new EntityNotFoundException(Poll.class, pollId);
+		}
+		
+		return poll; 
 	}
 
+	@Transactional
 	public void savePoll(Poll poll, Long userId) throws EntityNotFoundException, UserIsNotTheAuthorException {
 		Poll returnedPoll = pollRepository.findOne(poll.getId());
 		

@@ -1,5 +1,6 @@
 package es.udc.jadt.arbitrium.model.service.poll.exceptions;
 
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -18,6 +19,10 @@ public class EndDateInThePastException extends Exception {
 	}
 
 	public EndDateInThePastException(Date endDate) {
+		super(new StringBuilder().append(DEFAULT_EXCEPTION_MESSAGE).append(endDate.toString()).toString());
+	}
+
+	public EndDateInThePastException(Instant endDate) {
 		super(new StringBuilder().append(DEFAULT_EXCEPTION_MESSAGE).append(endDate.toString()).toString());
 	}
 

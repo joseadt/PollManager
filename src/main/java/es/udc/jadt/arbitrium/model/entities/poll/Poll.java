@@ -2,10 +2,10 @@ package es.udc.jadt.arbitrium.model.entities.poll;
 
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Calendar;
+import java.time.Instant;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,14 +32,14 @@ public class Poll implements Serializable {
 
 	private String description;
 
-	@OneToMany(mappedBy = "poll", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "poll", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<PollOption> options;
 
 	private PollType pollType;
 
-	private Timestamp creationDate;
+	private Instant creationDate;
 
-	private Timestamp endDate;
+	private Instant endDate;
 
 	@OneToMany(mappedBy = "poll", fetch = FetchType.LAZY)
 	private List<ParticipantsGroup> participantsGroups;
@@ -49,12 +49,12 @@ public class Poll implements Serializable {
 	}
 
 	public Poll(UserProfile author, List<PollOption> options, PollType pollType,
-			Timestamp endDate) {
+			Instant endDate) {
 
 		this.author = author;
 		this.options = options;
 		this.pollType = pollType;
-		this.creationDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		this.creationDate = Instant.now();
 		this.endDate = endDate;
 	}
 
@@ -90,19 +90,19 @@ public class Poll implements Serializable {
 		this.pollType = pollType;
 	}
 
-	public Timestamp getCreationDate() {
+	public Instant getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(Timestamp creationDate) {
+	public void setCreationDate(Instant creationDate) {
 		this.creationDate = creationDate;
 	}
 
-	public Timestamp getEndDate() {
+	public Instant getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Timestamp endDate) {
+	public void setEndDate(Instant endDate) {
 		this.endDate = endDate;
 	}
 

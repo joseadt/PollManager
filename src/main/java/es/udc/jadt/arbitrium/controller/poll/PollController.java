@@ -11,13 +11,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.service.poll.PollService;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
 import es.udc.jadt.arbitrium.model.service.user.UserService;
+import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
 import es.udc.jadt.arbitrium.support.web.Ajax;
 import es.udc.jadt.arbitrium.support.web.MessageHelper;
 
@@ -25,6 +28,8 @@ import es.udc.jadt.arbitrium.support.web.MessageHelper;
 public class PollController {
 
     private static final String CREATE_POLL_VIEW = "poll/create";
+
+	private static final String EDIT_POLL_VIEW = "poll/edit";
 
 
     @Autowired
@@ -50,15 +55,38 @@ public class PollController {
 			return CREATE_POLL_VIEW;
 		}
 		Principal principal = request.getUserPrincipal();
-		
+		Poll poll = null;
 		try {
-			pollService.createPoll(principal.getName(), pollForm.getOptions(), pollForm.getPollType(),
-					pollForm.getEndDate());
+			poll = pollService.createPoll(principal.getName(), pollForm.getPoll(), pollForm.getOptions());
 		} catch (EndDateInThePastException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "redirect:/error";
 		}
 		MessageHelper.addSuccessAttribute(ra, "createpoll.success");
-		return "redirect:/";
+		return "redirect:/editpoll/" + poll.getId();
+	}
+
+	@GetMapping("editpoll/{id}")
+	String editPoll(HttpServletRequest request, Model model,
+			@RequestHeader(value = "X-Requested-With", required = false) String requestedWith, @PathVariable Long id) {
+
+
+		Principal principal = request.getUserPrincipal();
+		Poll poll;
+		try {
+			poll = pollService.findPollById(id);
+
+		} catch (EntityNotFoundException e) {
+			return "redirect:/error";
+		}
+
+		if (!principal.getName().equals(poll.getAuthor().getEmail())) {
+			return "redirect:/error";
+		}
+
+		PollForm pollForm = new PollForm(poll);
+
+		model.addAttribute(pollForm);
+
+		return CREATE_POLL_VIEW;
 	}
 }

@@ -1,11 +1,12 @@
 package es.udc.jadt.arbitrium.test.servicetest.poll;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -64,7 +65,10 @@ public class PollServiceTest {
 		UserProfile userProfile = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
 		final Long defaultId= new Long(1);
 		userProfile.setId(defaultId);
-		List<String> options = Arrays.asList("OPTION1","OPTION2","OPTION3");
+		Poll poll = new Poll();
+
+		poll.setEndDate(Instant.now().plus(Duration.ofDays(2)));
+
 
 		when(userRepo.findOne(userProfile.getId())).thenReturn(userProfile);
 		when(pollRepo.save(any(Poll.class))).thenAnswer(new Answer<Poll>() {
@@ -78,7 +82,7 @@ public class PollServiceTest {
 		});
 		Calendar endDate = Calendar.getInstance();
 		endDate.set(Calendar.MINUTE, endDate.get(Calendar.MINUTE) + (int) PollService.MINIMUM_DURATION + 3);
-		Poll returnedPoll = service.createPoll(userProfile.getId(), options, PollType.PROPOSAL, endDate);
+		Poll returnedPoll = service.createPoll(userProfile.getId(), poll);
 		assertEquals(defaultId, returnedPoll.getId());
 	}
 
@@ -89,11 +93,13 @@ public class PollServiceTest {
 		userProfile.setId(defaultId);
 		List<String> options = Arrays.asList("OPTION1", "OPTION2", "OPTION3");
 
+		Poll poll = new Poll();
+
+		poll.setEndDate(Instant.now().minus(Duration.ofDays(2)));
+
 		when(userRepo.findOne(userProfile.getId())).thenReturn(userProfile);
 
-		Calendar endDate = Calendar.getInstance();
-		endDate.set(Calendar.YEAR, endDate.get(Calendar.YEAR) - 1);
-		service.createPoll(userProfile.getId(), options, PollType.PROPOSAL, endDate);
+		service.createPoll(userProfile.getId(), poll);
 	}
 
 
@@ -103,13 +109,13 @@ public class PollServiceTest {
 		final Long defaultId= new Long(1);
 		userProfile.setId(defaultId);
 		List<String> options = Arrays.asList("OPTION1","OPTION2","OPTION3");
-		Calendar endDate = Calendar.getInstance();
-		endDate.set(Calendar.DAY_OF_MONTH, endDate.get(Calendar.DAY_OF_MONTH) +1);
-		;
-
+		Instant endDate = Instant.now();
+		endDate = endDate.plus(Duration.ofDays(2));
+		System.out.println(endDate);
 		List<PollOption> pollOption = new ArrayList<PollOption>();
 
-		Poll poll = new Poll(userProfile, null, PollType.PROPOSAL, new Timestamp(endDate.getTimeInMillis()));
+		Poll poll = new Poll(userProfile, null, PollType.PROPOSAL, endDate);
+		poll.setEndDate(endDate);
 		for (String optionName : options) {
 			PollOption option = new PollOption(poll, optionName);
 			pollOption.add(option);
@@ -130,7 +136,7 @@ public class PollServiceTest {
 				Object[] args = invocation.getArguments();
 				Poll poll = (Poll) args[0];
 				assertEquals(defaultId, poll.getId());
-				assertTrue(poll.getEndDate().getTime() - Calendar.getInstance().getTimeInMillis() <= 0);
+				assertFalse(poll.getEndDate().isAfter(Instant.now()));
 				return poll;
 			}
 		});
@@ -146,15 +152,16 @@ public class PollServiceTest {
 		final Long defaultId = new Long(1);
 		userProfile.setId(defaultId);
 		List<String> options = Arrays.asList("OPTION1", "OPTION2", "OPTION3");
-		Calendar endDate = Calendar.getInstance();
-		endDate.set(Calendar.DAY_OF_MONTH, endDate.get(Calendar.DAY_OF_MONTH) + 1);
-		;
+		Instant endDate = Instant.now();
+		Duration duration = Duration.ofDays(2);
+		
+		endDate.plus(duration);
 
 		UserProfile userProfile2 = new UserProfile(DEFAULT_EMAIL, USER_NAME.concat("1234"), PASSWORD);
 
 		List<PollOption> pollOption = new ArrayList<PollOption>();
 		userProfile.setId(new Long(2));
-		Poll poll = new Poll(userProfile, null, PollType.PROPOSAL, new Timestamp(endDate.getTimeInMillis()));
+		Poll poll = new Poll(userProfile, null, PollType.PROPOSAL, endDate);
 		for (String optionName : options) {
 			PollOption option = new PollOption(poll, optionName);
 			pollOption.add(option);
@@ -171,7 +178,7 @@ public class PollServiceTest {
 	}
 
 	@Test
-	public void FindByIdTest() {
+	public void FindByIdTest() throws EntityNotFoundException {
 		Poll poll = new Poll();
 		Poll otherPoll = new Poll();
 
