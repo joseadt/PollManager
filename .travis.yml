@@ -1,1 +1,11 @@
 language: java
+
+jobs:
+    include:
+        script:
+        - mvn install -P hsqldb
+        deploy:
+            provider: heroku
+            api_key:
+                    secure: "60419448-7c3d-4303-a318-38746dc07a54"
+            app: arbitrium-jdt
