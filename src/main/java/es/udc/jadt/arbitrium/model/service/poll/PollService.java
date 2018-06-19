@@ -1,8 +1,6 @@
 package es.udc.jadt.arbitrium.model.service.poll;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
-import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOptionRepository;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
@@ -57,7 +54,7 @@ public class PollService {
 	}
 
 	@Transactional
-	public Poll createPoll(String email, Poll poll, List<String> pollOptions)
+	public Poll createPoll(String email, Poll poll)
 			throws EndDateInThePastException {
 
 		UserProfile user = userRepository.findOneByEmail(email);
@@ -68,15 +65,6 @@ public class PollService {
 			throw new EndDateInThePastException(poll.getEndDate());
 		}
 		
-		List<PollOption> options = new ArrayList<PollOption>();
-
-		for (String option : pollOptions) {
-			if (option != null) {
-				options.add(new PollOption(poll, option));
-			}
-		}
-
-		poll.setOptions(options);
 		poll.setCreationDate(currentCalendar);
 		poll = pollRepository.save(poll);
 
@@ -114,14 +102,14 @@ public class PollService {
 	}
 
 	@Transactional
-	public void savePoll(Poll poll, Long userId) throws EntityNotFoundException, UserIsNotTheAuthorException {
+	public void savePoll(Poll poll, String userId) throws EntityNotFoundException, UserIsNotTheAuthorException {
 		Poll returnedPoll = pollRepository.findOne(poll.getId());
 		
 		if (returnedPoll == null) {
 			throw new EntityNotFoundException(Poll.class, poll.getId());
 		}
 
-		UserProfile user = userRepository.findOne(userId);
+		UserProfile user = userRepository.findOneByEmail(userId);
 
 		
 		if(user== null) {
@@ -129,9 +117,11 @@ public class PollService {
 		}
 		
 		if (!user.equals(returnedPoll.getAuthor())) {
-			throw new UserIsNotTheAuthorException(userId, returnedPoll.getId());
+			throw new UserIsNotTheAuthorException(user.getId(), returnedPoll.getId());
 		}
+
 
 		pollRepository.save(poll);
 	}
+
 }

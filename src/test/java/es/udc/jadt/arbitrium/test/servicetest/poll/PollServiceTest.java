@@ -203,8 +203,8 @@ public class PollServiceTest {
 		user.setId(userId);
 		
 		Mockito.when(pollRepo.findOne(POLL_ID)).thenReturn(poll);
-		Mockito.when(userRepo.findOne(userId)).thenReturn(user);
-		service.savePoll(poll, userId);
+		Mockito.when(userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
+		service.savePoll(poll, user.getEmail());
 		
 		Mockito.verify(pollRepo).save(poll);
 	}
@@ -223,7 +223,7 @@ public class PollServiceTest {
 				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, poll.getId(),
 						Poll.class.getName()));
 
-		service.savePoll(poll, userId);
+		service.savePoll(poll, DEFAULT_EMAIL);
 		
 	}
 
@@ -235,12 +235,12 @@ public class PollServiceTest {
 		Long userId = Long.valueOf(1);
 
 		Mockito.when(pollRepo.findOne(POLL_ID)).thenReturn(poll);
-		Mockito.when(userRepo.findOne(userId)).thenReturn(null);
+		Mockito.when(userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(null);
 
 		exception.expect(EntityNotFoundException.class);
 		exception.expectMessage(
 				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, userId, UserProfile.class.getName()));
-		service.savePoll(poll, userId);
+		service.savePoll(poll, DEFAULT_EMAIL);
 		
 	}
 
@@ -256,12 +256,12 @@ public class PollServiceTest {
 		user.setId(userId);
 
 		Mockito.when(pollRepo.findOne(POLL_ID)).thenReturn(poll);
-		Mockito.when(userRepo.findOne(userId)).thenReturn(user);
+		Mockito.when(userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
 
 		exception.expect(UserIsNotTheAuthorException.class);
 		exception.expectMessage(
 				String.format(UserIsNotTheAuthorException.DEFAULT_MESSAGE_FORMAT, userId.toString(), POLL_ID.toString()));
 
-		service.savePoll(poll, userId);
+		service.savePoll(poll, DEFAULT_EMAIL);
 	}
 }

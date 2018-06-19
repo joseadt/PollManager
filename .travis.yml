@@ -4,4 +4,6 @@ jobs:
     include:
         script:
         - mvn install -P hsqldb
-        
+    branches:
+      only:
+      - master

@@ -19,7 +19,7 @@ public class PollForm {
 
 	private String description;
 
-	private List<String> options;
+	private List<PollOption> options;
 
 	private PollType pollType;
 
@@ -27,16 +27,14 @@ public class PollForm {
 	private Date endDate;
 
 	public PollForm() {
-		this.options = new ArrayList<String>();
+		options = new ArrayList<PollOption>();
 	}
 
 	public PollForm(Poll poll) {
 		this.title = poll.getName();
 		this.description = poll.getDescription();
-		this.options = new ArrayList<String>();
-		for (PollOption option : poll.getOptions()) {
-			options.add(option.getDescription());
-		}
+
+		this.options = poll.getOptions();
 
 		this.pollType = poll.getPollType();
 		this.endDate = Date.from(poll.getEndDate());
@@ -59,13 +57,14 @@ public class PollForm {
 		this.description = description;
 	}
 
-	public List<String> getOptions() {
+	public List<PollOption> getOptions() {
 		return options;
 	}
 
-	public void setOptions(List<String> options) {
+	public void setOptions(List<PollOption> options) {
 		this.options = options;
 	}
+
 
 	public PollType getPollType() {
 		return pollType;
@@ -94,7 +93,10 @@ public class PollForm {
 		poll.setPollType(this.pollType);
 		poll.setEndDate(Instant.ofEpochMilli(this.endDate.getTime()));
 		poll.setName(this.title);
-
+		for (PollOption option : options) {
+			option.setPoll(poll);
+		}
+		poll.setOptions(options);
 		return poll;
 	}
 
