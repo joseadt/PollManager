@@ -2,6 +2,7 @@ package es.udc.jadt.arbitrium.test.servicetest.poll;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +27,7 @@ import org.mockito.stubbing.Answer;
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
 import es.udc.jadt.arbitrium.model.entities.poll.PollType;
+import es.udc.jadt.arbitrium.model.entities.poll.specification.PollFilters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
@@ -264,4 +266,17 @@ public class PollServiceTest {
 
 		service.savePoll(poll, DEFAULT_EMAIL);
 	}
+
+	@Test
+	public void FindPollsByKeywords() {
+		Poll poll = new Poll();
+		poll.setName("Nombre");
+		
+		Mockito.when(pollRepo.findAll(PollFilters.pollKeywordsFilter(Arrays.asList("nombre"), false)))
+				.thenReturn(Arrays.asList(poll));
+		
+		List<Poll> polls = service.findByKeywords("Nombre", false);
+		assertTrue(polls.contains(poll));
+	}
+
 }

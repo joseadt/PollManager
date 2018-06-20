@@ -1,6 +1,8 @@
 package es.udc.jadt.arbitrium.model.service.poll;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
+import es.udc.jadt.arbitrium.model.entities.poll.specification.PollFilters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOptionRepository;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
@@ -122,6 +125,14 @@ public class PollService {
 
 
 		pollRepository.save(poll);
+	}
+
+	@Transactional
+	public List<Poll> findByKeywords(String keywords, boolean findOnDescriptionToo) {
+		List<String> keywordsList = Arrays.asList(keywords.split(" "));
+
+
+		return pollRepository.findAll(PollFilters.pollKeywordsFilter(keywordsList, findOnDescriptionToo));
 	}
 
 }

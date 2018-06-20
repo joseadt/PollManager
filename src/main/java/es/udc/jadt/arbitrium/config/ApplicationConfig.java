@@ -11,7 +11,7 @@ import es.udc.jadt.arbitrium.BaseApplication;
 @Configuration
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackageClasses = BaseApplication.class)
-public class ApplicationConfig {
+class ApplicationConfig {
 
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
