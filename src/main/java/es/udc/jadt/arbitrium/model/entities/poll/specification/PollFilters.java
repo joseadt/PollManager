@@ -11,12 +11,13 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
+import es.udc.jadt.arbitrium.model.util.SpecificationFilter;
 
 public class PollFilters {
 
 	public static Specification<Poll> pollKeywordsFilter(final List<String> keywords, final boolean onDescriptionToo) {
 
-		return new Specification<Poll>() {
+		SpecificationFilter<Poll> filter = new SpecificationFilter<Poll>() {
 			
 			@Override
 			public Predicate toPredicate(Root<Poll> poll, CriteriaQuery<?> query, CriteriaBuilder builder) {
@@ -44,7 +45,11 @@ public class PollFilters {
 				}
 				return predicate;
 			}
+
 		};
+		// Testing and debug purpouses
+		filter.setArgs(new Object[] { keywords, Boolean.valueOf(onDescriptionToo) });
+		return filter;
 
 	}
 

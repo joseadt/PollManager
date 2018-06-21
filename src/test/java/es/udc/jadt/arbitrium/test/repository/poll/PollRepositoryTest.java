@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -52,7 +51,7 @@ public class PollRepositoryTest {
 		poll = repository.save(poll);
 
 		List<Poll> polls = repository
-				.findAll(PollFilters.pollKeywordsFilter(ArgumentMatchers.<String>anyList(), true));
+				.findAll(PollFilters.pollKeywordsFilter(Arrays.asList("DEsCr"), true));
 
 		assertTrue(polls.contains(poll));
 	}
