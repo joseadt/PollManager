@@ -239,7 +239,8 @@ public class PollServiceTest {
 
 		exception.expect(EntityNotFoundException.class);
 		exception.expectMessage(
-				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, userId, UserProfile.class.getName()));
+				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, DEFAULT_EMAIL,
+						UserProfile.class.getName()));
 		service.savePoll(poll, DEFAULT_EMAIL);
 		
 	}
