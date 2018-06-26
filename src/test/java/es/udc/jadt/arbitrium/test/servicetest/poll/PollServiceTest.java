@@ -2,6 +2,7 @@ package es.udc.jadt.arbitrium.test.servicetest.poll;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -16,12 +17,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.data.jpa.domain.Specification;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
@@ -34,6 +37,7 @@ import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastExcep
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateTooCloseException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.util.SpecificationFilter;
 import es.udc.jadt.arbitrium.util.exceptions.PollAlreadyClosedException;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 
@@ -265,4 +269,35 @@ public class PollServiceTest {
 
 		service.savePoll(poll, DEFAULT_EMAIL);
 	}
+
+	@Test
+	public void FindPollsByKeywords() {
+		final Poll poll = new Poll();
+		poll.setName("Nombre pRUEBA");
+		final String keywords = "Nombre rue";
+		final boolean onDescription = false;
+		
+		Mockito.when(
+				pollRepo.findAll(ArgumentMatchers.<Specification<Poll>>any()))
+				.thenAnswer(new Answer<List<Poll>>() {
+
+					@SuppressWarnings("unchecked")
+					@Override
+					public List<Poll> answer(InvocationOnMock invocation) throws Throwable {
+						Object[] args = invocation.getArguments();
+						SpecificationFilter<Poll> filter = (SpecificationFilter<Poll>) args[0];
+						Object[] specificationArgs = filter.getArgs();
+						List<String> keywordsList = (List<String>) specificationArgs[0];
+						assertTrue(keywordsList.containsAll(Arrays.asList(keywords.split(" "))));
+						Boolean onDescToo = (Boolean) specificationArgs[1];
+						assertEquals(Boolean.valueOf(onDescription), onDescToo);
+
+						return Arrays.asList(poll);
+					}
+				});
+		
+		List<Poll> polls = service.findByKeywords(keywords, onDescription);
+		assertTrue(polls.contains(poll));
+	}
+
 }
