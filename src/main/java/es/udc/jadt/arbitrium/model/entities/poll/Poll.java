@@ -44,6 +44,8 @@ public class Poll implements Serializable {
 	@OneToMany(mappedBy = "poll", fetch = FetchType.LAZY)
 	private List<ParticipantsGroup> participantsGroups;
 
+	private Boolean multiSelection;
+
 	public Poll() {
 
 	}
@@ -59,7 +61,7 @@ public class Poll implements Serializable {
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -67,7 +69,7 @@ public class Poll implements Serializable {
 	}
 
 	public UserProfile getAuthor() {
-		return author;
+		return this.author;
 	}
 
 	public void setAuthor(UserProfile author) {
@@ -75,7 +77,7 @@ public class Poll implements Serializable {
 	}
 
 	public List<PollOption> getOptions() {
-		return options;
+		return this.options;
 	}
 
 	public void setOptions(List<PollOption> options) {
@@ -83,7 +85,7 @@ public class Poll implements Serializable {
 	}
 
 	public PollType getPollType() {
-		return pollType;
+		return this.pollType;
 	}
 
 	public void setPollType(PollType pollType) {
@@ -91,7 +93,7 @@ public class Poll implements Serializable {
 	}
 
 	public Instant getCreationDate() {
-		return creationDate;
+		return this.creationDate;
 	}
 
 	public void setCreationDate(Instant creationDate) {
@@ -99,7 +101,7 @@ public class Poll implements Serializable {
 	}
 
 	public Instant getEndDate() {
-		return endDate;
+		return this.endDate;
 	}
 
 	public void setEndDate(Instant endDate) {
@@ -107,7 +109,7 @@ public class Poll implements Serializable {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -115,7 +117,7 @@ public class Poll implements Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -123,11 +125,19 @@ public class Poll implements Serializable {
 	}
 
 	public List<ParticipantsGroup> getParticipantsGroups() {
-		return participantsGroups;
+		return this.participantsGroups;
 	}
 
 	public void setParticipantsGroups(List<ParticipantsGroup> participantsGroups) {
 		this.participantsGroups = participantsGroups;
+	}
+
+	public Boolean getMultiSelection() {
+		return this.multiSelection;
+	}
+
+	public void setMultiSelection(Boolean multiSelection) {
+		this.multiSelection = multiSelection;
 	}
 
 
