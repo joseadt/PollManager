@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
+import es.udc.jadt.arbitrium.model.entities.poll.PollType;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.service.poll.PollService;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
@@ -40,22 +41,26 @@ public class PollController {
 
 	private static final String NOT_FOUND_VIEW = "error/notfound";
 
+	private static final String POLL_CONFIG_VIEW = "poll/fragments/pollConfigs";
+
+	private static final String CONFIG_FRAGMENT_SUFFIX = "Config";
 
     @Autowired
     private PollService pollService;
-    
+
 	@Autowired
 	private UserService userService;
-    
-    
+
+
     @GetMapping("createpoll")
     String createPoll(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
-	model.addAttribute(new PollForm());
-	if (Ajax.isAjaxRequest(requestedWith)) {
-	    return CREATE_POLL_VIEW.concat(" :: pollForm");
-	}
-	
-	return CREATE_POLL_VIEW;
+		model.addAttribute(new PollForm());
+		model.addAttribute("configFragment", getPollTypeFragment(PollType.values()[0]));
+		if (Ajax.isAjaxRequest(requestedWith)) {
+			return CREATE_POLL_VIEW.concat(" :: pollForm");
+		}
+
+		return CREATE_POLL_VIEW;
     }
 
 	@PostMapping("createpoll")
@@ -66,7 +71,7 @@ public class PollController {
 		Principal principal = request.getUserPrincipal();
 		Poll poll = null;
 		try {
-			poll = pollService.createPoll(principal.getName(), pollForm.getPoll());
+			poll = this.pollService.createPoll(principal.getName(), pollForm.getPoll());
 		} catch (EndDateInThePastException e) {
 			return "redirect:/error";
 		}
@@ -82,7 +87,7 @@ public class PollController {
 		Principal principal = request.getUserPrincipal();
 		Poll poll;
 		try {
-			poll = pollService.findPollById(id);
+			poll = this.pollService.findPollById(id);
 
 		} catch (EntityNotFoundException e) {
 			return "redirect:/error";
@@ -108,12 +113,12 @@ public class PollController {
 		Principal principal = request.getUserPrincipal();
 		Poll poll;
 		try {
-			poll = pollService.findPollById(id);
+			poll = this.pollService.findPollById(id);
 
 		} catch (EntityNotFoundException e) {
 			return "redirect:/error";
 		}
-		
+
 
 
 		poll.setName(pollForm.getTitle());
@@ -121,12 +126,12 @@ public class PollController {
 		poll.setEndDate(Instant.ofEpochMilli(pollForm.getEndDate().getTime()));
 		poll.setPollType(pollForm.getPollType());
 		List<PollOption> options = new ArrayList<PollOption>();
-		
+
 
 
 		poll.getOptions().addAll(options);
-		
-		pollService.savePoll(poll, principal.getName());
+
+		this.pollService.savePoll(poll, principal.getName());
 
 		return "redirect:/editpoll/" + id;
 
@@ -138,7 +143,7 @@ public class PollController {
 		Poll poll = null;
 
 		try {
-			 poll= pollService.findPollById(id);
+			 poll= this.pollService.findPollById(id);
 		} catch (EntityNotFoundException e) {
 
 			// TODO: MODEL BLOCK TO RETURN SPECIFIC DATA ABOUT THE ERROR (ENTITY CLASS, ID,
@@ -152,8 +157,20 @@ public class PollController {
 		if(Ajax.isAjaxRequest(requestedWith)) {
 			return SEE_POLL_VIEW.concat(" :: pollFragment");
 		}
-		
+
 		return SEE_POLL_VIEW;
 	}
 
+	@GetMapping("pollconfig/{pollType}")
+	String getConfig(Model model, @PathVariable String pollType) {
+		PollType type = PollType.valueOf(pollType);
+		String pollConfigFragmentName = getPollTypeFragment(type);
+		model.addAttribute(new PollForm());
+		return POLL_CONFIG_VIEW.concat(" :: ").concat(pollConfigFragmentName);
+	}
+
+	private String getPollTypeFragment(PollType pollType) {
+
+		return pollType.getName().toLowerCase().concat(CONFIG_FRAGMENT_SUFFIX);
+	}
 }

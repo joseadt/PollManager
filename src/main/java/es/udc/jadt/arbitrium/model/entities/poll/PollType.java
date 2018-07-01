@@ -6,7 +6,7 @@ import es.udc.jadt.arbitrium.util.votecount.ProposalConfiguration;
 
 public enum PollType {
 
-	BASIC_POLL("POLL", BasicPollConfiguration.getInstance()),
+	POLL("POLL", BasicPollConfiguration.getInstance()),
 
 	PROPOSAL("PROPOSAL", ProposalConfiguration.getInstance());
 
@@ -31,6 +31,10 @@ public enum PollType {
 
 	public PollConfiguration getConfiguration() {
 		return this.configuration;
+	}
+
+	public String getName() {
+		return this.name;
 	}
 
 }

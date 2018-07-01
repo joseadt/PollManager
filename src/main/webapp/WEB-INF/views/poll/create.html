@@ -43,54 +43,30 @@
                 </select>
             </div>
         </div>
-        <div class="form-group">
-        	<label for="optionInput" class="col-lg-2 control-label">Options</label>
-	        <input type="text" class="form-control" id="optionInput" placeholder="Poll Description"/>
-			<button type="button" class="btn btn-primary" id="addButton">Add</button>
+        
+        <div id="pollConfigGroup" th:insert="poll/fragments/pollConfigs :: ${configFragment}" th:fragment="pollConfigGroup">
         </div>
-        <div class="form-group" id="addOption">
-        	<p th:each="option,stat : ${pollForm.options}">
-        		<label th:text="${option}"></label>
-        		<input type="hidden" th:field="*{options[__${stat.index}__].description}"/>
-        		<input type="hidden" th:field="*{options[__${stat.index}__].optionId}"/>
-        		<button type="button" name="${'removebutton'+'__${stat.index}__'}" id="${'removebutton'+'__${stat.index}__'}"
-        		 class="btn btn-danger"></button>
-        	</p>
-        </div>
-       	<script th:inline="javascript" type="text/javascript">
-		    /* Fill in modal with content loaded with Ajax */
-		    $(function () {
-		    	var addOption = $('#addOption');
-		    	var i=$('#addOption p').size();
-		    	
-		        $('#addButton').on('click', function () {
-		        	$('<p><label>'+ $('#optionInput').val()+ '</label><input type="hidden" name="options['+i
-		        			+'].description" id="options['+i+'].description" value="'+$('#optionInput').val()+'"></input>'
-		        			+'<button type="button" name="removeButton" id="removeButton'+i+'" class="btn btn-danger"></button></p>').appendTo(addOption);
-		        	$('#optionInput').val('');
-		        	$('#removeButton'+i).click(function(){
-		        		if( i > 0 ){
-		        			$(this).parents('p').remove();
-		        			i--;
-		        		}
-		        		return false;
-		        	});
-		        	i++;
-		            });
-		        });
-		    
-		    	
-   	
-		</script>
+       	
        
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
                 <button type="submit" class="btn btn-default">Create!</button>
             </div>
         </div>
+        
     </fieldset>
 
-
+	<script th:inline="javascript" type="text/javascript">
+		$('#pollType').change(function(){
+			configurl="pollconfig/"+$(this).val();
+			$.ajax({
+				url : configurl,
+				cache: false
+			}).done(function (html) {
+				$('#pollConfigGroup').replaceWith(html);
+			});
+		});
+	</script>
 
 </form>
 
