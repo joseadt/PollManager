@@ -13,8 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import es.udc.jadt.arbitrium.model.entities.participantsgroup.ParticipantsGroup;
+import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
@@ -44,7 +46,8 @@ public class Poll implements Serializable {
 	@OneToMany(mappedBy = "poll", fetch = FetchType.LAZY)
 	private List<ParticipantsGroup> participantsGroups;
 
-	private Boolean multiSelection;
+	@OneToOne(cascade = CascadeType.ALL)
+	private ConfigurationParameters configuration;
 
 	public Poll() {
 
@@ -132,12 +135,12 @@ public class Poll implements Serializable {
 		this.participantsGroups = participantsGroups;
 	}
 
-	public Boolean getMultiSelection() {
-		return this.multiSelection;
+	public ConfigurationParameters getConfiguration() {
+		return this.configuration;
 	}
 
-	public void setMultiSelection(Boolean multiSelection) {
-		this.multiSelection = multiSelection;
+	public void setConfiguration(ConfigurationParameters configuration) {
+		this.configuration = configuration;
 	}
 
 

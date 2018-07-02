@@ -27,7 +27,7 @@ public class PollForm {
 	private Date endDate;
 
 	public PollForm() {
-		options = new ArrayList<PollOption>();
+		this.options = new ArrayList<PollOption>();
 	}
 
 	public PollForm(Poll poll) {
@@ -42,7 +42,7 @@ public class PollForm {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -50,7 +50,7 @@ public class PollForm {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -58,7 +58,7 @@ public class PollForm {
 	}
 
 	public List<PollOption> getOptions() {
-		return options;
+		return this.options;
 	}
 
 	public void setOptions(List<PollOption> options) {
@@ -67,7 +67,7 @@ public class PollForm {
 
 
 	public PollType getPollType() {
-		return pollType;
+		return this.pollType;
 	}
 
 	public void setPollType(PollType pollType) {
@@ -75,7 +75,7 @@ public class PollForm {
 	}
 
 	public Date getEndDate() {
-		return endDate;
+		return this.endDate;
 	}
 
 	public void setEndDate(Date endDate) {
@@ -93,10 +93,15 @@ public class PollForm {
 		poll.setPollType(this.pollType);
 		poll.setEndDate(Instant.ofEpochMilli(this.endDate.getTime()));
 		poll.setName(this.title);
-		for (PollOption option : options) {
+		poll.setConfiguration(this.pollType.getConfiguration().fullConfiguration());
+
+		if (!Boolean.TRUE.equals(poll.getConfiguration().getIsUserDefinedOptions())) {
+			this.options = poll.getConfiguration().getDefaultOptions();
+		}
+		for (PollOption option : this.options) {
 			option.setPoll(poll);
 		}
-		poll.setOptions(options);
+		poll.setOptions(this.options);
 		return poll;
 	}
 

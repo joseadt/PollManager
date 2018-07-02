@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
+import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
-import es.udc.jadt.arbitrium.util.configurations.ConfigurationParameters;
 import es.udc.jadt.arbitrium.util.pollresult.PollResult;
 import es.udc.jadt.arbitrium.util.pollresult.SimpleResult;
 
@@ -44,7 +44,7 @@ public class BasicPollConfiguration implements PollConfiguration {
 		if (votes != null && !votes.isEmpty()) {
 			for (Vote vote : votes) {
 				List<PollOption> votedOptions = vote.getSelectedOptions();
-				if (votedOptions.size() > 1 && !Boolean.TRUE.equals(poll.getMultiSelection())) {
+				if (votedOptions.size() > 1 && !Boolean.TRUE.equals(poll.getConfiguration().getIsMultiSelection())) {
 					continue;
 				}
 
@@ -68,7 +68,7 @@ public class BasicPollConfiguration implements PollConfiguration {
 
 		cp.setIsUserDefinedOptions(Boolean.TRUE);
 
-		return null;
+		return cp;
 	}
 
 }

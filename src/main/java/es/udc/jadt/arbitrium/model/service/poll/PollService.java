@@ -39,18 +39,20 @@ public class PollService {
 	public Poll createPoll(Long userId, Poll poll)
 			throws EndDateInThePastException, EndDateTooCloseException {
 
-		UserProfile user = userRepository.findOne(userId);
+		UserProfile user = this.userRepository.findOne(userId);
 
 		poll.setAuthor(user);
-		
+
+
+
 		poll.setCreationDate(Instant.now());
-		
+
 		if (poll.getCreationDate().isAfter(poll.getEndDate())) {
-			
+
 			throw new EndDateInThePastException(poll.getEndDate());
 		}
 
-		poll = pollRepository.save(poll);
+		poll = this.pollRepository.save(poll);
 
 		return poll;
 
@@ -60,28 +62,28 @@ public class PollService {
 	public Poll createPoll(String email, Poll poll)
 			throws EndDateInThePastException {
 
-		UserProfile user = userRepository.findOneByEmail(email);
+		UserProfile user = this.userRepository.findOneByEmail(email);
 		poll.setAuthor(user);
-		
+
 		Instant currentCalendar = Instant.now();
 		if (currentCalendar.isAfter(poll.getEndDate())) {
 			throw new EndDateInThePastException(poll.getEndDate());
 		}
-		
+
 		poll.setCreationDate(currentCalendar);
-		poll = pollRepository.save(poll);
+		poll = this.pollRepository.save(poll);
 
 		return poll;
 	}
 
 	@Transactional
 	public void closePoll(Long userId, Long pollId) throws UserWithoutPermisionException, PollAlreadyClosedException {
-		UserProfile user = userRepository.findOne(userId);
-		Poll poll = pollRepository.findOne(pollId);
-		
-		
+		UserProfile user = this.userRepository.findOne(userId);
+		Poll poll = this.pollRepository.findOne(pollId);
+
+
 		if(!user.equals(poll.getAuthor())) {
-			
+
 			throw new UserWithoutPermisionException(user, poll);
 		}
 
@@ -89,42 +91,42 @@ public class PollService {
 			throw new PollAlreadyClosedException(poll);
 		}
 		poll.setEndDate(Instant.now());
-		pollRepository.save(poll);
+		this.pollRepository.save(poll);
 
 	}
 
 	@Transactional
 	public Poll findPollById(Long pollId) throws EntityNotFoundException {
-		Poll poll = pollRepository.findOne(pollId);
-		
+		Poll poll = this.pollRepository.findOne(pollId);
+
 		if(poll==null) {
 			throw new EntityNotFoundException(Poll.class, pollId);
 		}
-		
-		return poll; 
+
+		return poll;
 	}
 
 	@Transactional
 	public void savePoll(Poll poll, String userId) throws EntityNotFoundException, UserIsNotTheAuthorException {
-		Poll returnedPoll = pollRepository.findOne(poll.getId());
-		
+		Poll returnedPoll = this.pollRepository.findOne(poll.getId());
+
 		if (returnedPoll == null) {
 			throw new EntityNotFoundException(Poll.class, poll.getId());
 		}
 
-		UserProfile user = userRepository.findOneByEmail(userId);
+		UserProfile user = this.userRepository.findOneByEmail(userId);
 
-		
+
 		if(user== null) {
 			throw new EntityNotFoundException(UserProfile.class, userId);
 		}
-		
+
 		if (!user.equals(returnedPoll.getAuthor())) {
 			throw new UserIsNotTheAuthorException(user.getId(), returnedPoll.getId());
 		}
 
 
-		pollRepository.save(poll);
+		this.pollRepository.save(poll);
 	}
 
 	@Transactional
@@ -132,7 +134,9 @@ public class PollService {
 		List<String> keywordsList = Arrays.asList(keywords.split(" "));
 
 
-		return pollRepository.findAll(PollFilters.pollKeywordsFilter(keywordsList, findOnDescriptionToo));
+		return this.pollRepository.findAll(PollFilters.pollKeywordsFilter(keywordsList, findOnDescriptionToo));
 	}
+
+
 
 }
