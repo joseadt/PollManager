@@ -109,16 +109,6 @@ public class PollOption implements Serializable {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (optionId == null) {
-			if (other.optionId != null)
-				return false;
-		} else if (!optionId.equals(other.optionId))
-			return false;
-		if (poll == null) {
-			if (other.poll != null)
-				return false;
-		} else if (!poll.getId().equals(other.poll.getId()))
-			return false;
 		return true;
 	}
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}"/>
+</head>
+<body>
+
+<div th:fragment="pollConfig" id="pollConfigGroup">
+
+ 	<div class="form-group">
+		<label for="optionInput" class="col-lg-2 control-label">Options</label>
+     	<input type="text" class="form-control" id="optionInput" placeholder="Poll Description"/>
+		<button type="button" class="btn btn-primary" id="addButton">Add</button>
+ 	</div>
+	<div class="form-group" id="addOption">
+       	<p th:each="option,stat : ${pollForm.options}">
+       		<label th:text="${option}"></label>
+       		<input type="hidden" th:field="*{options[__${stat.index}__].description}"/>
+       		<input type="hidden" th:field="*{options[__${stat.index}__].optionId}"/>
+       		<button type="button" name="${'removebutton'+'__${stat.index}__'}" id="${'removebutton'+'__${stat.index}__'}"
+       		 class="btn btn-danger"></button>
+       	</p>
+	</div>
+  	<script th:inline="javascript" type="text/javascript">
+	    /* Fill in modal with content loaded with Ajax */
+	    $(function () {
+	    	var addOption = $('#addOption');
+	    	var i=$('#addOption p').size();
+	    	
+	        $('#addButton').on('click', function () {
+	        	$('<p><label>'+ $('#optionInput').val()+ '</label><input type="hidden" name="options['+i
+	        			+'].description" id="options['+i+'].description" value="'+$('#optionInput').val()+'"></input>'
+	        			+'<button type="button" name="removeButton" id="removeButton'+i+'" class="btn btn-danger"></button></p>').appendTo(addOption);
+	        	$('#optionInput').val('');
+	        	$('#removeButton'+i).click(function(){
+	        		if( i > 0 ){
+	        			$(this).parents('p').remove();
+	        			i--;
+	        		}
+	        		return false;
+	        	});
+	        	i++;
+	            });
+	        });
+	</script>
+</div>
+
+
+<div th:fragment ="proposalConfig" id="pollConfigGroup">
+</div>
+</body>
+</html>

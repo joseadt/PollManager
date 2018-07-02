@@ -13,8 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import es.udc.jadt.arbitrium.model.entities.participantsgroup.ParticipantsGroup;
+import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
@@ -44,6 +46,9 @@ public class Poll implements Serializable {
 	@OneToMany(mappedBy = "poll", fetch = FetchType.LAZY)
 	private List<ParticipantsGroup> participantsGroups;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	private ConfigurationParameters configuration;
+
 	public Poll() {
 
 	}
@@ -59,7 +64,7 @@ public class Poll implements Serializable {
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -67,7 +72,7 @@ public class Poll implements Serializable {
 	}
 
 	public UserProfile getAuthor() {
-		return author;
+		return this.author;
 	}
 
 	public void setAuthor(UserProfile author) {
@@ -75,7 +80,7 @@ public class Poll implements Serializable {
 	}
 
 	public List<PollOption> getOptions() {
-		return options;
+		return this.options;
 	}
 
 	public void setOptions(List<PollOption> options) {
@@ -83,7 +88,7 @@ public class Poll implements Serializable {
 	}
 
 	public PollType getPollType() {
-		return pollType;
+		return this.pollType;
 	}
 
 	public void setPollType(PollType pollType) {
@@ -91,7 +96,7 @@ public class Poll implements Serializable {
 	}
 
 	public Instant getCreationDate() {
-		return creationDate;
+		return this.creationDate;
 	}
 
 	public void setCreationDate(Instant creationDate) {
@@ -99,7 +104,7 @@ public class Poll implements Serializable {
 	}
 
 	public Instant getEndDate() {
-		return endDate;
+		return this.endDate;
 	}
 
 	public void setEndDate(Instant endDate) {
@@ -107,7 +112,7 @@ public class Poll implements Serializable {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -115,7 +120,7 @@ public class Poll implements Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -123,11 +128,19 @@ public class Poll implements Serializable {
 	}
 
 	public List<ParticipantsGroup> getParticipantsGroups() {
-		return participantsGroups;
+		return this.participantsGroups;
 	}
 
 	public void setParticipantsGroups(List<ParticipantsGroup> participantsGroups) {
 		this.participantsGroups = participantsGroups;
+	}
+
+	public ConfigurationParameters getConfiguration() {
+		return this.configuration;
+	}
+
+	public void setConfiguration(ConfigurationParameters configuration) {
+		this.configuration = configuration;
 	}
 
 
