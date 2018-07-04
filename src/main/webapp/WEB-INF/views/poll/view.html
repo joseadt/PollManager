@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Create Poll</title>
+    <title>View Poll</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}"/>
     <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}" />
@@ -13,19 +13,20 @@
 
 	<div th:fragment="pollFragment" class="container">
 		<div class="jumbotron">
-			<h1 th:text="${poll.name}"></h1>
-			<p th:text="${poll.description}"><p>
-			<div id="options">
-			<!-- <form class="form-narrow form-horizontal" method="post" th:action="@{/vote}" th:object="${voteForm}" th:fragment="pollForm">
-					<p th:each="option,stat : ${poll.options}"> 
-						<label ></label>
-					</p>
-				</form> -->
+			<form class="form-narrow" method="post" th:action="@{/vote}" th:object="${voteForm}" th:fragment="pollForm">
+					<h1 th:text="${poll.name}"></h1>
+					<hr/>
+					<p th:text="${poll.description}"></p>
+					<hr/>
+					<div id="options">
+						<p th:each="option,stat : ${poll.options}">
+								<input th:id="${'chk_box' + option.optionId}" name="radio" th:value="${option.optionId}" th:type="${poll.configuration.isMultiSelection} ? 'checkbox' : 'radio'"></input>
+								<label th:text="${option.description}" th:for="${'chk_box' + option.optionId}"></label>
+						</p>
+						
+					</div>
 				
-				<p th:each="option,stat : ${poll.options}"> 
-						<label th:text="${option.description}"></label>
-				</p>
-			</div>
+			</form>
 		</div>
 	</div>
 
