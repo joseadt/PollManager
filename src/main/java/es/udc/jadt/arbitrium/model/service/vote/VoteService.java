@@ -58,4 +58,18 @@ public class VoteService {
 
 		return this.voteRepository.save(new Vote(selectedOptions, "", user));
 	}
+
+	@Transactional
+	public Vote findByIdAndEmail(Long id, String email) throws EntityNotFoundException {
+
+		Vote vote = this.voteRepository.findOneByIdAndUserEmail(id, email);
+
+		if(vote==null) {
+			ArrayList<Object> findParameters = new ArrayList<Object>();
+			findParameters.add(id);
+			findParameters.add(email);
+			throw new EntityNotFoundException(Vote.class, findParameters);
+		}
+		return vote;
+	}
 }

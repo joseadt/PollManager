@@ -3,7 +3,9 @@ package es.udc.jadt.arbitrium.model.entities.vote;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,8 +22,8 @@ public class Vote implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
-	@ManyToMany
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<PollOption> selectedOptions;
 
 	private String token;
@@ -48,7 +50,7 @@ public class Vote implements Serializable {
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -56,7 +58,7 @@ public class Vote implements Serializable {
 	}
 
 	public List<PollOption> getSelectedOptions() {
-		return selectedOptions;
+		return this.selectedOptions;
 	}
 
 	public void setSelectedOptions(List<PollOption> selectedOptions) {
@@ -64,7 +66,7 @@ public class Vote implements Serializable {
 	}
 
 	public String getComment() {
-		return comment;
+		return this.comment;
 	}
 
 	public void setComment(String comment) {
@@ -72,7 +74,7 @@ public class Vote implements Serializable {
 	}
 
 	public UserProfile getUser() {
-		return user;
+		return this.user;
 	}
 
 	public void setUser(UserProfile user) {
