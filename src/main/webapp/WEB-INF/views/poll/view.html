@@ -25,6 +25,7 @@
 						</p>
 					</div>
 					<div>
+						<input id="pollId" name="pollId" type="hidden" th:value="${poll.id}"></input>
 						<button type="submit" class="btn btn-success" th:text="#{viewpoll.vote.button}"></button>
 					</div>
 				
