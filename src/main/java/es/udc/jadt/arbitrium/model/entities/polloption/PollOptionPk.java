@@ -7,7 +7,7 @@ import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 public class PollOptionPk implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class PollOptionPk implements Serializable {
 	}
 
 	public Long getOptionId() {
-		return optionId;
+		return this.optionId;
 	}
 
 	public void setOptionId(Long optionId) {
@@ -32,11 +32,16 @@ public class PollOptionPk implements Serializable {
 	}
 
 	public Poll getPoll() {
-		return poll;
+		return this.poll;
 	}
 
 	public void setPoll(Poll poll) {
 		this.poll = poll;
+	}
+
+	@Override
+	public String toString() {
+		return "PollOptionPk [optionId=" + this.optionId + ", poll=" + this.poll + "]";
 	}
 
 }

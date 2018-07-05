@@ -32,7 +32,7 @@ public class PollOption implements Serializable {
 	private Poll poll;
 
 	private String description;
-	
+
 	@ManyToMany(mappedBy = "selectedOptions", fetch = FetchType.LAZY)
 	private List<Vote> votes;
 
@@ -55,7 +55,7 @@ public class PollOption implements Serializable {
 	}
 
 	public Long getOptionId() {
-		return optionId;
+		return this.optionId;
 	}
 
 	public void setOptionId(Long optionId) {
@@ -63,7 +63,7 @@ public class PollOption implements Serializable {
 	}
 
 	public Poll getPoll() {
-		return poll;
+		return this.poll;
 	}
 
 	public void setPoll(Poll poll) {
@@ -71,7 +71,7 @@ public class PollOption implements Serializable {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
@@ -79,7 +79,7 @@ public class PollOption implements Serializable {
 	}
 
 	public List<Vote> getVotes() {
-		return votes;
+		return this.votes;
 	}
 
 	public void setVotes(List<Vote> votes) {
@@ -90,34 +90,39 @@ public class PollOption implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((optionId == null) ? 0 : optionId.hashCode());
+		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+		result = prime * result + ((this.optionId == null) ? 0 : this.optionId.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		PollOption other = (PollOption) obj;
-		if (description == null) {
-			if (other.description != null)
+		if (this.description == null) {
+			if (other.description != null) {
 				return false;
-		} else if (!description.equals(other.description))
+			}
+		} else if (!this.description.equals(other.description)) {
 			return false;
+		}
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return description;
+		return this.description;
 	}
-	
-	
-	
+
+
+
 
 }
