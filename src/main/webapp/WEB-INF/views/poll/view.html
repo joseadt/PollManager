@@ -13,17 +13,19 @@
 
 	<div th:fragment="pollFragment" class="container">
 		<div class="jumbotron">
-			<form class="form-narrow" method="post" th:action="@{/vote}" th:object="${voteForm}" th:fragment="pollForm">
+			<form class="form-narrow" method="post" th:action="@{/vote}" th:fragment="voteForm">
 					<h1 th:text="${poll.name}"></h1>
 					<hr/>
 					<p th:text="${poll.description}"></p>
 					<hr/>
-					<div id="options">
+					<div class="checkbox" id="options">
 						<p th:each="option,stat : ${poll.options}">
-								<input th:id="${'chk_box' + option.optionId}" name="radio" th:value="${option.optionId}" th:type="${poll.configuration.isMultiSelection} ? 'checkbox' : 'radio'"></input>
+								<input id="optSelection" name="optSelection" th:value="${option.optionId}" th:type="${poll.configuration.isMultiSelection} ? 'checkbox' : 'radio'"></input>
 								<label th:text="${option.description}" th:for="${'chk_box' + option.optionId}"></label>
 						</p>
-						
+					</div>
+					<div>
+						<button type="submit" class="btn btn-success" th:text="#{viewpoll.vote.button}"></button>
 					</div>
 				
 			</form>
