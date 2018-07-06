@@ -1,14 +1,14 @@
 package es.udc.jadt.arbitrium.util.votecount;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
-import es.udc.jadt.arbitrium.util.pollresult.PollResult;
-import es.udc.jadt.arbitrium.util.pollresult.SimpleResult;
 
 
 
@@ -38,7 +38,7 @@ public class ProposalConfiguration implements PollConfiguration {
 	}
 
 	@Override
-	public PollResult getResult(Poll poll, List<Vote> votes) {
+	public Map<PollOption,Integer> getResult(Poll poll, List<Vote> votes) {
 		if (votes == null) {
 			return null;
 		}
@@ -64,16 +64,8 @@ public class ProposalConfiguration implements PollConfiguration {
 			}
 
 		}
-		String resultMsg;
-		if (yesCounter > noCounter) {
-			resultMsg = "YES";
-		} else if (noCounter > yesCounter) {
-			resultMsg = "NO";
-		} else {
-			resultMsg="TIE";
-		}
-
-		return new SimpleResult(resultMsg);
+		Map<PollOption, Integer> results = new HashMap<PollOption, Integer>();
+		return results;
 	}
 
 	@Override
