@@ -9,8 +9,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
-import es.udc.jadt.arbitrium.model.entities.poll.PollType;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
+import es.udc.jadt.arbitrium.util.polltype.PollType;
 
 public class PollForm {
 
@@ -93,7 +93,7 @@ public class PollForm {
 		poll.setPollType(this.pollType);
 		poll.setEndDate(Instant.ofEpochMilli(this.endDate.getTime()));
 		poll.setName(this.title);
-		poll.setConfiguration(this.pollType.getConfiguration().fullConfiguration());
+		poll.setConfiguration(this.pollType.getConfiguration().getConfigurationParameters());
 
 		if (!Boolean.TRUE.equals(poll.getConfiguration().getIsUserDefinedOptions())) {
 			this.options = poll.getConfiguration().getDefaultOptions();

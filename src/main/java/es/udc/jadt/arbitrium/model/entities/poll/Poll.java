@@ -19,6 +19,7 @@ import es.udc.jadt.arbitrium.model.entities.participantsgroup.ParticipantsGroup;
 import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
+import es.udc.jadt.arbitrium.util.polltype.PollType;
 
 @Entity
 public class Poll implements Serializable {
@@ -57,6 +58,9 @@ public class Poll implements Serializable {
 			Instant endDate) {
 
 		this.author = author;
+		for (PollOption option : options) {
+			option.setPoll(this);
+		}
 		this.options = options;
 		this.pollType = pollType;
 		this.creationDate = Instant.now();
@@ -84,6 +88,9 @@ public class Poll implements Serializable {
 	}
 
 	public void setOptions(List<PollOption> options) {
+		for (PollOption option : options) {
+			option.setPoll(this);
+		}
 		this.options = options;
 	}
 
@@ -143,5 +150,8 @@ public class Poll implements Serializable {
 		this.configuration = configuration;
 	}
 
-
+	public void addOption(PollOption option) {
+		option.setPoll(this);
+		this.options.add(option);
+	}
 }

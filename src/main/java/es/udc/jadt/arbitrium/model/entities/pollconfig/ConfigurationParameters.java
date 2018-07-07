@@ -14,7 +14,7 @@ public class ConfigurationParameters {
 
 	@Id
 	@GeneratedValue
-	private Long Id;
+	private Long id;
 
 	private Integer maxOptions;
 
@@ -25,11 +25,11 @@ public class ConfigurationParameters {
 	private List<PollOption> defaultOptions;
 
 	public Long getId() {
-		return this.Id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
-		this.Id = id;
+		this.id = id;
 	}
 
 	public Integer getMaxOptions() {

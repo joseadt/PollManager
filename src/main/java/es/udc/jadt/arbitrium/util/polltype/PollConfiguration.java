@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.util.votecount;
+package es.udc.jadt.arbitrium.util.polltype;
 
 import java.util.List;
 
@@ -12,6 +12,6 @@ public interface PollConfiguration {
 
 	public PollResult getResult(Poll poll, List<Vote> votes);
 
-	public ConfigurationParameters fullConfiguration();
+	public ConfigurationParameters getConfigurationParameters();
 
 }

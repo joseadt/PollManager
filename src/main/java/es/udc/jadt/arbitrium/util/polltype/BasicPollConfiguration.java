@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.util.votecount;
+package es.udc.jadt.arbitrium.util.polltype;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,16 +59,17 @@ public class BasicPollConfiguration implements PollConfiguration {
 
 
 		return new SimpleResult(voteCounter);
-
 	}
 
+
 	@Override
-	public ConfigurationParameters fullConfiguration() {
+	public ConfigurationParameters getConfigurationParameters() {
 		ConfigurationParameters cp = new ConfigurationParameters();
 
 		cp.setIsUserDefinedOptions(Boolean.TRUE);
 
 		return cp;
 	}
+
 
 }

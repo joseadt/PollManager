@@ -1,9 +1,11 @@
 package es.udc.jadt.arbitrium.model.service.poll;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,15 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
 import es.udc.jadt.arbitrium.model.entities.poll.specification.PollFilters;
+import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOptionRepository;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
+import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateTooCloseException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
 import es.udc.jadt.arbitrium.util.exceptions.PollAlreadyClosedException;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
+import es.udc.jadt.arbitrium.util.generics.Pair;
 
 @Service
 public class PollService {
@@ -137,6 +142,19 @@ public class PollService {
 		return this.pollRepository.findAll(PollFilters.pollKeywordsFilter(keywordsList, findOnDescriptionToo));
 	}
 
+	@Transactional
+	public Pair<Poll, List<Vote>> getPollVotes(Long id) throws EntityNotFoundException {
+		Poll poll = findPollById(id);
+		List<Vote> votes = new ArrayList<Vote>();
+		Pair<Poll, List<Vote>> pair = new Pair<Poll, List<Vote>>(poll, votes);
+		for (PollOption option : poll.getOptions()) {
+			Hibernate.initialize(option.getVotes());
+			votes.addAll(option.getVotes());
+		}
+
+		return pair;
+
+	}
 
 
 }

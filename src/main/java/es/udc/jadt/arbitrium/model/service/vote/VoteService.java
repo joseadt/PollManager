@@ -72,4 +72,6 @@ public class VoteService {
 		}
 		return vote;
 	}
+
+
 }
