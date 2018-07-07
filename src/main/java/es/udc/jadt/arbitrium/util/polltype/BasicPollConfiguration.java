@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.util.votecount;
+package es.udc.jadt.arbitrium.util.polltype;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +8,8 @@ import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
+import es.udc.jadt.arbitrium.util.pollresult.PollResult;
+import es.udc.jadt.arbitrium.util.pollresult.SimpleResult;
 
 public class BasicPollConfiguration implements PollConfiguration {
 
@@ -26,7 +28,7 @@ public class BasicPollConfiguration implements PollConfiguration {
 	}
 
 	@Override
-	public Map<PollOption,Integer> getResult(Poll poll, List<Vote> votes) {
+	public PollResult getResult(Poll poll, List<Vote> votes) {
 		if (poll == null) {
 			return null;
 		}
@@ -56,16 +58,18 @@ public class BasicPollConfiguration implements PollConfiguration {
 		}
 
 
-		return voteCounter;
+		return new SimpleResult(voteCounter);
 	}
 
+
 	@Override
-	public ConfigurationParameters fullConfiguration() {
+	public ConfigurationParameters getConfigurationParameters() {
 		ConfigurationParameters cp = new ConfigurationParameters();
 
 		cp.setIsUserDefinedOptions(Boolean.TRUE);
 
 		return cp;
 	}
+
 
 }

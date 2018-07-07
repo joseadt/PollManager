@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
-import es.udc.jadt.arbitrium.model.entities.poll.PollType;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.service.poll.PollService;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
@@ -29,6 +28,7 @@ import es.udc.jadt.arbitrium.model.service.user.UserService;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
 import es.udc.jadt.arbitrium.support.web.Ajax;
 import es.udc.jadt.arbitrium.support.web.MessageHelper;
+import es.udc.jadt.arbitrium.util.polltype.PollType;
 
 @Controller
 public class PollController {

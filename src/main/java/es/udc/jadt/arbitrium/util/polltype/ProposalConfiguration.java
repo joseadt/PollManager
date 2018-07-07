@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.util.votecount;
+package es.udc.jadt.arbitrium.util.polltype;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +9,8 @@ import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
+import es.udc.jadt.arbitrium.util.pollresult.PollResult;
+import es.udc.jadt.arbitrium.util.pollresult.SimpleResult;
 
 
 
@@ -38,7 +40,8 @@ public class ProposalConfiguration implements PollConfiguration {
 	}
 
 	@Override
-	public Map<PollOption,Integer> getResult(Poll poll, List<Vote> votes) {
+	public PollResult getResult(Poll poll, List<Vote> votes) {
+
 		if (votes == null) {
 			return null;
 		}
@@ -46,6 +49,8 @@ public class ProposalConfiguration implements PollConfiguration {
 		int yesCounter = 0;
 		int noCounter = 0;
 		List<Vote> nullVotes = new ArrayList<Vote>();
+
+		Map<PollOption, Integer> results = new HashMap<PollOption, Integer>();
 
 		for (Vote vote : votes) {
 			PollOption votedOption = (vote.getSelectedOptions() != null && vote.getSelectedOptions().size() == 1)
@@ -59,17 +64,24 @@ public class ProposalConfiguration implements PollConfiguration {
 
 			if (votedOption.getDescription().equals(YES_OPTION_STRING)) {
 				yesCounter++;
+
 			} else {
 				noCounter++;
 			}
 
 		}
-		Map<PollOption, Integer> results = new HashMap<PollOption, Integer>();
-		return results;
+		if (poll.getOptions().get(0).getDescription().equals(YES_OPTION_STRING)) {
+			results.put(poll.getOptions().get(0), yesCounter);
+			results.put(poll.getOptions().get(1), noCounter);
+		} else {
+			results.put(poll.getOptions().get(1), yesCounter);
+			results.put(poll.getOptions().get(0), noCounter);
+		}
+		return new SimpleResult(results);
 	}
 
 	@Override
-	public ConfigurationParameters fullConfiguration() {
+	public ConfigurationParameters getConfigurationParameters() {
 		ConfigurationParameters cp = new ConfigurationParameters();
 
 		cp.setDefaultOptions(this.defaultOptions);
