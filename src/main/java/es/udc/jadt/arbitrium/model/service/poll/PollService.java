@@ -44,7 +44,7 @@ public class PollService {
 	public Poll createPoll(Long userId, Poll poll)
 			throws EndDateInThePastException, EndDateTooCloseException {
 
-		UserProfile user = this.userRepository.findOne(userId);
+		UserProfile user = this.userRepository.getOne(userId);
 
 		poll.setAuthor(user);
 
@@ -83,8 +83,8 @@ public class PollService {
 
 	@Transactional
 	public void closePoll(Long userId, Long pollId) throws UserWithoutPermisionException, PollAlreadyClosedException {
-		UserProfile user = this.userRepository.findOne(userId);
-		Poll poll = this.pollRepository.findOne(pollId);
+		UserProfile user = this.userRepository.getOne(userId);
+		Poll poll = this.pollRepository.getOne(pollId);
 
 
 		if(!user.equals(poll.getAuthor())) {
@@ -102,7 +102,7 @@ public class PollService {
 
 	@Transactional
 	public Poll findPollById(Long pollId) throws EntityNotFoundException {
-		Poll poll = this.pollRepository.findOne(pollId);
+		Poll poll = this.pollRepository.getOne(pollId);
 
 		if(poll==null) {
 			throw new EntityNotFoundException(Poll.class, pollId);
@@ -113,7 +113,7 @@ public class PollService {
 
 	@Transactional
 	public void savePoll(Poll poll, String userId) throws EntityNotFoundException, UserIsNotTheAuthorException {
-		Poll returnedPoll = this.pollRepository.findOne(poll.getId());
+		Poll returnedPoll = this.pollRepository.getOne(poll.getId());
 
 		if (returnedPoll == null) {
 			throw new EntityNotFoundException(Poll.class, poll.getId());

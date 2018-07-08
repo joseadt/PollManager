@@ -78,8 +78,8 @@ public class VoteServiceTest {
 		List<PollOption> optionsList = Arrays.asList(option1, option2);
 
 		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
-		when(this.pollRepository.findOne(DEFAULT_ID)).thenReturn(poll);
-		when(this.pollOptionRepository.findOne(any(PollOptionPk.class))).thenAnswer(new Answer<PollOption>() {
+		when(this.pollRepository.getOne(DEFAULT_ID)).thenReturn(poll);
+		when(this.pollOptionRepository.getOne(any(PollOptionPk.class))).thenAnswer(new Answer<PollOption>() {
 
 			@Override
 			public PollOption answer(InvocationOnMock invocation) throws Throwable {
@@ -147,7 +147,7 @@ public class VoteServiceTest {
 
 
 		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
-		when(this.pollRepository.findOne(DEFAULT_ID)).thenReturn(null);
+		when(this.pollRepository.getOne(DEFAULT_ID)).thenReturn(null);
 
 		this.exception.expect(EntityNotFoundException.class);
 		this.exception.expectMessage(
@@ -170,8 +170,8 @@ public class VoteServiceTest {
 
 
 		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
-		when(this.pollRepository.findOne(DEFAULT_ID)).thenReturn(poll);
-		when(this.pollOptionRepository.findOne(any(PollOptionPk.class))).thenAnswer(new Answer<PollOption>() {
+		when(this.pollRepository.getOne(DEFAULT_ID)).thenReturn(poll);
+		when(this.pollOptionRepository.getOne(any(PollOptionPk.class))).thenAnswer(new Answer<PollOption>() {
 
 			@Override
 			public PollOption answer(InvocationOnMock invocation) throws Throwable {
