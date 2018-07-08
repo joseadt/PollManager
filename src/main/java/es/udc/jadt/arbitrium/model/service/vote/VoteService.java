@@ -40,7 +40,7 @@ public class VoteService {
 		if(user==null) {
 			throw new EntityNotFoundException(UserProfile.class, email);
 		}
-		Poll poll = this.pollRepository.findOne(pollId);
+		Poll poll = this.pollRepository.getOne(pollId);
 
 		if (poll == null) {
 			throw new EntityNotFoundException(Poll.class, pollId);
@@ -48,7 +48,7 @@ public class VoteService {
 
 		List<PollOption> selectedOptions = new ArrayList<PollOption>();
 		for (Long id : optionsIds) {
-			PollOption option = this.pollOptionRepository.findOne(new PollOptionPk(id, poll));
+			PollOption option = this.pollOptionRepository.getOne(new PollOptionPk(id, poll));
 			if (option == null) {
 				throw new EntityNotFoundException(PollOption.class, new PollOptionPk(id, poll));
 			}

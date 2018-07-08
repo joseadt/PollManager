@@ -27,7 +27,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public TokenBasedRememberMeServices rememberMeServices() {
-		return new TokenBasedRememberMeServices(REMEMBER_ME_KEY, userService);
+		return new TokenBasedRememberMeServices(REMEMBER_ME_KEY, this.userService);
 	}
 
 	@Bean
@@ -37,7 +37,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.eraseCredentials(true).userDetailsService(userService).passwordEncoder(passwordEncoder());
+		auth.eraseCredentials(true).userDetailsService(this.userService).passwordEncoder(passwordEncoder());
 	}
 
 	@Override
@@ -54,4 +54,5 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+
 }

@@ -74,7 +74,7 @@ public class PollServiceTest {
 		poll.setEndDate(Instant.now().plus(Duration.ofDays(2)));
 
 
-		when(this.userRepo.findOne(userProfile.getId())).thenReturn(userProfile);
+		when(this.userRepo.getOne(userProfile.getId())).thenReturn(userProfile);
 		when(this.pollRepo.save(any(Poll.class))).thenAnswer(new Answer<Poll>() {
 			@Override
 			public Poll answer(InvocationOnMock invocation) {
@@ -101,7 +101,7 @@ public class PollServiceTest {
 
 		poll.setEndDate(Instant.now().minus(Duration.ofDays(2)));
 
-		when(this.userRepo.findOne(userProfile.getId())).thenReturn(userProfile);
+		when(this.userRepo.getOne(userProfile.getId())).thenReturn(userProfile);
 
 		this.service.createPoll(userProfile.getId(), poll);
 	}
@@ -126,8 +126,8 @@ public class PollServiceTest {
 
 		poll.setAuthor(userProfile);
 
-		when(this.userRepo.findOne(defaultId)).thenReturn(userProfile);
-		when(this.pollRepo.findOne(defaultId)).thenReturn(poll);
+		when(this.userRepo.getOne(defaultId)).thenReturn(userProfile);
+		when(this.pollRepo.getOne(defaultId)).thenReturn(poll);
 
 		when(this.pollRepo.save(poll)).thenAnswer(new Answer<Poll>() {
 
@@ -171,8 +171,8 @@ public class PollServiceTest {
 		poll.setId(defaultId);
 		poll.setAuthor(userProfile2);
 
-		when(this.userRepo.findOne(defaultId)).thenReturn(userProfile);
-		when(this.pollRepo.findOne(defaultId)).thenReturn(poll);
+		when(this.userRepo.getOne(defaultId)).thenReturn(userProfile);
+		when(this.pollRepo.getOne(defaultId)).thenReturn(poll);
 
 		this.service.closePoll(defaultId, defaultId);
 	}
@@ -184,7 +184,7 @@ public class PollServiceTest {
 
 		poll.setId(POLL_ID);
 
-		Mockito.when(this.pollRepo.findOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(poll);
 
 		Poll returnedPoll = this.service.findPollById(POLL_ID);
 
@@ -202,7 +202,7 @@ public class PollServiceTest {
 
 		user.setId(userId);
 
-		Mockito.when(this.pollRepo.findOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(poll);
 		Mockito.when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
 		this.service.savePoll(poll, user.getEmail());
 
@@ -216,7 +216,7 @@ public class PollServiceTest {
 
 		Long userId = Long.valueOf(1);
 
-		Mockito.when(this.pollRepo.findOne(POLL_ID)).thenReturn(null);
+		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(null);
 
 		this.exception.expect(EntityNotFoundException.class);
 		this.exception.expectMessage(
@@ -234,7 +234,7 @@ public class PollServiceTest {
 
 		Long userId = Long.valueOf(1);
 
-		Mockito.when(this.pollRepo.findOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(poll);
 		Mockito.when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(null);
 
 		this.exception.expect(EntityNotFoundException.class);
@@ -256,7 +256,7 @@ public class PollServiceTest {
 
 		user.setId(userId);
 
-		Mockito.when(this.pollRepo.findOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(poll);
 		Mockito.when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
 
 		this.exception.expect(UserIsNotTheAuthorException.class);
