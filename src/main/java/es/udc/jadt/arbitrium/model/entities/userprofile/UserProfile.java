@@ -2,6 +2,7 @@ package es.udc.jadt.arbitrium.model.entities.userprofile;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -48,7 +49,7 @@ public class UserProfile implements Serializable {
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -56,7 +57,7 @@ public class UserProfile implements Serializable {
 	}
 
 	public List<UserGroup> getUserGroups() {
-		return userGroups;
+		return this.userGroups;
 	}
 
 	public void setUserGroups(List<UserGroup> userGroups) {
@@ -64,7 +65,7 @@ public class UserProfile implements Serializable {
 	}
 
 	public String getEmail() {
-		return email;
+		return this.email;
 	}
 
 	public void setEmail(String email) {
@@ -72,7 +73,7 @@ public class UserProfile implements Serializable {
 	}
 
 	public String getUserName() {
-		return userName;
+		return this.userName;
 	}
 
 	public void setUserName(String userName) {
@@ -80,7 +81,7 @@ public class UserProfile implements Serializable {
 	}
 
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	public void setPassword(String password) {
@@ -88,7 +89,7 @@ public class UserProfile implements Serializable {
 	}
 
 	public String getRole() {
-		return role;
+		return this.role;
 	}
 
 	public void setRole(String role) {
@@ -96,47 +97,64 @@ public class UserProfile implements Serializable {
 	}
 
 	public Instant getCreated() {
-		return created;
+		return this.created;
 	}
 
 	public void setCreated(Instant created) {
 		this.created = created;
 	}
 
+	public boolean addGroup(UserGroup group) {
+		if (this.userGroups == null) {
+			this.userGroups = new ArrayList<>();
+		}
+
+		return this.userGroups.add(group);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		result = prime * result + ((this.email == null) ? 0 : this.email.hashCode());
+		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+		result = prime * result + ((this.userName == null) ? 0 : this.userName.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		UserProfile other = (UserProfile) obj;
-		if (email == null) {
-			if (other.email != null)
+		if (this.email == null) {
+			if (other.email != null) {
 				return false;
-		} else if (!email.equals(other.email))
+			}
+		} else if (!this.email.equals(other.email)) {
 			return false;
-		if (id == null) {
-			if (other.id != null)
+		}
+		if (this.id == null) {
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!this.id.equals(other.id)) {
 			return false;
-		if (userName == null) {
-			if (other.userName != null)
+		}
+		if (this.userName == null) {
+			if (other.userName != null) {
 				return false;
-		} else if (!userName.equals(other.userName))
+			}
+		} else if (!this.userName.equals(other.userName)) {
 			return false;
+		}
 		return true;
 	}
 

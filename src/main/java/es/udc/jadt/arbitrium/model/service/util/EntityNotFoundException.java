@@ -15,12 +15,24 @@ public class EntityNotFoundException extends Exception {
 	}
 
 	public Class<?> getEntityClass() {
-		return entityClass;
+		return this.entityClass;
 	}
 
 	public Object getEntityId() {
-		return entityId;
+		return this.entityId;
 	}
-	
+
+	/**
+	 * Gets the message that you should expect with two given arguments
+	 *
+	 * @param entityClass
+	 *            the entity class
+	 * @param entityId
+	 *            the entity id
+	 * @return the string
+	 */
+	public static String messageExample(Class<?> entityClass, Object entityId) {
+		return String.format(DEFAULT_MESSAGE_FORMAT, entityId.toString(), entityClass.getName());
+	}
 
 }
