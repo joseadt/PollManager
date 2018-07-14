@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.service.vote;
+package es.udc.jadt.arbitrium.model.service.vote;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

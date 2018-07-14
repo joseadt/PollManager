@@ -1,6 +1,7 @@
 package es.udc.jadt.arbitrium.model.entities.group;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -30,9 +31,11 @@ public class UserGroup implements Serializable {
 
 	@ManyToMany
 	private List<UserProfile> members;
-	
+
 	@ManyToMany
 	private List<Poll> polls;
+
+	private Boolean isPrivate;
 
 	public UserGroup() {
 	}
@@ -44,7 +47,7 @@ public class UserGroup implements Serializable {
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -52,7 +55,7 @@ public class UserGroup implements Serializable {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -60,7 +63,7 @@ public class UserGroup implements Serializable {
 	}
 
 	public List<UserProfile> getMembers() {
-		return members;
+		return this.members;
 	}
 
 	public void setMembers(List<UserProfile> members) {
@@ -68,11 +71,49 @@ public class UserGroup implements Serializable {
 	}
 
 	public List<Poll> getPolls() {
-		return polls;
+		return this.polls;
 	}
 
 	public void setPolls(List<Poll> polls) {
 		this.polls = polls;
+	}
+
+	public boolean addMember(UserProfile user) {
+		if (this.members == null) {
+			this.members = new ArrayList<>();
+		}
+
+		return this.members.add(user);
+	}
+
+	/**
+	 * @return the creator
+	 */
+	public UserProfile getCreator() {
+		return this.creator;
+	}
+
+	/**
+	 * @param creator
+	 *            the creator to set
+	 */
+	public void setCreator(UserProfile creator) {
+		this.creator = creator;
+	}
+
+	/**
+	 * @return the isPrivate
+	 */
+	public Boolean getIsPrivate() {
+		return this.isPrivate;
+	}
+
+	/**
+	 * @param isPrivate
+	 *            the isPrivate to set
+	 */
+	public void setIsPrivate(Boolean isPrivate) {
+		this.isPrivate = isPrivate;
 	}
 
 }

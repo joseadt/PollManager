@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    
+    <title>Create Group</title>
+    
+    <th:block th:replace="fragments/layout :: resusableStyles"/>
+  </head>
+  <body>
+    <div th:replace="fragments/layout :: header"></div>
+	
+	<div class="container" th:fragment="showGroupFragment">
+    	<div class="jumbotrom">
+    		<div class="row">
+    			<h2 th:text="${groupName}"></h2>
+    		</div>
+    		<hr></hr>
+    		<div class="row">
+    			<h3 th:text="#{group.show.polls.header}"></h3>
+    		</div>
+    		<hr></hr>
+    		<div class="row">
+    			<label th:if="${polls.empty}" th:text="#{group.show.polls.noPolls}" class="text-danger"></label>
+    			<th:block th:each="poll : ${polls}">
+   					<p th:text="${poll.name}"></p>
+   				</th:block>	
+    		</div>
+    		<div class="row">
+    			<h3 th:text="#{group.show.members.header}"></h3>
+    		</div>
+    		<hr></hr>
+    		<div class="row">
+    			<th:block th:each="member : ${members}">
+   					<p th:text="${member.email}"></p>
+   				</th:block>	
+    		</div>
+    	</div>
+	</div>
+	
+    <div th:replace="fragments/layout :: footer">&copy; 2016 The Static Templates</div>
+<!-- Signup modal -->
+<div th:replace="fragments/components :: modal(id='signup-modal', title='Signup')"></div>
+<div th:if="${#authorization.expression('isAuthenticated()')}" th:replace="fragments/components :: modal(id='poll-modal', title='Create Poll')"></div>
+  </body>
+</html>
