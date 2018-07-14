@@ -90,4 +90,16 @@ public class GroupService {
 		this.groupRepository.save(group);
 	}
 
+	@Transactional
+	public UserGroup findGroupById(Long id) throws EntityNotFoundException {
+		UserGroup group = null;
+		try {
+			group = this.groupRepository.getOne(id);
+		} catch (javax.persistence.EntityNotFoundException e) {
+			throw new EntityNotFoundException(UserGroup.class, id);
+		}
+
+		return group;
+	}
+
 }
