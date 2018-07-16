@@ -30,7 +30,7 @@ public class GroupController {
 			@RequestHeader(value = "X-Requested-With", required = false) String requestedWith, @PathVariable Long id) {
 		try {
 			UserGroup group = this.groupService.findGroupById(id);
-			model.addAttribute(group);
+			model.addAttribute("userGroup", group);
 			model.addAttribute("groupName", group.getName());
 			model.addAttribute("polls", group.getPolls());
 			model.addAttribute("members", group.getMembers());
@@ -41,7 +41,7 @@ public class GroupController {
 		return GROUP_VIEW;
 	}
 
-	@PostMapping("group/{id}")
+	@PostMapping("joingroup/{id}")
 	public String joinGroup(HttpServletRequest request, @PathVariable Long id) {
 		Principal principal = request.getUserPrincipal();
 
