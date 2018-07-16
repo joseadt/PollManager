@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     
-    <title>Create Group</title>
+    <title>[[${groupName}]]</title>
     
     <th:block th:replace="fragments/layout :: resusableStyles"/>
   </head>
@@ -10,30 +10,33 @@
     <div th:replace="fragments/layout :: header"></div>
 	
 	<div class="container" th:fragment="showGroupFragment">
-    	<div class="jumbotrom">
-    		<div class="row">
-    			<h2 th:text="${groupName}"></h2>
+    	<div class="jumbotron">
+    		<div class="d-flex flex-row justify-content-between">
+    			<h2 class="flex-column" th:text="${groupName}"></h2>
+    			<form  method="post" th:action="@{'/joingroup/' + ${userGroup.id}}">
+    				<button class="btn btn-success" th:text="#{group.show.button.join}"></button>
+    			</form>
     		</div>
     		<hr></hr>
-    		<div class="row">
-    			<h3 th:text="#{group.show.polls.header}"></h3>
+    		<div class="d-flex flex-row">
+    			<h3 th:text="#{group.show.header.polls}"></h3>
     		</div>
-    		<hr></hr>
-    		<div class="row">
-    			<label th:if="${polls.empty}" th:text="#{group.show.polls.noPolls}" class="text-danger"></label>
+    		<div class="d-flex flex-row">
+    			<label th:if="${polls.empty}" th:text="#{group.show.label.noPolls}" class="text-danger"></label>
     			<th:block th:each="poll : ${polls}">
    					<p th:text="${poll.name}"></p>
    				</th:block>	
     		</div>
-    		<div class="row">
-    			<h3 th:text="#{group.show.members.header}"></h3>
-    		</div>
     		<hr></hr>
-    		<div class="row">
+    		<div class="d-flex flex-row">
+    			<h3 th:text="#{group.show.header.members}"></h3>
+    		</div>
+    		<div>
     			<th:block th:each="member : ${members}">
    					<p th:text="${member.email}"></p>
    				</th:block>	
     		</div>
+    		<hr></hr>
     	</div>
 	</div>
 	
