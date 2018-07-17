@@ -44,6 +44,7 @@ public class UserGroup implements Serializable {
 		this.name = name;
 		this.members = members;
 		this.polls = polls;
+		this.isPrivate = false;
 	}
 
 	public Long getId() {
