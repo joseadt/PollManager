@@ -4,12 +4,19 @@
 package es.udc.jadt.arbitrium.model.service.group;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.udc.jadt.arbitrium.model.entities.group.GroupRepository;
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
+import es.udc.jadt.arbitrium.model.entities.group.specifications.GroupFilters;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
@@ -100,6 +107,13 @@ public class GroupService {
 		}
 
 		return group;
+	}
+
+	@Transactional
+	public Page<UserGroup> searchGroups(int index, String keywords) {
+		List<String> keywordsList = (keywords != null) ? Arrays.asList(keywords.split(" ")) : new ArrayList<>();
+
+		return this.groupRepository.findAll(GroupFilters.groupKeywordsFilter(keywordsList), PageRequest.of(index, 10));
 	}
 
 }

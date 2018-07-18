@@ -9,6 +9,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,6 +23,8 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import es.udc.jadt.arbitrium.model.entities.group.GroupRepository;
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
@@ -27,6 +32,7 @@ import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.service.util.exceptions.UserAlreadyInGroupException;
+import es.udc.jadt.arbitrium.model.util.SpecificationFilter;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GroupServiceTest {
@@ -59,6 +65,10 @@ public class GroupServiceTest {
 
 	private UserGroup defaultGroup;
 
+	private static Specification<UserGroup> specification;
+
+	private static Pageable pageRequest;
+
 	@Before
 	public void initializeTest() {
 		this.defaultGroup = new UserGroup();
@@ -85,6 +95,9 @@ public class GroupServiceTest {
 				return group;
 			}
 		});
+
+		specification = null;
+		pageRequest = null;
 	}
 
 	@Test
@@ -146,5 +159,36 @@ public class GroupServiceTest {
 		this.exception
 				.expectMessage(UserAlreadyInGroupException.messageFormatExample(DEFAULT_USER_EMAIL, DEFAULT_GROUP_ID));
 		this.groupService.joinGroup(DEFAULT_GROUP_ID, DEFAULT_USER_EMAIL);
+	}
+
+	@Test
+	public void searchGroups() throws Exception {
+		final String keywords = "key words to search";
+
+		when(this.groupRepository.findAll(any(Specification.class), any(Pageable.class)))
+				.thenAnswer(new Answer<UserGroup>() {
+
+					@Override
+					public UserGroup answer(InvocationOnMock invocation) throws Throwable {
+						SpecificationFilter<UserGroup> specification = invocation.getArgument(0);
+						Pageable pageRequest = invocation.getArgument(1);
+						GroupServiceTest.specification = specification;
+						GroupServiceTest.pageRequest = pageRequest;
+						List<String> keywordsList = Arrays.asList(keywords.split(" "));
+						assertEquals(keywordsList.size(),
+								((List<String>) specification.getArgs()[0]).size());
+						assertTrue(keywordsList.containsAll(((List<String>) specification.getArgs()[0])));
+
+						assertEquals(10, pageRequest.getPageSize());
+						assertEquals(0, pageRequest.getPageNumber());
+						return null;
+					}
+				});
+		this.groupService.searchGroups(0, keywords);
+
+		assertNotNull(GroupServiceTest.specification);
+		assertNotNull(GroupServiceTest.pageRequest);
+
+
 	}
 }
