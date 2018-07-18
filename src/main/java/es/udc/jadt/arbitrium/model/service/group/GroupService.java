@@ -4,6 +4,7 @@
 package es.udc.jadt.arbitrium.model.service.group;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -110,7 +111,7 @@ public class GroupService {
 
 	@Transactional
 	public Page<UserGroup> searchGroups(int index, String keywords) {
-		List<String> keywordsList = Arrays.asList(keywords.split(" "));
+		List<String> keywordsList = (keywords != null) ? Arrays.asList(keywords.split(" ")) : new ArrayList<>();
 
 		return this.groupRepository.findAll(GroupFilters.groupKeywordsFilter(keywordsList), PageRequest.of(index, 10));
 	}

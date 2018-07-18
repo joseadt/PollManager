@@ -74,7 +74,8 @@ public class GroupController {
 		model.addAttribute("groupList", groups.getContent());
 		model.addAttribute("hasNext", groups.hasNext());
 		model.addAttribute("hasPrevious", groups.hasPrevious());
-
+		model.addAttribute("currentPage", (page != null && page > 0) ? page : 0);
+		model.addAttribute("keywords", (keywords != null) ? keywords : "");
 		return returned;
 	}
 }
