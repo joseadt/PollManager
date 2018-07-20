@@ -1,9 +1,0 @@
-spring:
-  thymeleaf:
-    cache: false
-  messages:
-    basename: i18n/messages
-    cache-duration: 
-      seconds: 2
-         
-      
