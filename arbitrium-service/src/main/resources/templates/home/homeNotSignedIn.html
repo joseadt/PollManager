@@ -2,7 +2,7 @@
 <html>
   <head>
     
-    <title>Welcome to the Spring MVC Quickstart application! Get started quickly by signing up!</title>
+    <title th:text="#{home.title}"></title>
     <th:block th:replace="fragments/layout :: resusableStyles"/>
   </head>
   <body>
@@ -14,7 +14,7 @@
             Arbitrium
         </p>
         <p>
-            <a class="btn btn-success btn-lg" href="#" id="signup" role="button">Sign up</a>
+            <a class="btn btn-success btn-lg" href="#" id="signup" role="button" th:text="#{default.button.signup}">Sign up</a>
         </p>
     </div>
     <div th:replace="fragments/layout :: footer">&copy; 2016 The Static Templates</div>
@@ -36,7 +36,7 @@
     
 </script>
 <!-- Signup modal -->
-<div th:replace="fragments/components :: modal(id='signup-modal', title='Signup')"></div>
-<div th:if="${#authorization.expression('isAuthenticated()')}" th:replace="fragments/components :: modal(id='poll-modal', title='Create Poll')"></div>
+<div th:replace="fragments/components :: modal(id='signup-modal', title='#{signup.title}')"></div>
+<div th:if="${#authorization.expression('isAuthenticated()')}" th:replace="fragments/components :: modal(id='poll-modal', title='#{poll.create.title}')"></div>
   </body>
 </html>
