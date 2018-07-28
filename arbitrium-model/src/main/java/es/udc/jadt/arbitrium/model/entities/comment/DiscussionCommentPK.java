@@ -5,16 +5,16 @@ import java.io.Serializable;
 import es.udc.jadt.arbitrium.model.entities.discussion.Discussion;
 
 @SuppressWarnings("serial")
-public class CommentPK implements Serializable {
+public class DiscussionCommentPK implements Serializable {
 
 	private Long id;
 	
 	private Discussion discussion;
 
-	public CommentPK() {
+	public DiscussionCommentPK() {
 	}
 
-	public CommentPK(Long id, Discussion discussion) {
+	public DiscussionCommentPK(Long id, Discussion discussion) {
 		this.id = id;
 		this.discussion = discussion;
 	}
