@@ -5,15 +5,20 @@ import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 public class UserWithoutPermisionException extends Exception {
 
 	private static final String DEFAULT_MESSAGE = "User %s doesn't have permmisions to edit this entity : %s";
-	
+
 	private Object entity;
-	
+
 	public UserWithoutPermisionException(UserProfile user, Object object) {
 		super(String.format(DEFAULT_MESSAGE, user.getEmail(), object.toString()));
 		this.entity = object;
 	}
 
+	public UserWithoutPermisionException(String message, Object object) {
+		super(message);
+		this.entity = object;
+	}
+
 	public Object entity() {
-		return entity;
+		return this.entity;
 	}
 }
