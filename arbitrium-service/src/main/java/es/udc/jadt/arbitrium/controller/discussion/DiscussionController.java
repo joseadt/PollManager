@@ -11,10 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import es.udc.jadt.arbitrium.model.entities.discussion.Discussion;
 import es.udc.jadt.arbitrium.model.service.discussion.DiscussionService;
 import es.udc.jadt.arbitrium.model.service.group.GroupService;
 import es.udc.jadt.arbitrium.model.service.user.UserService;
@@ -36,6 +38,8 @@ public class DiscussionController {
 
 	private static final String CREATE_VIEW = "discussion/create";
 
+	private static final String SHOW_VIEW = "discussion/show";
+
 	@GetMapping("discussion/create")
 	String getCreateView(HttpServletRequest request, Model model,
 			@RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
@@ -56,14 +60,37 @@ public class DiscussionController {
 			RedirectAttributes ra) {
 
 		Principal principal = request.getUserPrincipal();
-
+		Discussion discussion = null;
 		try {
-			this.discussionService.createDiscussion(form.getTitle(), form.getDescription(), principal.getName(),
+			discussion = this.discussionService.createDiscussion(form.getTitle(), form.getDescription(),
+					principal.getName(),
 					form.getGroupId());
 		} catch (EntityNotFoundException | UserWithoutPermisionException e) {
 			return "redirect:/error";
 		}
 
-		return "redirect:/";
+		return "redirect:/discussion/show/" + discussion.getId();
+	}
+
+	@GetMapping("discussion/show/{id}")
+	String showDiscussion(HttpServletRequest request, Model model,
+			@RequestHeader(value = "X-Requested-With", required = false) String requestedWith, @PathVariable Long id) {
+
+		Discussion discussion = null;
+
+		try {
+			discussion = this.discussionService.findDiscussion(id);
+		} catch (EntityNotFoundException e) {
+			return "redirect:/error";
+		}
+
+		model.addAttribute(discussion);
+		model.addAttribute("commentList", discussion.getComments());
+
+		if (Ajax.isAjaxRequest(requestedWith)) {
+			return SHOW_VIEW.concat(" :: discussionFragment");
+		}
+
+		return SHOW_VIEW;
 	}
 }

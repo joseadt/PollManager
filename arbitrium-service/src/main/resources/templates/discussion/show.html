@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title th:text="#{discussion.create.title}">Create Discussion</title>
+  
+  	<th:block th:replace="fragments/layout :: resusableStyles"></th:block>
+</head>
+
+<body>
+    <div th:replace="fragments/layout :: header"></div>
+    
+    
+    <div th:fragment="discussionFragment" class="container" id="discussionContainer"> 
+    	<div class="jumbotron">
+   			<div class="container">
+   				<div class="card border-info">
+   					<h1 class="card-title" th:text="${discussion.tittle}"> </h1>
+   					<p class="card-header bg-secondary text-white d-flex" th:text="${discussion.createdBy.userName}">
+   					</p>
+   					<p class="card-body margin-left-1" th:text="${discussion.description}"> </p>
+   				</div>
+   				<th:block th:each="userComment,stat : ${commentList}">
+					<hr>
+					<div class="card">
+	 					<p class="card-header bg-secondary text-white" th:text="${userComment.commentedBy}"></p>
+	 					<p class="card-body margin-left-1" th:text="${userComment.content}"> </p>
+					</div>
+   				</th:block>
+   			</div>
+    	</div>
+    </div>
+    
+    
+    <div th:replace="fragments/layout :: footer">© 2016 The Static Templates</div>
+    <!-- Signup modal -->
+    <div th:replace="fragments/components :: modal(id='signup-modal', title='Signup')"></div>
+    <div th:replace="fragments/components :: modal(id='poll-modal', title='Create Poll')" th:if="${#authorization.expression('isAuthenticated()')}"></div>
+  
+</body>
+
+</html>

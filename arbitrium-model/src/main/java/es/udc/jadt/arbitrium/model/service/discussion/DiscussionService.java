@@ -1,7 +1,9 @@
 package es.udc.jadt.arbitrium.model.service.discussion;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,4 +58,17 @@ public class DiscussionService {
 
 		return this.discussionRepository.save(discussion);
 	}
+
+	public Discussion findDiscussion(Long id) throws EntityNotFoundException {
+		Optional<Discussion> discussion = null;
+
+		discussion = this.discussionRepository.findById(id);
+		if(!discussion.isPresent()) {
+			throw new EntityNotFoundException(Discussion.class, id);
+		}
+
+		Hibernate.initialize(discussion.get().getComments());
+		return discussion.get();
+	}
+
 }
