@@ -116,4 +116,8 @@ public class GroupService {
 		return this.groupRepository.findAll(GroupFilters.groupKeywordsFilter(keywordsList), PageRequest.of(index, 10));
 	}
 
+	@Transactional
+	public List<UserGroup> findGroupsByUser(String email) {
+		return this.groupRepository.findByAMember(email);
+	}
 }

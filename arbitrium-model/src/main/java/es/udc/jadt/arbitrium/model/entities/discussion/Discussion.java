@@ -1,5 +1,7 @@
 package es.udc.jadt.arbitrium.model.entities.discussion;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -9,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import es.udc.jadt.arbitrium.model.entities.comment.Comment;
+import es.udc.jadt.arbitrium.model.entities.comment.DiscussionComment;
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
@@ -31,7 +33,9 @@ public class Discussion {
 	private String description;
 
 	@OneToMany
-	private List<Comment> comments;
+	private List<DiscussionComment> comments;
+
+	private LocalDate creationDate;
 
 	public Discussion() {
 	}
@@ -40,10 +44,11 @@ public class Discussion {
 		this.createdBy = createdBy;
 		this.tittle = tittle;
 		this.description = description;
+		this.creationDate = LocalDate.now();
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -51,7 +56,7 @@ public class Discussion {
 	}
 
 	public UserProfile getCreatedBy() {
-		return createdBy;
+		return this.createdBy;
 	}
 
 	public void setCreatedBy(UserProfile createdBy) {
@@ -59,7 +64,7 @@ public class Discussion {
 	}
 
 	public String getTittle() {
-		return tittle;
+		return this.tittle;
 	}
 
 	public void setTittle(String tittle) {
@@ -67,11 +72,72 @@ public class Discussion {
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
+	/**
+	 * @return the userGroup
+	 */
+	public UserGroup getUserGroup() {
+		return this.userGroup;
+	}
+
+	/**
+	 * @param userGroup
+	 *            the userGroup to set
+	 */
+	public void setUserGroup(UserGroup userGroup) {
+		this.userGroup = userGroup;
+	}
+
+	/**
+	 * @return the comments
+	 */
+	public List<DiscussionComment> getComments() {
+		return this.comments;
+	}
+
+	/**
+	 * Sets the comments.
+	 *
+	 * @param comments
+	 *            the comments to set
+	 */
+	public void setComments(List<DiscussionComment> comments) {
+		this.comments = comments;
+	}
+
+	/**
+	 * @return the creationDate
+	 */
+	public LocalDate getCreationDate() {
+		return this.creationDate;
+	}
+
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(LocalDate creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	/**
+	 * Adds the comment.
+	 *
+	 * @param comment
+	 *            the comment
+	 * @return true, if successful
+	 */
+	public boolean addComment(DiscussionComment comment) {
+		if (comment == null) {
+			this.comments = new ArrayList<>();
+		}
+
+		return this.comments.add(comment);
+	}
 }

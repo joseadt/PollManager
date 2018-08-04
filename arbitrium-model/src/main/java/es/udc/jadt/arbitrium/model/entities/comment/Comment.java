@@ -1,69 +1,81 @@
 package es.udc.jadt.arbitrium.model.entities.comment;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 
-import es.udc.jadt.arbitrium.model.entities.discussion.Discussion;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
-@Entity
-@IdClass(CommentPK.class)
+@MappedSuperclass
 public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
-
-	@Id
-	@ManyToOne
-	private Discussion discussion;
+	protected long id;
 
 	@ManyToOne
-	private UserProfile commentedBy;
+	protected UserProfile commentedBy;
 
-	private String content;
+	protected String content;
 
-	public Comment() {
+	protected Comment() {
 	}
 
-	public Comment(Discussion discussion, UserProfile commentedBy, String content) {
-		this.discussion = discussion;
+	/**
+	 * @param id
+	 * @param discussion
+	 * @param commentedBy
+	 * @param content
+	 */
+	public Comment(long id, UserProfile commentedBy, String content) {
+		this.id = id;
 		this.commentedBy = commentedBy;
 		this.content = content;
 	}
 
+	/**
+	 * @return the id
+	 */
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
+	/**
+	 * @param id
+	 *            the id to set
+	 */
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	public Discussion getDiscussion() {
-		return discussion;
-	}
-
-	public void setDiscussion(Discussion discussion) {
-		this.discussion = discussion;
-	}
-
+	/**
+	 * @return the commentedBy
+	 */
 	public UserProfile getCommentedBy() {
-		return commentedBy;
+		return this.commentedBy;
 	}
 
+	/**
+	 * @param commentedBy
+	 *            the commentedBy to set
+	 */
 	public void setCommentedBy(UserProfile commentedBy) {
 		this.commentedBy = commentedBy;
 	}
 
+	/**
+	 * @return the content
+	 */
 	public String getContent() {
-		return content;
+		return this.content;
 	}
 
+	/**
+	 * @param content
+	 *            the content to set
+	 */
 	public void setContent(String content) {
 		this.content = content;
 	}
