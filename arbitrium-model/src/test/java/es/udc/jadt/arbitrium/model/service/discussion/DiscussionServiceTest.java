@@ -9,6 +9,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -52,6 +54,8 @@ public class DiscussionServiceTest {
 
 	private static final Long DEFAULT_ID_2 = 2L;
 
+	private static final Long DEFAULT_DISCUSSION_ID = 10L;
+
 	private static final Long NON_EXISTENT_ID = -1L;
 
 	private static final String DEFAULT_EMAIL = "johnDoe@email.com";
@@ -64,6 +68,8 @@ public class DiscussionServiceTest {
 
 	private static final String DEFAULT_DESCRIPTION = "DESC";
 
+	private static final String DEFAULT_COMMENT_CONTENT = "Comment content";
+
 	private static UserProfile USER_PROFILE;
 
 	private static UserGroup USER_GROUP;
@@ -71,6 +77,8 @@ public class DiscussionServiceTest {
 	private static UserGroup OTHER_GROUP;
 
 	private static Discussion SAVED_DISCUSSION;
+
+	private static Optional<Discussion> OPTIONAL_DISCUSSION;
 
 
 	@BeforeClass
@@ -85,10 +93,18 @@ public class DiscussionServiceTest {
 		OTHER_GROUP = new UserGroup();
 		OTHER_GROUP.setId(DEFAULT_ID_2);
 
+		Discussion discussion = new Discussion(USER_PROFILE,DEFAULT_TITTLE,DEFAULT_DESCRIPTION);
+		discussion.setId(DEFAULT_DISCUSSION_ID);
+		OPTIONAL_DISCUSSION = Optional.of(discussion);
+
 	}
 
 	@Before
 	public void initialize() {
+		Discussion discussion = new Discussion(USER_PROFILE, DEFAULT_TITTLE, DEFAULT_DESCRIPTION);
+		discussion.setId(DEFAULT_DISCUSSION_ID);
+		OPTIONAL_DISCUSSION = Optional.of(discussion);
+
 		SAVED_DISCUSSION = null;
 		when(this.userRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(USER_PROFILE);
 		when(this.userRepository.findOneByEmail(not(eq(DEFAULT_EMAIL)))).thenReturn(null);
@@ -107,6 +123,8 @@ public class DiscussionServiceTest {
 			}
 
 		});
+
+		when(this.discussionRepository.findById(DEFAULT_DISCUSSION_ID)).thenReturn(OPTIONAL_DISCUSSION);
 
 	}
 
@@ -145,6 +163,34 @@ public class DiscussionServiceTest {
 
 		this.exception.expect(UserWithoutPermisionException.class);
 		this.service.createDiscussion(DEFAULT_TITTLE, DEFAULT_DESCRIPTION, DEFAULT_EMAIL, DEFAULT_ID_2);
+
+	}
+
+	@Test
+	public void addCommentTest() throws Exception {
+		this.service.addComment(DEFAULT_DISCUSSION_ID, DEFAULT_COMMENT_CONTENT,
+				DEFAULT_EMAIL);
+
+		Discussion discussion = this.discussionRepository.findById(DEFAULT_DISCUSSION_ID).get();
+
+		assertNotNull(discussion.getComments());
+		assertEquals(1, discussion.getComments().size());
+		assertEquals(DEFAULT_COMMENT_CONTENT, discussion.getComments().get(0).getContent());
+
+	}
+
+	@Test
+	public void addCommentUserNotFoundTest() throws Exception {
+		this.exception.expect(EntityNotFoundException.class);
+		this.exception.expectMessage(EntityNotFoundException.messageExample(UserProfile.class, NON_EXISTENT_EMAIL));
+		this.service.addComment(DEFAULT_DISCUSSION_ID, DEFAULT_COMMENT_CONTENT, NON_EXISTENT_EMAIL);
+	}
+
+	@Test
+	public void addCommentDiscussionNotFoundTest() throws Exception {
+		this.exception.expect(EntityNotFoundException.class);
+		this.exception.expectMessage(EntityNotFoundException.messageExample(Discussion.class, NON_EXISTENT_ID));
+		this.service.addComment(NON_EXISTENT_ID, DEFAULT_COMMENT_CONTENT, DEFAULT_EMAIL);
 
 	}
 

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,7 +33,7 @@ public class Discussion {
 
 	private String description;
 
-	@OneToMany
+	@OneToMany(cascade = { CascadeType.ALL })
 	private List<DiscussionComment> comments;
 
 	private LocalDate creationDate;
@@ -134,7 +135,7 @@ public class Discussion {
 	 * @return true, if successful
 	 */
 	public boolean addComment(DiscussionComment comment) {
-		if (comment == null) {
+		if (this.comments == null) {
 			this.comments = new ArrayList<>();
 		}
 
