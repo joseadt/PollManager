@@ -23,10 +23,26 @@
    				<th:block th:each="userComment,stat : ${commentList}">
 					<hr>
 					<div class="card">
-	 					<p class="card-header bg-secondary text-white" th:text="${userComment.commentedBy}"></p>
+	 					<p class="card-header bg-secondary text-white" th:text="${userComment.commentedBy.userName}"></p>
 	 					<p class="card-body margin-left-1" th:text="${userComment.content}"> </p>
 					</div>
    				</th:block>
+   			</div>
+   			<hr>
+   			<div class="container">
+   				
+   				<div class="card border-info">
+	 				<p class="card-header bg-primary text-white" th:text="#{discussion.show.cardHeader.newComment}">New Comment</p>			
+	   				<form th:object="${commentForm}" method="POST" th:action="@{/discussion/addComment}">
+		   					<div class="form-group from-row">
+		   						<input type="hidden" th:field="*{discussionId}"></input>
+		   						<textarea class="form-control card-body" rows="7" th:field="*{content}" style="resize: vertical;"></textarea> 
+		   					</div>
+		   					<div class="form-row card-footer justify-content-end" style="text-align:right;">
+			   					<button  class="btn btn-success" >Comment!</input>
+		   					</div>
+	   				</form>
+   				</div>
    			</div>
     	</div>
     </div>

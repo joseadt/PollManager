@@ -17,6 +17,10 @@ public class DiscussionComment extends Comment {
 	@ManyToOne
 	private Discussion discussion;
 
+	public DiscussionComment() {
+		super();
+	}
+
 	public DiscussionComment(UserProfile commentBy, String content, Discussion discussion) {
 		super(commentBy, content);
 		this.discussion = discussion;
