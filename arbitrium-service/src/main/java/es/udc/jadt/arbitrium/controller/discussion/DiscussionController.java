@@ -86,6 +86,7 @@ public class DiscussionController {
 
 		model.addAttribute(discussion);
 		model.addAttribute("commentList", discussion.getComments());
+		model.addAttribute("commentForm", new CommentForm(id));
 
 		if (Ajax.isAjaxRequest(requestedWith)) {
 			return SHOW_VIEW.concat(" :: discussionFragment");
@@ -93,4 +94,18 @@ public class DiscussionController {
 
 		return SHOW_VIEW;
 	}
+
+	@PostMapping("discussion/addComment")
+	String addComment(HttpServletRequest request, @ModelAttribute("commentForm") CommentForm commentForm) {
+		Principal principal = request.getUserPrincipal();
+
+		try {
+			this.discussionService.addComment(commentForm.discussionId, commentForm.content, principal.getName());
+		} catch (EntityNotFoundException e) {
+			return "redirect:/error";
+		}
+
+		return "redirect:/discussion/show/" + commentForm.getDiscussionId();
+	}
+
 }

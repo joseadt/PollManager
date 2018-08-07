@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.udc.jadt.arbitrium.model.entities.comment.DiscussionComment;
 import es.udc.jadt.arbitrium.model.entities.discussion.Discussion;
 import es.udc.jadt.arbitrium.model.entities.discussion.DiscussionRepository;
 import es.udc.jadt.arbitrium.model.entities.group.GroupRepository;
@@ -59,6 +60,7 @@ public class DiscussionService {
 		return this.discussionRepository.save(discussion);
 	}
 
+	@Transactional
 	public Discussion findDiscussion(Long id) throws EntityNotFoundException {
 		Optional<Discussion> discussion = null;
 
@@ -69,6 +71,28 @@ public class DiscussionService {
 
 		Hibernate.initialize(discussion.get().getComments());
 		return discussion.get();
+	}
+
+	@Transactional
+	public void addComment(Long discussionId, String commentContent, String userEmail) throws EntityNotFoundException {
+		UserProfile userProfile = this.userRepository.findOneByEmail(userEmail);
+
+		if (userProfile == null) {
+			throw new EntityNotFoundException(UserProfile.class, userEmail);
+		}
+
+		Optional<Discussion> optDiscussion = this.discussionRepository.findById(discussionId);
+
+		if (!optDiscussion.isPresent()) {
+			throw new EntityNotFoundException(Discussion.class, discussionId);
+		}
+
+		Discussion discussion = optDiscussion.get();
+
+		DiscussionComment comment = new DiscussionComment(userProfile, commentContent, discussion);
+		discussion.addComment(comment);
+
+		this.discussionRepository.save(discussion);
 	}
 
 }

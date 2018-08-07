@@ -24,12 +24,11 @@ public class Comment {
 	}
 
 	/**
-	 * @param id
-	 * @param discussion
 	 * @param commentedBy
 	 * @param content
+	 * @param discussion
 	 */
-	public Comment(long id, UserProfile commentedBy, String content) {
+	public Comment(UserProfile commentedBy, String content) {
 		this.id = id;
 		this.commentedBy = commentedBy;
 		this.content = content;
