@@ -16,6 +16,7 @@ import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.ServiceHelper;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 
 @Service
@@ -37,12 +38,7 @@ public class DiscussionService {
 		if (user == null) {
 			throw new EntityNotFoundException(UserProfile.class, email);
 		}
-		UserGroup userGroup = null;
-		try {
-			userGroup = this.groupRepository.getOne(groupId);
-		 }catch(javax.persistence.EntityNotFoundException e){
-			 throw new EntityNotFoundException(UserGroup.class,groupId);
-		}
+		UserGroup userGroup = ServiceHelper.findOneById(this.groupRepository, groupId, UserGroup.class);
 
 		if (userGroup.getMembers() == null || !userGroup.getMembers().contains(user)) {
 			throw new UserWithoutPermisionException("Can't create discussion: Doesn't belong to group", userGroup);

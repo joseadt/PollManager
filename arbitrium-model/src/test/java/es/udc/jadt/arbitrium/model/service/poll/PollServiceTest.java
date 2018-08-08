@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +32,6 @@ import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
-import es.udc.jadt.arbitrium.model.service.poll.PollService;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateTooCloseException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
@@ -184,7 +184,7 @@ public class PollServiceTest {
 
 		poll.setId(POLL_ID);
 
-		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.of(poll));
 
 		Poll returnedPoll = this.service.findPollById(POLL_ID);
 
@@ -202,7 +202,7 @@ public class PollServiceTest {
 
 		user.setId(userId);
 
-		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.of(poll));
 		Mockito.when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
 		this.service.savePoll(poll, user.getEmail());
 
@@ -210,13 +210,13 @@ public class PollServiceTest {
 	}
 
 	@Test
-	public void SavePollEntityNotFound() throws EntityNotFoundException, UserIsNotTheAuthorException {
+	public void SavePollEntityNotFoundTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
 		Poll poll = new Poll();
 		poll.setId(POLL_ID);
 
 		Long userId = Long.valueOf(1);
 
-		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(null);
+		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.empty());
 
 		this.exception.expect(EntityNotFoundException.class);
 		this.exception.expectMessage(
@@ -228,13 +228,13 @@ public class PollServiceTest {
 	}
 
 	@Test
-	public void SavePollUserNotFoundException() throws EntityNotFoundException, UserIsNotTheAuthorException {
+	public void SavePollUserNotFoundExceptionTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
 		Poll poll = new Poll();
 		poll.setId(POLL_ID);
 
 		Long userId = Long.valueOf(1);
 
-		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.of(poll));
 		Mockito.when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(null);
 
 		this.exception.expect(EntityNotFoundException.class);
@@ -256,7 +256,7 @@ public class PollServiceTest {
 
 		user.setId(userId);
 
-		Mockito.when(this.pollRepo.getOne(POLL_ID)).thenReturn(poll);
+		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.of(poll));
 		Mockito.when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
 
 		this.exception.expect(UserIsNotTheAuthorException.class);

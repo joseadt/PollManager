@@ -108,11 +108,11 @@ public class DiscussionServiceTest {
 		SAVED_DISCUSSION = null;
 		when(this.userRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(USER_PROFILE);
 		when(this.userRepository.findOneByEmail(not(eq(DEFAULT_EMAIL)))).thenReturn(null);
-		when(this.groupRepository.getOne(DEFAULT_ID)).thenReturn(USER_GROUP);
-		when(this.groupRepository.getOne(DEFAULT_ID_2)).thenReturn(OTHER_GROUP);
+		when(this.groupRepository.findById(DEFAULT_ID)).thenReturn(Optional.of(USER_GROUP));
+		when(this.groupRepository.findById(DEFAULT_ID_2)).thenReturn(Optional.of(OTHER_GROUP));
 
-		when(this.groupRepository.getOne(and(not(eq(DEFAULT_ID)), not(eq(DEFAULT_ID_2)))))
-				.thenThrow(javax.persistence.EntityNotFoundException.class);
+		when(this.groupRepository.findById(and(not(eq(DEFAULT_ID)), not(eq(DEFAULT_ID_2)))))
+				.thenReturn(Optional.empty());
 		when(this.discussionRepository.save(any())).thenAnswer(new Answer<Discussion>() {
 
 			@Override

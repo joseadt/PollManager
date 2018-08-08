@@ -18,6 +18,7 @@ import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 import es.udc.jadt.arbitrium.model.entities.vote.VoteRepository;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.ServiceHelper;
 
 @Service
 public class VoteService {
@@ -40,18 +41,13 @@ public class VoteService {
 		if(user==null) {
 			throw new EntityNotFoundException(UserProfile.class, email);
 		}
-		Poll poll = this.pollRepository.getOne(pollId);
 
-		if (poll == null) {
-			throw new EntityNotFoundException(Poll.class, pollId);
-		}
+		Poll poll = ServiceHelper.findOneById(this.pollRepository, pollId, Poll.class);
 
 		List<PollOption> selectedOptions = new ArrayList<PollOption>();
 		for (Long id : optionsIds) {
-			PollOption option = this.pollOptionRepository.getOne(new PollOptionPk(id, poll));
-			if (option == null) {
-				throw new EntityNotFoundException(PollOption.class, new PollOptionPk(id, poll));
-			}
+			PollOption option = ServiceHelper.findOneById(this.pollOptionRepository, new PollOptionPk(id, poll),
+					PollOption.class);
 
 			selectedOptions.add(option);
 		}

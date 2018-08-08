@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -81,9 +82,8 @@ public class GroupServiceTest {
 
 		when(this.userRepository.findOneByEmail(DEFAULT_USER_EMAIL)).thenReturn(this.defaultUser);
 		when(this.userRepository.findOneByEmail(not(eq(DEFAULT_USER_EMAIL)))).thenReturn(null);
-		when(this.groupRepository.getOne(DEFAULT_GROUP_ID)).thenReturn(this.defaultGroup);
-		when(this.groupRepository.getOne(not(eq(DEFAULT_GROUP_ID))))
-				.thenThrow(javax.persistence.EntityNotFoundException.class);
+		when(this.groupRepository.findById(DEFAULT_GROUP_ID)).thenReturn(Optional.of(this.defaultGroup));
+		when(this.groupRepository.findById(not(eq(DEFAULT_GROUP_ID)))).thenReturn(Optional.empty());
 
 		when(this.groupRepository.save(any(UserGroup.class))).thenAnswer(new Answer<UserGroup>() {
 

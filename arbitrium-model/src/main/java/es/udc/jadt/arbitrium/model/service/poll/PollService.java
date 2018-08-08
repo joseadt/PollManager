@@ -21,6 +21,7 @@ import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastExcep
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateTooCloseException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.ServiceHelper;
 import es.udc.jadt.arbitrium.util.exceptions.PollAlreadyClosedException;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 import es.udc.jadt.arbitrium.util.generics.Pair;
@@ -101,22 +102,12 @@ public class PollService {
 
 	@Transactional
 	public Poll findPollById(Long pollId) throws EntityNotFoundException {
-		Poll poll = this.pollRepository.getOne(pollId);
-
-		if(poll==null) {
-			throw new EntityNotFoundException(Poll.class, pollId);
-		}
-
-		return poll;
+		return ServiceHelper.findOneById(this.pollRepository, pollId, Poll.class);
 	}
 
 	@Transactional
 	public void savePoll(Poll poll, String userId) throws EntityNotFoundException, UserIsNotTheAuthorException {
-		Poll returnedPoll = this.pollRepository.getOne(poll.getId());
-
-		if (returnedPoll == null) {
-			throw new EntityNotFoundException(Poll.class, poll.getId());
-		}
+		Poll returnedPoll = ServiceHelper.findOneById(this.pollRepository, poll.getId(), Poll.class);
 
 		UserProfile user = this.userRepository.findOneByEmail(userId);
 

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,7 +31,6 @@ import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 import es.udc.jadt.arbitrium.model.entities.vote.VoteRepository;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
-import es.udc.jadt.arbitrium.model.service.vote.VoteService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class VoteServiceTest {
@@ -78,26 +78,27 @@ public class VoteServiceTest {
 		List<PollOption> optionsList = Arrays.asList(option1, option2);
 
 		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
-		when(this.pollRepository.getOne(DEFAULT_ID)).thenReturn(poll);
-		when(this.pollOptionRepository.getOne(any(PollOptionPk.class))).thenAnswer(new Answer<PollOption>() {
+		when(this.pollRepository.findById(DEFAULT_ID)).thenReturn(Optional.ofNullable(poll));
+		when(this.pollOptionRepository.findById(any(PollOptionPk.class)))
+				.thenAnswer(new Answer<Optional<PollOption>>() {
 
-			@Override
-			public PollOption answer(InvocationOnMock invocation) throws Throwable {
-				Object[] args = invocation.getArguments();
-				PollOptionPk pk = (PollOptionPk) args[0];
-				if (pk.getPoll().equals(poll)) {
-					if(pk.getOptionId().equals(OPTION_ID_1)) {
-						return option1;
+					@Override
+					public Optional<PollOption> answer(InvocationOnMock invocation) throws Throwable {
+						Object[] args = invocation.getArguments();
+						PollOptionPk pk = (PollOptionPk) args[0];
+						if (pk.getPoll().equals(poll)) {
+							if (pk.getOptionId().equals(OPTION_ID_1)) {
+								return Optional.of(option1);
+							}
+
+							if (pk.getOptionId().equals(OPTION_ID_2)) {
+								return Optional.of(option2);
+							}
+						}
+
+						return Optional.empty();
 					}
-
-					if (pk.getOptionId().equals(OPTION_ID_2)) {
-						return option2;
-					}
-				}
-
-				return null;
-			}
-		});
+				});
 		when(this.voteRepository.save(any(Vote.class))).thenAnswer(new Answer<Vote>() {
 
 			@Override
@@ -147,7 +148,7 @@ public class VoteServiceTest {
 
 
 		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
-		when(this.pollRepository.getOne(DEFAULT_ID)).thenReturn(null);
+		when(this.pollRepository.findById(DEFAULT_ID)).thenReturn(Optional.empty());
 
 		this.exception.expect(EntityNotFoundException.class);
 		this.exception.expectMessage(
@@ -170,26 +171,27 @@ public class VoteServiceTest {
 
 
 		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
-		when(this.pollRepository.getOne(DEFAULT_ID)).thenReturn(poll);
-		when(this.pollOptionRepository.getOne(any(PollOptionPk.class))).thenAnswer(new Answer<PollOption>() {
+		when(this.pollRepository.findById(DEFAULT_ID)).thenReturn(Optional.of(poll));
+		when(this.pollOptionRepository.findById(any(PollOptionPk.class)))
+				.thenAnswer(new Answer<Optional<PollOption>>() {
 
-			@Override
-			public PollOption answer(InvocationOnMock invocation) throws Throwable {
-				Object[] args = invocation.getArguments();
-				PollOptionPk pk = (PollOptionPk) args[0];
-				if (pk.getPoll().equals(poll)) {
-					if(pk.getOptionId().equals(OPTION_ID_1)) {
-						return option1;
+					@Override
+					public Optional<PollOption> answer(InvocationOnMock invocation) throws Throwable {
+						Object[] args = invocation.getArguments();
+						PollOptionPk pk = (PollOptionPk) args[0];
+						if (pk.getPoll().equals(poll)) {
+							if (pk.getOptionId().equals(OPTION_ID_1)) {
+								return Optional.of(option1);
+							}
+
+							if (pk.getOptionId().equals(OPTION_ID_2)) {
+								return Optional.of(option2);
+							}
+						}
+
+						return Optional.empty();
 					}
-
-					if (pk.getOptionId().equals(OPTION_ID_2)) {
-						return option2;
-					}
-				}
-
-				return null;
-			}
-		});
+				});
 
 		this.exception.expect(EntityNotFoundException.class);
 		this.exception.expectMessage(

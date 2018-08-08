@@ -20,6 +20,7 @@ import es.udc.jadt.arbitrium.model.entities.group.specifications.GroupFilters;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.ServiceHelper;
 import es.udc.jadt.arbitrium.model.service.util.exceptions.UserAlreadyInGroupException;
 
 /**
@@ -80,18 +81,14 @@ public class GroupService {
 			throw new EntityNotFoundException(UserProfile.class, userEmail);
 		}
 		UserGroup group =null;
-		try {
-			group = this.groupRepository.getOne(groupId);
-		} catch (javax.persistence.EntityNotFoundException e) {
-			throw new EntityNotFoundException(UserGroup.class, groupId);
-		}
+
+		group = ServiceHelper.findOneById(this.groupRepository, groupId, UserGroup.class);
 
 		if ((user.getUserGroups() != null && user.getUserGroups().contains(group))) {
 			throw new UserAlreadyInGroupException(userEmail, groupId);
 		}
 
 		group.addMember(user);
-
 		user.addGroup(group);
 
 		this.groupRepository.save(group);
@@ -99,12 +96,7 @@ public class GroupService {
 
 	@Transactional
 	public UserGroup findGroupById(Long id) throws EntityNotFoundException {
-		UserGroup group = null;
-		try {
-			group = this.groupRepository.getOne(id);
-		} catch (javax.persistence.EntityNotFoundException e) {
-			throw new EntityNotFoundException(UserGroup.class, id);
-		}
+		UserGroup group = ServiceHelper.findOneById(this.groupRepository, id, UserGroup.class);
 
 		return group;
 	}
@@ -120,4 +112,6 @@ public class GroupService {
 	public List<UserGroup> findGroupsByUser(String email) {
 		return this.groupRepository.findByAMember(email);
 	}
+
+
 }
