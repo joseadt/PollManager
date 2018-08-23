@@ -31,7 +31,7 @@ public class VoteController {
 
 		Vote vote = null;
 		try {
-			vote = this.voteService.createVote(request.getUserPrincipal().getName(), pollId, optionsIds);
+			vote = this.voteService.createVote(request.getUserPrincipal().getName(), pollId, optionsIds, null);
 		} catch (EntityNotFoundException e) {
 			return "redirect:/error";
 		}

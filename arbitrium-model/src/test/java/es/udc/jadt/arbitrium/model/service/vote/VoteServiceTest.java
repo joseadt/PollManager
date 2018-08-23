@@ -109,7 +109,9 @@ public class VoteServiceTest {
 			}
 		});
 
-		Vote vote = this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2));
+		String comment = "MY COMMENT";
+		Vote vote = this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2),
+				comment);
 
 		Mockito.verify(this.voteRepository).save(any(Vote.class));
 		assertNotNull(vote);
@@ -117,6 +119,8 @@ public class VoteServiceTest {
 		assertTrue(vote.getSelectedOptions().containsAll(optionsList));
 		assertEquals(optionsList.size(), vote.getSelectedOptions().size());
 		assertEquals(user, vote.getUser());
+		assertNotNull(vote.getComment());
+		assertEquals(comment, vote.getComment());
 
 	}
 
@@ -138,7 +142,7 @@ public class VoteServiceTest {
 		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(null);
 
 
-		this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2));
+		this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2), null);
 
 	}
 
@@ -154,7 +158,7 @@ public class VoteServiceTest {
 		this.exception.expectMessage(
 				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, DEFAULT_ID, Poll.class.getName()));
 
-		this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2));
+		this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2), null);
 	}
 
 	@Test
@@ -197,6 +201,6 @@ public class VoteServiceTest {
 		this.exception.expectMessage(
 				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT,
 						new PollOptionPk(NON_EXISTANT_OPTION_ID, poll), PollOption.class.getName()));
-		this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, NON_EXISTANT_OPTION_ID));
+		this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, NON_EXISTANT_OPTION_ID), null);
 	}
 }

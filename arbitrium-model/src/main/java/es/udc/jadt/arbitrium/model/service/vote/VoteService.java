@@ -36,7 +36,7 @@ public class VoteService {
 	private VoteRepository voteRepository;
 
 	@Transactional
-	public Vote createVote(String email, Long pollId, List<Long> optionsIds) throws EntityNotFoundException {
+	public Vote createVote(String email, Long pollId, List<Long> optionsIds, String voteComment) throws EntityNotFoundException {
 		UserProfile user = this.userRepository.findOneByEmail(email);
 		if(user==null) {
 			throw new EntityNotFoundException(UserProfile.class, email);
@@ -44,7 +44,7 @@ public class VoteService {
 
 		Poll poll = ServiceHelper.findOneById(this.pollRepository, pollId, Poll.class);
 
-		List<PollOption> selectedOptions = new ArrayList<PollOption>();
+		List<PollOption> selectedOptions = new ArrayList<>();
 		for (Long id : optionsIds) {
 			PollOption option = ServiceHelper.findOneById(this.pollOptionRepository, new PollOptionPk(id, poll),
 					PollOption.class);
@@ -52,7 +52,7 @@ public class VoteService {
 			selectedOptions.add(option);
 		}
 
-		return this.voteRepository.save(new Vote(selectedOptions, "", user));
+		return this.voteRepository.save(new Vote(selectedOptions, voteComment, user));
 	}
 
 	@Transactional
