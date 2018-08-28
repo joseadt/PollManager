@@ -27,11 +27,11 @@ public class VoteController {
 
 	@PostMapping("vote")
 	String doVote(HttpServletRequest request, @RequestParam("optSelection") List<Long> optionsIds,
-			@RequestParam("pollId") Long pollId) {
+			@RequestParam("pollId") Long pollId, @RequestParam("voteComment") String comment) {
 
 		Vote vote = null;
 		try {
-			vote = this.voteService.createVote(request.getUserPrincipal().getName(), pollId, optionsIds, null);
+			vote = this.voteService.createVote(request.getUserPrincipal().getName(), pollId, optionsIds, comment);
 		} catch (EntityNotFoundException e) {
 			return "redirect:/error";
 		}
