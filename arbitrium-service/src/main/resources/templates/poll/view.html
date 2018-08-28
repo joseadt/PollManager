@@ -24,6 +24,10 @@
 								<label th:text="${option.description}" th:for="${'chk_box' + option.optionId}"></label>
 						</p>
 					</div>
+					<div class="d-flex flex-row">
+						<textarea id="voteComment" name="voteComment" class="form-control noresize" rows="" cols=""></textarea>
+					</div>
+					<hr/>
 					<div>
 						<input id="pollId" name="pollId" type="hidden" th:value="${poll.id}"></input>
 						<button type="submit" class="btn btn-success" th:text="#{viewpoll.vote.button}"></button>
