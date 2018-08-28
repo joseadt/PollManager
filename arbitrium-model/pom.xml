@@ -1,0 +1,98 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>es.udc.jadt</groupId>
+    <artifactId>arbitrium</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>arbitrium-model</artifactId>
+  <name>Arbitrium-Model</name>
+  <properties>
+  	<persistence.conf.basedir>src/main/persistence-conf</persistence.conf.basedir>
+  </properties>
+  <dependencies>
+	 <!-- Persistence -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            </dependency>
+		<!-- Spring Data -->
+        <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		
+		
+	
+        
+		<!-- HSQLDB -->
+		<dependency>
+		    <groupId>org.hsqldb</groupId>
+		    <artifactId>hsqldb</artifactId>
+		</dependency>
+		
+	</dependencies>
+	<build>
+	  	<plugins>
+	  		<plugin>
+		  		<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+	  		</plugin>
+	  	</plugins>		
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>${persistence.conf.folder}</directory>
+			</resource>
+			
+		</resources>
+	</build>
+	<profiles>
+			<!-- HSQL base profile -->
+			<profile>
+				<id>hsqldb</id>
+				<activation>
+					<activeByDefault>true</activeByDefault>
+					<property>
+						<name>database</name>
+						<value>hsql</value>
+					</property>
+				</activation>
+				<properties>
+					<persistence.folder>hsql</persistence.folder>
+					<persistence.conf.folder>${persistence.conf.basedir}/hsql</persistence.conf.folder>
+				</properties>
+			</profile>
+			
+			
+			<!-- POSTGRESQL base profile -->
+			<profile>
+				<id>psql</id>
+				<activation>
+					<property>
+						<name>database</name>
+						<value>psql</value>
+					</property>
+				</activation>
+				<properties>
+					<persistence.folder>psql</persistence.folder>
+					<persistence.conf.folder>${persistence.conf.basedir}/psql</persistence.conf.folder>
+				</properties>
+				<dependencies>
+					<!-- POSTGRESQL -->
+					<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+					<dependency>
+					    <groupId>org.postgresql</groupId>
+					    <artifactId>postgresql</artifactId>
+					    <version>42.2.2</version>
+					</dependency>
+				</dependencies>
+				
+			</profile>
+	</profiles>
+	
+</project>
