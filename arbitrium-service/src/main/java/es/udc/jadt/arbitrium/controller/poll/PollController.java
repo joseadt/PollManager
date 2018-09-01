@@ -157,7 +157,7 @@ public class PollController {
 		}
 
 		model.addAttribute(poll);
-		model.addAttribute(pollPair.getSecond());
+		model.addAttribute("pollComments", pollPair.getSecond());
 
 		if(Ajax.isAjaxRequest(requestedWith)) {
 			return SEE_POLL_VIEW.concat(" :: pollFragment");
