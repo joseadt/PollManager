@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import es.udc.jadt.arbitrium.model.entities.comment.Comment;
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.service.poll.PollService;
@@ -29,6 +30,7 @@ import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.util.polltype.PollType;
 import es.udc.jadt.arbitrium.support.web.Ajax;
 import es.udc.jadt.arbitrium.support.web.MessageHelper;
+import es.udc.jadt.arbitrium.util.generics.Pair;
 
 @Controller
 public class PollController {
@@ -141,9 +143,11 @@ public class PollController {
 	String viewPoll(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith,
 			@PathVariable Long id) {
 		Poll poll = null;
+		Pair<Poll, List<Comment>> pollPair;
 
 		try {
-			 poll= this.pollService.findPollById(id);
+			pollPair = this.pollService.getPollByIDWithComments(id);
+			poll = pollPair.getFirst();
 		} catch (EntityNotFoundException e) {
 
 			// TODO: MODEL BLOCK TO RETURN SPECIFIC DATA ABOUT THE ERROR (ENTITY CLASS, ID,
@@ -153,6 +157,7 @@ public class PollController {
 		}
 
 		model.addAttribute(poll);
+		model.addAttribute("pollComments", pollPair.getSecond());
 
 		if(Ajax.isAjaxRequest(requestedWith)) {
 			return SEE_POLL_VIEW.concat(" :: pollFragment");

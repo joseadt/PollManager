@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.udc.jadt.arbitrium.model.entities.comment.Comment;
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
 import es.udc.jadt.arbitrium.model.entities.poll.specification.PollFilters;
@@ -17,6 +18,7 @@ import es.udc.jadt.arbitrium.model.entities.polloption.PollOptionRepository;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
+import es.udc.jadt.arbitrium.model.entities.vote.VoteRepository;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateTooCloseException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
@@ -37,6 +39,9 @@ public class PollService {
 
 	@Autowired
 	private PollOptionRepository pollOptionRepository;
+
+	@Autowired
+	private VoteRepository voteRepository;
 
 	public static final long MINIMUM_DURATION = 20L;
 
@@ -145,5 +150,12 @@ public class PollService {
 
 	}
 
+	@Transactional
+	public Pair<Poll, List<Comment>> getPollByIDWithComments(Long id) throws EntityNotFoundException {
+		final Poll poll = ServiceHelper.findOneById(this.pollRepository, id, Poll.class);
+		final List<Comment> comments = this.voteRepository.findPollComments(id);
+
+		return new Pair<>(poll, comments);
+	}
 
 }
