@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.udc.jadt.arbitrium.model.entities.comment.Comment;
+import es.udc.jadt.arbitrium.model.entities.group.GroupRepository;
+import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
 import es.udc.jadt.arbitrium.model.entities.poll.specification.PollFilters;
@@ -43,6 +45,9 @@ public class PollService {
 	@Autowired
 	private VoteRepository voteRepository;
 
+	@Autowired
+	private GroupRepository groupRepository;
+
 	public static final long MINIMUM_DURATION = 20L;
 
 	@Transactional
@@ -70,10 +75,25 @@ public class PollService {
 
 	@Transactional
 	public Poll createPoll(String email, Poll poll)
-			throws EndDateInThePastException {
+			throws EndDateInThePastException, EntityNotFoundException {
 
+		return createPoll(email, poll, null);
+	}
+
+	@Transactional
+	public Poll createPoll(String email, Poll poll, Long groupId) throws EndDateInThePastException, EntityNotFoundException {
 		UserProfile user = this.userRepository.findOneByEmail(email);
 		poll.setAuthor(user);
+
+		if(groupId!=null) {
+			UserGroup userGroup = ServiceHelper.findOneById(this.groupRepository, groupId, UserGroup.class);
+
+			if (!(userGroup.getMembers().contains(user) || userGroup.getCreator().equals(user))) {
+				throw new EntityNotFoundException("User is not member or creator of a group with id " + groupId,
+						UserGroup.class, groupId);
+			}
+			poll.setUserGroup(userGroup);
+		}
 
 		Instant currentCalendar = Instant.now();
 		if (currentCalendar.isAfter(poll.getEndDate())) {

@@ -66,7 +66,8 @@ public class PollController {
     }
 
 	@PostMapping("createpoll")
-	String createPoll(HttpServletRequest request,@Valid @ModelAttribute PollForm pollForm, Errors errors, RedirectAttributes ra) {
+	String createPoll(HttpServletRequest request, @Valid @ModelAttribute PollForm pollForm, Errors errors,
+			RedirectAttributes ra) throws EntityNotFoundException {
 		if (errors.hasErrors()) {
 			return CREATE_POLL_VIEW;
 		}
