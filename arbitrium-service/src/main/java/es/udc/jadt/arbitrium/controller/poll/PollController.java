@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.udc.jadt.arbitrium.model.entities.comment.Comment;
+import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
+import es.udc.jadt.arbitrium.model.service.group.GroupService;
 import es.udc.jadt.arbitrium.model.service.poll.PollService;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
@@ -53,11 +55,18 @@ public class PollController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private GroupService groupService;
+
 
     @GetMapping("createpoll")
-    String createPoll(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
+	String createPoll(HttpServletRequest request, Model model,
+			@RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
 		model.addAttribute(new PollForm());
 		model.addAttribute("configFragment", getPollTypeFragment(PollType.values()[0]));
+		Principal principal = request.getUserPrincipal();
+		List<UserGroup> userGroups = this.groupService.findGroupsByUser(principal.getName());
+		model.addAttribute("userGroups", userGroups);
 		if (Ajax.isAjaxRequest(requestedWith)) {
 			return CREATE_POLL_VIEW.concat(" :: pollForm");
 		}
@@ -66,14 +75,15 @@ public class PollController {
     }
 
 	@PostMapping("createpoll")
-	String createPoll(HttpServletRequest request,@Valid @ModelAttribute PollForm pollForm, Errors errors, RedirectAttributes ra) {
+	String createPoll(HttpServletRequest request, @Valid @ModelAttribute PollForm pollForm, Errors errors,
+			RedirectAttributes ra) throws EntityNotFoundException {
 		if (errors.hasErrors()) {
 			return CREATE_POLL_VIEW;
 		}
 		Principal principal = request.getUserPrincipal();
 		Poll poll = null;
 		try {
-			poll = this.pollService.createPoll(principal.getName(), pollForm.getPoll());
+			poll = this.pollService.createPoll(principal.getName(), pollForm.getPoll(), pollForm.getUserGroup());
 		} catch (EndDateInThePastException e) {
 			return "redirect:/error";
 		}

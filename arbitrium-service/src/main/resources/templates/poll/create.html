@@ -26,6 +26,15 @@
             </div>
         </div>
         <div class="form-group row">
+        	<label for="userGroupSelect" class="col-lg-3 control-label" th:text="#{poll.create.form.label.group}"></label>
+        	<div class = "col-lg-auto">
+        		<select class="form-control custom-select" id="userGroupSelect" th:field="*{userGroup}">
+        			<option th:value="null" th:text="NONE"></option>
+        			<option th:each="userGroup : ${userGroups}" th:value="${userGroup.id}" th:text="${userGroup.name}"></option>
+        		</select>
+        	</div>
+        </div>
+        <div class="form-group row">
         	<label for="description" class="col-lg-3 control-label">End Date</label>
         	<div class="col-lg-auto">
                 <input type="date" class="form-control" id="endDate" th:field="*{endDate}"/>
