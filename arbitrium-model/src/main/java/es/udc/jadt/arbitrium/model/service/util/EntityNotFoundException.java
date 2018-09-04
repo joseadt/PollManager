@@ -14,6 +14,12 @@ public class EntityNotFoundException extends Exception {
 		this.entityId = entityId;
 	}
 
+	public EntityNotFoundException(String msg, Class<?> entityClass, Object entityId) {
+		super(msg);
+		this.entityClass = entityClass;
+		this.entityId = entityId;
+	}
+
 	public Class<?> getEntityClass() {
 		return this.entityClass;
 	}

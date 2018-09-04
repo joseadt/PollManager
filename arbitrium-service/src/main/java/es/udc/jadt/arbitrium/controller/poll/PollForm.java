@@ -26,6 +26,8 @@ public class PollForm {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endDate;
 
+	private Long userGroup;
+
 	public PollForm() {
 		this.options = new ArrayList<PollOption>();
 	}
@@ -103,6 +105,21 @@ public class PollForm {
 		}
 		poll.setOptions(this.options);
 		return poll;
+	}
+
+	/**
+	 * @return the userGroup
+	 */
+	public Long getUserGroup() {
+		return this.userGroup;
+	}
+
+	/**
+	 * @param userGroup
+	 *            the userGroup to set
+	 */
+	public void setUserGroup(Long userGroup) {
+		this.userGroup = userGroup;
 	}
 
 }

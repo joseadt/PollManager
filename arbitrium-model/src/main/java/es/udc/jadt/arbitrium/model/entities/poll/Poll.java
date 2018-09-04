@@ -51,6 +51,7 @@ public class Poll implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private ConfigurationParameters configuration;
 
+	@ManyToOne
 	private UserGroup userGroup;
 
 	public Poll() {
