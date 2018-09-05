@@ -29,7 +29,6 @@ public class Comment {
 	 * @param discussion
 	 */
 	public Comment(UserProfile commentedBy, String content) {
-		this.id = id;
 		this.commentedBy = commentedBy;
 		this.content = content;
 	}

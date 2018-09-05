@@ -3,7 +3,7 @@
   <parent>
     <groupId>es.udc.jadt</groupId>
     <artifactId>arbitrium</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
   </parent>
   <artifactId>arbitrium-model</artifactId>
   <name>Arbitrium-Model</name>
