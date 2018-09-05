@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Poll</title>
+    <th:block th:replace="fragments/layout :: resusableStyles"/>
+</head>
+<body style="background-color:white">
+<div th:replace="fragments/layout :: header"></div>
+
+	<div th:fragment="showVoteFragment" class="container-fluid text-center">
+		<div th:if="${notFound}">
+			<p>Not Found</p>
+		</div>
+		<div th:if="${otherError}">
+			<p>Internal Error</p>
+		</div>
+		<div th:if="${vote} != null" class="border">
+			<h2 class="text-center" th:text="#{vote.showvote.header.confirm}"></h2>
+			<p class="row justify-content-center">
+				<a class="btn btn-info col col-auto" th:href="@{'/poll/' + ${vote.selectedOptions[0].poll.id}}" th:text="#{vote.showvote.button.goback}"></a>
+				<a class="btn btn-info col col-auto offset-1" href="#" th:text="#{vote.showvote.button.edit}"></a>
+			</p>
+		</div>
+		
+		
+	</div>
+
+
+<div th:replace="fragments/layout :: footer"></div>
+</body>
+</html>

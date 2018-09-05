@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Poll</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}" />
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+</head>
+<body style="background-color:white">
+<div th:replace="fragments/layout :: header"></div>
+	
+	<div class="jumbotron">
+		<div class="d-flex container flex-row flex-wrap">
+			<div th:fragment="pollFragment" class="col-lg-6 p-2">
+					<form class="form-narrow" method="post" th:action="@{/vote}" th:fragment="voteForm">
+							<h1 th:text="${poll.name}"></h1>
+							<hr/>
+							<p th:text="${poll.description}"></p>
+							<hr/>
+							<div class="checkbox" id="options">
+								<p th:each="option,stat : ${poll.options}">
+										<input id="optSelection" name="optSelection" th:value="${option.optionId}" th:type="${poll.configuration.isMultiSelection} ? 'checkbox' : 'radio'"></input>
+										<label th:text="${option.description}" th:for="${'chk_box' + option.optionId}"></label>
+								</p>
+							</div>
+							<div class="d-flex flex-row">
+								<textarea id="voteComment" name="voteComment" class="form-control noresize" rows="" cols=""></textarea>
+							</div>
+							<hr/>
+							<div>
+								<input id="pollId" name="pollId" type="hidden" th:value="${poll.id}"></input>
+								<button type="submit" class="btn btn-success" th:text="#{viewpoll.vote.button}"></button>
+							</div>
+						
+					</form>
+			</div>
+			<div  th:if="(${pollComments} != null) and (${!pollComments.empty})" class="container col-lg-6 p-2 bg-light">
+				<div class="card">
+					<div th:text="#{poll.view.card.header.comments}" class="card-header text-white bg-secondary">
+						Comments
+					</div>
+					<ul class="list-group list-group-flush">
+						<th:block th:each="pollComment,stat : ${pollComments}">
+							<li class="list-group-item card bg-light" >
+								<div class="card-header bg-info text-light">
+									<th:block th:text="#{poll.view.card.list.commentedBy(${pollComment.commentedBy.userName})}"></th:block>
+								</div>
+								<p class="card-body bg-white" th:text="${pollComment.content}"></p>
+							</li>
+						</th:block>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<div th:replace="fragments/layout :: footer"></div>
+</body>
+</html>

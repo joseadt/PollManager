@@ -2,6 +2,7 @@ language: java
 branches:
       only:
       - master
+      - development
 jdk: oraclejdk8
 jobs:
     include:
