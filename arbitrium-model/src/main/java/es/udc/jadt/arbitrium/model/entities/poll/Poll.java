@@ -3,6 +3,7 @@ package es.udc.jadt.arbitrium.model.entities.poll;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -171,6 +172,9 @@ public class Poll implements Serializable {
 
 	public void addOption(PollOption option) {
 		option.setPoll(this);
+		if(this.options==null) {
+			this.options = new ArrayList<>();
+		}
 		this.options.add(option);
 	}
 }

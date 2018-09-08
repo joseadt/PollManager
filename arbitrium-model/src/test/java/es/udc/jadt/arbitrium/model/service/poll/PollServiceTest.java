@@ -1,7 +1,6 @@
 package es.udc.jadt.arbitrium.model.service.poll;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -10,10 +9,11 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -33,12 +33,10 @@ import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
-import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateTooCloseException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
 import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.util.SpecificationFilter;
 import es.udc.jadt.arbitrium.model.util.polltype.PollType;
-import es.udc.jadt.arbitrium.util.exceptions.PollAlreadyClosedException;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,165 +55,130 @@ public class PollServiceTest {
 
 	private final static String DEFAULT_EMAIL = "user@email.com";
 
+	private final static String ANOTHER_EMAIL = "user2@email.com";
+
 	private final static String USER_NAME = "John Doe";
 
 	private final static String PASSWORD = "12345";
 
+	private final static String NON_EXISTENT_EMAIL = "another@email.com";
+
+	private final static Long DEFAULT_ID = new Long(1);
+
+	private final static Long ANOTHER_ID = new Long(2);
+
+	private static UserProfile userProfile;
+
+	private static final UserProfile userProfile2 = new UserProfile(DEFAULT_EMAIL, USER_NAME.concat("1234"), PASSWORD);
+
+
+
+	private final static List<String> options = Arrays.asList("OPTION1", "OPTION2", "OPTION3");
+
+	private final static Instant endDate = Instant.now().plus(Duration.ofDays(2));
+
+	private static Poll poll;
+
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 
-	@Test
-	public void CreatePollTest() throws EndDateInThePastException, EndDateTooCloseException {
-		UserProfile userProfile = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
-		final Long defaultId= new Long(1);
-		userProfile.setId(defaultId);
-		Poll poll = new Poll();
+	@BeforeClass
+	public static void initializeClass() {
+		userProfile = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
+		List<PollOption> pollOptions = new ArrayList<PollOption>();
+		for (String desc : options) {
+			pollOptions.add(new PollOption(null, desc));
+		}
 
-		poll.setEndDate(Instant.now().plus(Duration.ofDays(2)));
+		poll = new Poll(userProfile, pollOptions, PollType.PROPOSAL, endDate);
+		poll.setId(DEFAULT_ID);
 
+		userProfile2.setId(ANOTHER_ID);
+	}
 
-		when(this.userRepo.getOne(userProfile.getId())).thenReturn(userProfile);
+	@Before
+	public void initialize() {
+		poll.setId(DEFAULT_ID);
+		poll.setAuthor(userProfile);
+		when(this.userRepo.getOne(DEFAULT_ID)).thenReturn(userProfile);
+		when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(userProfile);
+		when(this.userRepo.findOneByEmail(ANOTHER_EMAIL)).thenReturn(userProfile2);
+		when(this.userRepo.findOneByEmail(NON_EXISTENT_EMAIL)).thenReturn(null);
+		when(this.pollRepo.findById(DEFAULT_ID)).thenReturn(Optional.of(poll));
 		when(this.pollRepo.save(any(Poll.class))).thenAnswer(new Answer<Poll>() {
 			@Override
 			public Poll answer(InvocationOnMock invocation) {
 				Object[] args = invocation.getArguments();
 				Poll poll = (Poll) args[0];
-				poll.setId(defaultId);
+				poll.setId(DEFAULT_ID);
 				return poll;
 			}
 		});
-		Calendar endDate = Calendar.getInstance();
-		endDate.set(Calendar.MINUTE, endDate.get(Calendar.MINUTE) + (int) PollService.MINIMUM_DURATION + 3);
-		Poll returnedPoll = this.service.createPoll(userProfile.getId(), poll);
-		assertEquals(defaultId, returnedPoll.getId());
+
+	}
+
+	@Test
+	public void createPollTest() throws Exception {
+
+		Poll returnedPoll = this.service.createPoll(DEFAULT_EMAIL, poll);
+		assertEquals(DEFAULT_ID, returnedPoll.getId());
 	}
 
 	@Test(expected = EndDateInThePastException.class)
-	public void CreatePollWithPassedEndDateTest() throws EndDateInThePastException, EndDateTooCloseException {
-		UserProfile userProfile = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
-		final Long defaultId = new Long(1);
-		userProfile.setId(defaultId);
-		List<String> options = Arrays.asList("OPTION1", "OPTION2", "OPTION3");
+	public void createPollWithPassedEndDateTest() throws Exception {
+		userProfile.setId(DEFAULT_ID);
 
 		Poll poll = new Poll();
 
 		poll.setEndDate(Instant.now().minus(Duration.ofDays(2)));
 
-		when(this.userRepo.getOne(userProfile.getId())).thenReturn(userProfile);
-
-		this.service.createPoll(userProfile.getId(), poll);
+		this.service.createPoll(userProfile.getEmail(), poll);
 	}
 
 
 	@Test
-	public void ClosePollTest() throws UserWithoutPermisionException, PollAlreadyClosedException {
-		UserProfile userProfile = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
-		final Long defaultId= new Long(1);
-		userProfile.setId(defaultId);
-		List<String> optionsDescriptions = Arrays.asList("OPTION1","OPTION2","OPTION3");
-		Instant endDate = Instant.now();
-		endDate = endDate.plus(Duration.ofDays(2));
-		System.out.println(endDate);
-		List<PollOption> pollOptions = new ArrayList<PollOption>();
-		for (String desc : optionsDescriptions) {
-			pollOptions.add(new PollOption(null, desc));
-		}
+	public void closePollTest() throws Exception {
 
-		Poll poll = new Poll(userProfile, pollOptions, PollType.PROPOSAL, endDate);
-		poll.setId(defaultId);
 
 		poll.setAuthor(userProfile);
 
-		when(this.userRepo.getOne(defaultId)).thenReturn(userProfile);
-		when(this.pollRepo.getOne(defaultId)).thenReturn(poll);
-
-		when(this.pollRepo.save(poll)).thenAnswer(new Answer<Poll>() {
-
-			@Override
-			public Poll answer(InvocationOnMock invocation) throws Throwable {
-				Object[] args = invocation.getArguments();
-				Poll poll = (Poll) args[0];
-				assertEquals(defaultId, poll.getId());
-				assertFalse(poll.getEndDate().isAfter(Instant.now()));
-				return poll;
-			}
-		});
-		this.service.closePoll(defaultId, defaultId);
+		this.service.closePoll(DEFAULT_ID, DEFAULT_ID);
 		Mockito.verify(this.pollRepo).save(poll);
 
 	}
 
 	@Test(expected = UserWithoutPermisionException.class)
-	public void ShoulThrowNotPermissionExceptionOnCloseTest()
-			throws UserWithoutPermisionException, PollAlreadyClosedException {
-		UserProfile userProfile = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
-		final Long defaultId = new Long(1);
-		userProfile.setId(defaultId);
+	public void shoulThrowNotPermissionExceptionOnCloseTest() throws Exception {
 		List<String> options = Arrays.asList("OPTION1", "OPTION2", "OPTION3");
 		Instant endDate = Instant.now();
 		Duration duration = Duration.ofDays(2);
 
 		endDate.plus(duration);
 
-		UserProfile userProfile2 = new UserProfile(DEFAULT_EMAIL, USER_NAME.concat("1234"), PASSWORD);
-
-		List<PollOption> pollOption = new ArrayList<PollOption>();
-		userProfile.setId(new Long(2));
-
-		for (String optionName : options) {
-			PollOption option = new PollOption(null, optionName);
-			pollOption.add(option);
-
-		}
-		Poll poll = new Poll(userProfile, pollOption, PollType.PROPOSAL, endDate);
-		poll.setId(defaultId);
+		poll.setId(DEFAULT_ID);
 		poll.setAuthor(userProfile2);
 
-		when(this.userRepo.getOne(defaultId)).thenReturn(userProfile);
-		when(this.pollRepo.getOne(defaultId)).thenReturn(poll);
-
-		this.service.closePoll(defaultId, defaultId);
+		this.service.closePoll(DEFAULT_ID, DEFAULT_ID);
 	}
 
 	@Test
-	public void FindByIdTest() throws EntityNotFoundException {
-		Poll poll = new Poll();
-		Poll otherPoll = new Poll();
+	public void findByIdTest() throws EntityNotFoundException {
 
-		poll.setId(POLL_ID);
-
-		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.of(poll));
-
-		Poll returnedPoll = this.service.findPollById(POLL_ID);
+		Poll returnedPoll = this.service.findPollById(DEFAULT_ID);
 
 		assertEquals(poll, returnedPoll);
 	}
 
 	@Test
-	public void SavePollTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
-		Poll poll = new Poll();
-		poll.setId(POLL_ID);
-		UserProfile user = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
-		poll.setAuthor(user);
-
-		Long userId = Long.valueOf(1);
-
-		user.setId(userId);
-
-		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.of(poll));
-		Mockito.when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
-		this.service.savePoll(poll, user.getEmail());
+	public void savePollTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
+		this.service.savePoll(poll, DEFAULT_EMAIL);
 
 		Mockito.verify(this.pollRepo).save(poll);
 	}
 
 	@Test
-	public void SavePollEntityNotFoundTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
-		Poll poll = new Poll();
+	public void savePollEntityNotFoundTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
 		poll.setId(POLL_ID);
-
-		Long userId = Long.valueOf(1);
-
 		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.empty());
 
 		this.exception.expect(EntityNotFoundException.class);
@@ -228,46 +191,28 @@ public class PollServiceTest {
 	}
 
 	@Test
-	public void SavePollUserNotFoundExceptionTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
-		Poll poll = new Poll();
-		poll.setId(POLL_ID);
-
-		Long userId = Long.valueOf(1);
-
-		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.of(poll));
-		Mockito.when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(null);
-
+	public void savePollUserNotFoundExceptionTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
 		this.exception.expect(EntityNotFoundException.class);
 		this.exception.expectMessage(
-				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, DEFAULT_EMAIL,
-						UserProfile.class.getName()));
-		this.service.savePoll(poll, DEFAULT_EMAIL);
+				EntityNotFoundException.messageExample(UserProfile.class, NON_EXISTENT_EMAIL));
+		this.service.savePoll(poll, NON_EXISTENT_EMAIL);
 
 	}
 
 	@Test
-	public void SavePollUserIsNotTheAuthor() throws EntityNotFoundException, UserIsNotTheAuthorException {
-		Poll poll = new Poll();
-		poll.setId(POLL_ID);
-		UserProfile user = new UserProfile(DEFAULT_EMAIL, USER_NAME, PASSWORD);
-		poll.setAuthor(null);
+	public void savePollUserIsNotTheAuthor() throws EntityNotFoundException, UserIsNotTheAuthorException {
 
-		Long userId = Long.valueOf(1);
-
-		user.setId(userId);
-
-		Mockito.when(this.pollRepo.findById(POLL_ID)).thenReturn(Optional.of(poll));
-		Mockito.when(this.userRepo.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
 
 		this.exception.expect(UserIsNotTheAuthorException.class);
 		this.exception.expectMessage(
-				String.format(UserIsNotTheAuthorException.DEFAULT_MESSAGE_FORMAT, userId.toString(), POLL_ID.toString()));
+				String.format(UserIsNotTheAuthorException.DEFAULT_MESSAGE_FORMAT, userProfile2.getId(),
+						poll.getId()));
 
-		this.service.savePoll(poll, DEFAULT_EMAIL);
+		this.service.savePoll(poll, ANOTHER_EMAIL);
 	}
 
 	@Test
-	public void FindPollsByKeywords() {
+	public void findPollsByKeywords() {
 		final Poll poll = new Poll();
 		poll.setName("Nombre pRUEBA");
 		final String keywords = "Nombre rue";

@@ -71,7 +71,7 @@ public class GroupServiceTest {
 	private static Pageable pageRequest;
 
 	@Before
-	public void initializeTest() {
+	public void initialize() {
 		this.defaultGroup = new UserGroup();
 		this.defaultGroup.setName(DEFAULT_GROUP_NAME);
 		this.defaultGroup.setId(DEFAULT_GROUP_ID);

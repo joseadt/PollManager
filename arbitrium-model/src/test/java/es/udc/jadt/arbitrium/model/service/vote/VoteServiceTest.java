@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,26 +61,41 @@ public class VoteServiceTest {
 
 	private static final String DEFAULT_EMAIL = "john.doe@email.com";
 
+	private static final String NON_EXISTENT_EMAIL = "no@one.com";
+
 	private static final String DEFAULT_USERNAME = "John Doe";
 
 	private static final String DEFAULT_PASSWORD = "QWERTY";
 
-	@Test
-	public void VoteTest() throws EntityNotFoundException {
-		final Poll poll = new Poll();
-		poll.setId(DEFAULT_ID);
-		final PollOption option1 = new PollOption();
-		option1.setPoll(poll);
-		option1.setOptionId(OPTION_ID_1);
-		final PollOption option2 = new PollOption();
-		option2.setPoll(poll);
-		option2.setOptionId(OPTION_ID_2);
-		UserProfile user = new UserProfile(DEFAULT_EMAIL, DEFAULT_USERNAME, DEFAULT_PASSWORD);
+	private static final UserProfile USER = new UserProfile(DEFAULT_EMAIL, DEFAULT_USERNAME, DEFAULT_PASSWORD);
 
-		List<PollOption> optionsList = Arrays.asList(option1, option2);
+	private static final Poll POLL = new Poll();
 
-		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
-		when(this.pollRepository.findById(DEFAULT_ID)).thenReturn(Optional.ofNullable(poll));
+	private static final PollOption OPTION_1 = new PollOption();
+
+	private static final PollOption OPTION_2 = new PollOption();
+
+	private static final List<PollOption> OPTIONS = Arrays.asList(OPTION_1, OPTION_2);
+
+	@BeforeClass
+	public static void initializeClass() {
+		USER.setId(DEFAULT_ID);
+
+		POLL.setId(DEFAULT_ID);
+		POLL.setAuthor(USER);
+		OPTION_1.setPoll(POLL);
+		OPTION_1.setOptionId(OPTION_ID_1);
+		OPTION_2.setPoll(POLL);
+		OPTION_2.setOptionId(OPTION_ID_2);
+		POLL.addOption(OPTION_1);
+		POLL.addOption(OPTION_2);
+
+	}
+
+	@Before
+	public void initialize() {
+		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(USER);
+		when(this.pollRepository.findById(DEFAULT_ID)).thenReturn(Optional.ofNullable(POLL));
 		when(this.pollOptionRepository.findById(any(PollOptionPk.class)))
 				.thenAnswer(new Answer<Optional<PollOption>>() {
 
@@ -86,13 +103,13 @@ public class VoteServiceTest {
 					public Optional<PollOption> answer(InvocationOnMock invocation) throws Throwable {
 						Object[] args = invocation.getArguments();
 						PollOptionPk pk = (PollOptionPk) args[0];
-						if (pk.getPoll().equals(poll)) {
+						if (pk.getPoll().equals(POLL)) {
 							if (pk.getOptionId().equals(OPTION_ID_1)) {
-								return Optional.of(option1);
+								return Optional.of(OPTION_1);
 							}
 
 							if (pk.getOptionId().equals(OPTION_ID_2)) {
-								return Optional.of(option2);
+								return Optional.of(OPTION_2);
 							}
 						}
 
@@ -109,6 +126,11 @@ public class VoteServiceTest {
 			}
 		});
 
+	}
+
+	@Test
+	public void voteTest() throws EntityNotFoundException {
+
 		String comment = "MY COMMENT";
 		Vote vote = this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2),
 				comment);
@@ -116,42 +138,29 @@ public class VoteServiceTest {
 		Mockito.verify(this.voteRepository).save(any(Vote.class));
 		assertNotNull(vote);
 		assertNotNull(vote.getId());
-		assertTrue(vote.getSelectedOptions().containsAll(optionsList));
-		assertEquals(optionsList.size(), vote.getSelectedOptions().size());
-		assertEquals(user, vote.getUser());
+		assertTrue(vote.getSelectedOptions().containsAll(OPTIONS));
+		assertEquals(OPTIONS.size(), vote.getSelectedOptions().size());
+		assertEquals(USER, vote.getUser());
 		assertNotNull(vote.getComment());
 		assertEquals(comment, vote.getComment());
 
 	}
 
 	@Test
-	public void UserNotFoundExceptionTest() throws EntityNotFoundException {
-		final Poll poll = new Poll();
-		poll.setId(DEFAULT_ID);
-		final PollOption option1 = new PollOption();
-		option1.setPoll(poll);
-		option1.setOptionId(OPTION_ID_1);
-		final PollOption option2 = new PollOption();
-		option2.setPoll(poll);
-		option2.setOptionId(OPTION_ID_2);
+	public void userNotFoundExceptionTest() throws EntityNotFoundException {
 
+		when(this.userProfileRepository.findOneByEmail(NON_EXISTENT_EMAIL)).thenReturn(null);
 		this.exception.expect(EntityNotFoundException.class);
-		this.exception.expect(EntityNotFoundException.class);
-		this.exception.expectMessage(String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, DEFAULT_EMAIL,
-				UserProfile.class.getName()));
-		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(null);
+		this.exception.expectMessage(EntityNotFoundException.messageExample(UserProfile.class, NON_EXISTENT_EMAIL));
 
 
-		this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2), null);
+		this.service.createVote(NON_EXISTENT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2), null);
 
 	}
 
 	@Test
 	public void PollNotFoundExceptionTest() throws EntityNotFoundException {
-		UserProfile user = new UserProfile(DEFAULT_EMAIL, DEFAULT_USERNAME, DEFAULT_PASSWORD);
 
-
-		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
 		when(this.pollRepository.findById(DEFAULT_ID)).thenReturn(Optional.empty());
 
 		this.exception.expect(EntityNotFoundException.class);
@@ -163,44 +172,12 @@ public class VoteServiceTest {
 
 	@Test
 	public void OptionNotFoundExceptionTest() throws EntityNotFoundException {
-		final Poll poll = new Poll();
-		poll.setId(DEFAULT_ID);
-		final PollOption option1 = new PollOption();
-		option1.setPoll(poll);
-		option1.setOptionId(OPTION_ID_1);
-		final PollOption option2 = new PollOption();
-		option2.setPoll(poll);
-		option2.setOptionId(OPTION_ID_2);
-		UserProfile user = new UserProfile(DEFAULT_EMAIL, DEFAULT_USERNAME, DEFAULT_PASSWORD);
 
-
-		when(this.userProfileRepository.findOneByEmail(DEFAULT_EMAIL)).thenReturn(user);
-		when(this.pollRepository.findById(DEFAULT_ID)).thenReturn(Optional.of(poll));
-		when(this.pollOptionRepository.findById(any(PollOptionPk.class)))
-				.thenAnswer(new Answer<Optional<PollOption>>() {
-
-					@Override
-					public Optional<PollOption> answer(InvocationOnMock invocation) throws Throwable {
-						Object[] args = invocation.getArguments();
-						PollOptionPk pk = (PollOptionPk) args[0];
-						if (pk.getPoll().equals(poll)) {
-							if (pk.getOptionId().equals(OPTION_ID_1)) {
-								return Optional.of(option1);
-							}
-
-							if (pk.getOptionId().equals(OPTION_ID_2)) {
-								return Optional.of(option2);
-							}
-						}
-
-						return Optional.empty();
-					}
-				});
 
 		this.exception.expect(EntityNotFoundException.class);
 		this.exception.expectMessage(
 				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT,
-						new PollOptionPk(NON_EXISTANT_OPTION_ID, poll), PollOption.class.getName()));
+						new PollOptionPk(NON_EXISTANT_OPTION_ID, POLL), PollOption.class.getName()));
 		this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, NON_EXISTANT_OPTION_ID), null);
 	}
 }

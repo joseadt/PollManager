@@ -107,9 +107,9 @@ public class PollService {
 	}
 
 	@Transactional
-	public void closePoll(Long userId, Long pollId) throws UserWithoutPermisionException, PollAlreadyClosedException {
+	public void closePoll(Long userId, Long pollId) throws UserWithoutPermisionException, PollAlreadyClosedException, EntityNotFoundException {
 		UserProfile user = this.userRepository.getOne(userId);
-		Poll poll = this.pollRepository.getOne(pollId);
+		Poll poll = ServiceHelper.findOneById(this.pollRepository, pollId, Poll.class);
 
 
 		if(!user.equals(poll.getAuthor())) {
