@@ -8,6 +8,7 @@
   <artifactId>arbitrium-service</artifactId>
   <packaging>war</packaging>
   <name>Arbitrium-Service</name>
+  <version>${project.parent.version}</version>
   
   
   <dependencies>
@@ -19,7 +20,7 @@
 	<dependency>
    		 <groupId>es.udc.jadt</groupId>
  		<artifactId>arbitrium-model</artifactId>
- 		<version>${parent.version}</version>
+ 		<version>${project.parent.version}</version>
 	</dependency>
 	
 	
@@ -83,6 +84,28 @@
 	  		<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-resources-plugin</artifactId>
   		</plugin>
+  		
+  		
+		<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals><goal>copy</goal></goals>
+                    <configuration>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>com.github.jsimone</groupId>
+                                <artifactId>webapp-runner</artifactId>
+                                <version>8.5.31.0</version>
+                                <destFileName>webapp-runner.jar</destFileName>
+                            </artifactItem>
+                        </artifactItems>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
   	</plugins>
   </build>
 </project>

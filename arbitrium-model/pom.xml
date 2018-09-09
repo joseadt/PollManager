@@ -7,6 +7,7 @@
   </parent>
   <artifactId>arbitrium-model</artifactId>
   <name>Arbitrium-Model</name>
+  <version>${project.parent.version}</version>
   <properties>
   	<persistence.conf.basedir>src/main/persistence-conf</persistence.conf.basedir>
   </properties>

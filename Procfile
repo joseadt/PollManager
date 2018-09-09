@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT arbitrium-service/target/*.war
+web: java $JAVA_OPTS -jar  arbitrium-service/target/arbitrium.war -Dserver.port=$PORT
