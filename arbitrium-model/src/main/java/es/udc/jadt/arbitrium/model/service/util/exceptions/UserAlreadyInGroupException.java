@@ -2,7 +2,6 @@ package es.udc.jadt.arbitrium.model.service.util.exceptions;
 
 public class UserAlreadyInGroupException extends Exception {
 
-
 	/**
 	 *
 	 */
@@ -33,8 +32,6 @@ public class UserAlreadyInGroupException extends Exception {
 	public Long getGroupId() {
 		return this.groupId;
 	}
-
-
 
 	public static String messageFormatExample(String email, Long groupId) {
 		return String.format(MESSAGE_FORMAT, email, groupId.toString());

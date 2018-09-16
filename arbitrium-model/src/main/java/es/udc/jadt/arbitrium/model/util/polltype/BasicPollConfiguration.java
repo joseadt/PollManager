@@ -57,10 +57,8 @@ public class BasicPollConfiguration implements PollConfiguration {
 			}
 		}
 
-
 		return new SimpleResult(voteCounter);
 	}
-
 
 	@Override
 	public ConfigurationParameters getConfigurationParameters() {
@@ -70,6 +68,5 @@ public class BasicPollConfiguration implements PollConfiguration {
 
 		return cp;
 	}
-
 
 }

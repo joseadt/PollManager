@@ -38,7 +38,6 @@ public class GroupRepositoryTest {
 
 	private static final List<UserGroup> DEFAULT_USERS = new ArrayList<>();
 
-
 	@BeforeClass
 	public static void intializeClass() {
 		DEFAULT_USERS.add(new UserGroup(GROUP_1_NAME, null, null));
@@ -50,7 +49,6 @@ public class GroupRepositoryTest {
 	public void findWithPaginationTest() {
 		this.repository.saveAll(DEFAULT_USERS);
 
-
 		Page<UserGroup> groups = this.repository.findAll(GroupFilters.groupKeywordsFilter(null), PageRequest.of(0, 2));
 		Page<UserGroup> groups2 = this.repository.findAll(GroupFilters.groupKeywordsFilter(null), PageRequest.of(1, 2));
 		Page<UserGroup> groups3 = this.repository.findAll(GroupFilters.groupKeywordsFilter(Arrays.asList("own")),
@@ -60,9 +58,7 @@ public class GroupRepositoryTest {
 		assertEquals(2, groups.getNumberOfElements());
 		assertEquals(DEFAULT_USERS.size(), groups.getTotalElements());
 
-
 		assertEquals(1, groups2.getNumberOfElements());
-
 
 		assertEquals(1, groups3.getTotalPages());
 		assertEquals(2, groups3.getNumberOfElements());

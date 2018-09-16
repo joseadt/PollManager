@@ -32,7 +32,7 @@ import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 import es.udc.jadt.arbitrium.model.entities.vote.VoteRepository;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class VoteServiceTest {
@@ -153,7 +153,6 @@ public class VoteServiceTest {
 		this.exception.expect(EntityNotFoundException.class);
 		this.exception.expectMessage(EntityNotFoundException.messageExample(UserProfile.class, NON_EXISTENT_EMAIL));
 
-
 		this.service.createVote(NON_EXISTENT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, OPTION_ID_2), null);
 
 	}
@@ -173,11 +172,9 @@ public class VoteServiceTest {
 	@Test
 	public void OptionNotFoundExceptionTest() throws EntityNotFoundException {
 
-
 		this.exception.expect(EntityNotFoundException.class);
-		this.exception.expectMessage(
-				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT,
-						new PollOptionPk(NON_EXISTANT_OPTION_ID, POLL), PollOption.class.getName()));
+		this.exception.expectMessage(String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT,
+				new PollOptionPk(NON_EXISTANT_OPTION_ID, POLL), PollOption.class.getName()));
 		this.service.createVote(DEFAULT_EMAIL, DEFAULT_ID, Arrays.asList(OPTION_ID_1, NON_EXISTANT_OPTION_ID), null);
 	}
 }

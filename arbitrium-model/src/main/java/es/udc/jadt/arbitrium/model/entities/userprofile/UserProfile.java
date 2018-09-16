@@ -37,7 +37,6 @@ public class UserProfile implements Serializable {
 
 	private String role = "ROLE_USER";
 
-
 	public UserProfile() {
 	}
 

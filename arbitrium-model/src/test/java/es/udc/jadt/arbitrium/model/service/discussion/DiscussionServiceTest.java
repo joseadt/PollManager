@@ -29,7 +29,7 @@ import es.udc.jadt.arbitrium.model.entities.group.GroupRepository;
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -80,7 +80,6 @@ public class DiscussionServiceTest {
 
 	private static Optional<Discussion> OPTIONAL_DISCUSSION;
 
-
 	@BeforeClass
 	public static void initializeClass() {
 		USER_PROFILE = new UserProfile(DEFAULT_EMAIL, DEFAULT_EMAIL, DEFAULT_PASSWORD);
@@ -93,7 +92,7 @@ public class DiscussionServiceTest {
 		OTHER_GROUP = new UserGroup();
 		OTHER_GROUP.setId(DEFAULT_ID_2);
 
-		Discussion discussion = new Discussion(USER_PROFILE,DEFAULT_TITTLE,DEFAULT_DESCRIPTION);
+		Discussion discussion = new Discussion(USER_PROFILE, DEFAULT_TITTLE, DEFAULT_DESCRIPTION);
 		discussion.setId(DEFAULT_DISCUSSION_ID);
 		OPTIONAL_DISCUSSION = Optional.of(discussion);
 
@@ -168,8 +167,7 @@ public class DiscussionServiceTest {
 
 	@Test
 	public void addCommentTest() throws Exception {
-		this.service.addComment(DEFAULT_DISCUSSION_ID, DEFAULT_COMMENT_CONTENT,
-				DEFAULT_EMAIL);
+		this.service.addComment(DEFAULT_DISCUSSION_ID, DEFAULT_COMMENT_CONTENT, DEFAULT_EMAIL);
 
 		Discussion discussion = this.discussionRepository.findById(DEFAULT_DISCUSSION_ID).get();
 

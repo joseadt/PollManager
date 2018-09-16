@@ -67,7 +67,6 @@ public class PollForm {
 		this.options = options;
 	}
 
-
 	public PollType getPollType() {
 		return this.pollType;
 	}

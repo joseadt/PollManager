@@ -16,14 +16,12 @@ public interface PollResult {
 	 */
 	public Map<PollOption, Integer> getResult();
 
-
 	/**
 	 * Gets the winner option.
 	 *
 	 * @return the winner option , or null if , for exmaple, a tie
 	 */
 	public PollOption getWinnerOption();
-
 
 	/**
 	 * Gets the number of votes of the winner option

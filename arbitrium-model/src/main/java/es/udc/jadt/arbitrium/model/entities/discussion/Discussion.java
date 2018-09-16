@@ -6,10 +6,13 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 
 import es.udc.jadt.arbitrium.model.entities.comment.DiscussionComment;
@@ -17,10 +20,11 @@ import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
 @Entity
+@NamedEntityGraph(name = "discussions.details", attributeNodes = @NamedAttributeNode("comments"))
 public class Discussion {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@ManyToOne
@@ -33,7 +37,7 @@ public class Discussion {
 
 	private String description;
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	private List<DiscussionComment> comments;
 
 	private LocalDate creationDate;

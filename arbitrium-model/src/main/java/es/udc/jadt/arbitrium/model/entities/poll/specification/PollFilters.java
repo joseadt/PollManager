@@ -18,22 +18,21 @@ public class PollFilters {
 	public static Specification<Poll> pollKeywordsFilter(final List<String> keywords, final boolean onDescriptionToo) {
 
 		SpecificationFilter<Poll> filter = new SpecificationFilter<Poll>() {
-			
+
 			@Override
 			public Predicate toPredicate(Root<Poll> poll, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
 				Predicate predicate = null;
-				if(keywords !=null) {
+				if (keywords != null) {
 					for (String keyword : keywords) {
 						Predicate newPred = builder.like(builder.lower(getTitleField(poll)),
 								"%" + keyword.toLowerCase() + "%");
-						
+
 						if (onDescriptionToo) {
-							newPred = builder.or(newPred,
-									builder.like(builder.lower(getDescriptionField(poll)),
-											"%" + keyword.toLowerCase() + "%"));
+							newPred = builder.or(newPred, builder.like(builder.lower(getDescriptionField(poll)),
+									"%" + keyword.toLowerCase() + "%"));
 						}
-						
+
 						if (predicate != null) {
 							predicate = builder.or(predicate, newPred);
 						} else {
@@ -41,7 +40,7 @@ public class PollFilters {
 						}
 
 					}
-					
+
 				}
 				return predicate;
 			}

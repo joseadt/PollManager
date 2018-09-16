@@ -9,7 +9,6 @@ import es.udc.jadt.arbitrium.util.pollresult.PollResult;
 
 public interface PollConfiguration {
 
-
 	public PollResult getResult(Poll poll, List<Vote> votes);
 
 	public ConfigurationParameters getConfigurationParameters();

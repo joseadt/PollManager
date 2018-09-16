@@ -15,22 +15,47 @@ import es.udc.jadt.arbitrium.model.entities.group.GroupRepository;
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.service.util.ServiceHelper;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 
+/**
+ * The Class DiscussionService.
+ *
+ * @author JADT
+ */
 @Service
 public class DiscussionService {
 
+	/** The discussion repository. */
 	@Autowired
 	private DiscussionRepository discussionRepository;
 
+	/** The group repository. */
 	@Autowired
 	private GroupRepository groupRepository;
 
+	/** The user repository. */
 	@Autowired
 	private UserProfileRepository userRepository;
 
+	/**
+	 * Creates the discussion.
+	 *
+	 * @param tittle
+	 *            the tittle
+	 * @param description
+	 *            the description
+	 * @param email
+	 *            the email
+	 * @param groupId
+	 *            the group id
+	 * @return the discussion
+	 * @throws EntityNotFoundException
+	 *             the entity not found exception
+	 * @throws UserWithoutPermisionException
+	 *             the user without permision exception
+	 */
 	@Transactional
 	public Discussion createDiscussion(String tittle, String description, String email, Long groupId)
 			throws EntityNotFoundException, UserWithoutPermisionException {
@@ -52,16 +77,24 @@ public class DiscussionService {
 		discussion.setDescription(description);
 		discussion.setCreationDate(LocalDate.now());
 
-
 		return this.discussionRepository.save(discussion);
 	}
 
+	/**
+	 * Find discussion.
+	 *
+	 * @param id
+	 *            the discussion id
+	 * @return the discussion
+	 * @throws EntityNotFoundException
+	 *             the entity not found exception
+	 */
 	@Transactional
 	public Discussion findDiscussion(Long id) throws EntityNotFoundException {
 		Optional<Discussion> discussion = null;
 
 		discussion = this.discussionRepository.findById(id);
-		if(!discussion.isPresent()) {
+		if (!discussion.isPresent()) {
 			throw new EntityNotFoundException(Discussion.class, id);
 		}
 
@@ -69,6 +102,18 @@ public class DiscussionService {
 		return discussion.get();
 	}
 
+	/**
+	 * Adds the comment.
+	 *
+	 * @param discussionId
+	 *            the discussion id
+	 * @param commentContent
+	 *            the comment content
+	 * @param userEmail
+	 *            the user email
+	 * @throws EntityNotFoundException
+	 *             the entity not found exception
+	 */
 	@Transactional
 	public void addComment(Long discussionId, String commentContent, String userEmail) throws EntityNotFoundException {
 		UserProfile userProfile = this.userRepository.findOneByEmail(userEmail);

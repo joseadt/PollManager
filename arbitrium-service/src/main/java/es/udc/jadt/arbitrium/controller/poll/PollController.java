@@ -28,7 +28,7 @@ import es.udc.jadt.arbitrium.model.service.poll.PollService;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
 import es.udc.jadt.arbitrium.model.service.user.UserService;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.util.polltype.PollType;
 import es.udc.jadt.arbitrium.support.web.Ajax;
 import es.udc.jadt.arbitrium.support.web.MessageHelper;
@@ -37,7 +37,7 @@ import es.udc.jadt.arbitrium.util.generics.Pair;
 @Controller
 public class PollController {
 
-    private static final String CREATE_POLL_VIEW = "poll/create";
+	private static final String CREATE_POLL_VIEW = "poll/create";
 
 	private static final String EDIT_POLL_VIEW = "poll/edit";
 
@@ -49,8 +49,8 @@ public class PollController {
 
 	private static final String CONFIG_FRAGMENT_SUFFIX = "Config";
 
-    @Autowired
-    private PollService pollService;
+	@Autowired
+	private PollService pollService;
 
 	@Autowired
 	private UserService userService;
@@ -58,8 +58,7 @@ public class PollController {
 	@Autowired
 	private GroupService groupService;
 
-
-    @GetMapping("createpoll")
+	@GetMapping("createpoll")
 	String createPoll(HttpServletRequest request, Model model,
 			@RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
 		model.addAttribute(new PollForm());
@@ -72,7 +71,7 @@ public class PollController {
 		}
 
 		return CREATE_POLL_VIEW;
-    }
+	}
 
 	@PostMapping("createpoll")
 	String createPoll(HttpServletRequest request, @Valid @ModelAttribute PollForm pollForm, Errors errors,
@@ -94,7 +93,6 @@ public class PollController {
 	@GetMapping("editpoll/{id}")
 	String editPoll(HttpServletRequest request, Model model,
 			@RequestHeader(value = "X-Requested-With", required = false) String requestedWith, @PathVariable Long id) {
-
 
 		Principal principal = request.getUserPrincipal();
 		Poll poll;
@@ -131,15 +129,11 @@ public class PollController {
 			return "redirect:/error";
 		}
 
-
-
 		poll.setName(pollForm.getTitle());
 		poll.setDescription(pollForm.getDescription());
 		poll.setEndDate(Instant.ofEpochMilli(pollForm.getEndDate().getTime()));
 		poll.setPollType(pollForm.getPollType());
 		List<PollOption> options = new ArrayList<PollOption>();
-
-
 
 		poll.getOptions().addAll(options);
 
@@ -169,7 +163,7 @@ public class PollController {
 		model.addAttribute(poll);
 		model.addAttribute("pollComments", pollPair.getSecond());
 
-		if(Ajax.isAjaxRequest(requestedWith)) {
+		if (Ajax.isAjaxRequest(requestedWith)) {
 			return SEE_POLL_VIEW.concat(" :: pollFragment");
 		}
 

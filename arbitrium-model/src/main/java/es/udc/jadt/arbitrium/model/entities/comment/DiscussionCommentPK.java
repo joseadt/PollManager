@@ -8,7 +8,7 @@ import es.udc.jadt.arbitrium.model.entities.discussion.Discussion;
 public class DiscussionCommentPK implements Serializable {
 
 	private Long id;
-	
+
 	private Discussion discussion;
 
 	public DiscussionCommentPK() {

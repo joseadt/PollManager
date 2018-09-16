@@ -20,7 +20,7 @@ import es.udc.jadt.arbitrium.model.entities.discussion.Discussion;
 import es.udc.jadt.arbitrium.model.service.discussion.DiscussionService;
 import es.udc.jadt.arbitrium.model.service.group.GroupService;
 import es.udc.jadt.arbitrium.model.service.user.UserService;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.support.web.Ajax;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 
@@ -49,7 +49,7 @@ public class DiscussionController {
 		model.addAttribute("userGroups", this.groupService.findGroupsByUser(principal.getName()));
 		model.addAttribute("discussionForm", new DiscussionForm());
 
-		if(Ajax.isAjaxRequest(requestedWith)) {
+		if (Ajax.isAjaxRequest(requestedWith)) {
 			return CREATE_VIEW.concat(" :: discussionFormFragment");
 		}
 		return CREATE_VIEW;
@@ -63,8 +63,7 @@ public class DiscussionController {
 		Discussion discussion = null;
 		try {
 			discussion = this.discussionService.createDiscussion(form.getTitle(), form.getDescription(),
-					principal.getName(),
-					form.getGroupId());
+					principal.getName(), form.getGroupId());
 		} catch (EntityNotFoundException | UserWithoutPermisionException e) {
 			return "redirect:/error";
 		}

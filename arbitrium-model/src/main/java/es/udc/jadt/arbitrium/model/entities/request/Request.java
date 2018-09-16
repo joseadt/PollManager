@@ -28,7 +28,6 @@ public class Request {
 	@ManyToOne
 	private UserProfile admin;
 
-
 	private Date createdDate;
 
 	public Request() {

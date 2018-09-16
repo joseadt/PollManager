@@ -10,7 +10,6 @@ public enum PollType {
 
 	private PollConfiguration configuration;
 
-
 	PollType(String name, PollConfiguration configuration) {
 		this.name = name;
 		this.configuration = configuration;

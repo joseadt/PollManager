@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.service.group.GroupService;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.support.web.Ajax;
 
 /**
@@ -36,7 +36,7 @@ public class CreateGroupController {
 
 		model.addAttribute("groupForm", new GroupForm());
 
-		if(Ajax.isAjaxRequest(requestedWith)) {
+		if (Ajax.isAjaxRequest(requestedWith)) {
 			return CREATE_VIEW.concat(" :: groupFormFragment");
 		}
 		return CREATE_VIEW;

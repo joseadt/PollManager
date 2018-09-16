@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.service.group.GroupService;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.service.util.exceptions.UserAlreadyInGroupException;
 import es.udc.jadt.arbitrium.support.web.Ajax;
 

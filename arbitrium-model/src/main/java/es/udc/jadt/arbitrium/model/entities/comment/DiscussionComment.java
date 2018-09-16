@@ -12,7 +12,6 @@ import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 @IdClass(DiscussionCommentPK.class)
 public class DiscussionComment extends Comment {
 
-
 	@Id
 	@ManyToOne
 	private Discussion discussion;

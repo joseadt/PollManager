@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class EndDateInThePastException extends Exception {
 
-
 	/**
 	 * 
 	 */

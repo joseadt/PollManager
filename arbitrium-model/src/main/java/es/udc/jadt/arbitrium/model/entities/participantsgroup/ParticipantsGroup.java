@@ -28,7 +28,6 @@ public class ParticipantsGroup implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
 
 	@ManyToMany
 	private List<UserProfile> individualParticipants;
@@ -61,7 +60,6 @@ public class ParticipantsGroup implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 
 	public List<UserProfile> getIndividualParticipants() {
 		return individualParticipants;

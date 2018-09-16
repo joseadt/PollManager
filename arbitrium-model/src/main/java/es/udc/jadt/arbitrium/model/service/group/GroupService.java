@@ -3,7 +3,6 @@
  */
 package es.udc.jadt.arbitrium.model.service.group;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,10 +18,11 @@ import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.group.specifications.GroupFilters;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.service.util.ServiceHelper;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.service.util.exceptions.UserAlreadyInGroupException;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class GroupService.
  *
@@ -31,9 +31,11 @@ import es.udc.jadt.arbitrium.model.service.util.exceptions.UserAlreadyInGroupExc
 @Service
 public class GroupService {
 
+	/** The user repository. */
 	@Autowired
 	private UserProfileRepository userRepository;
 
+	/** The group repository. */
 	@Autowired
 	private GroupRepository groupRepository;
 
@@ -72,7 +74,9 @@ public class GroupService {
 	 * @param userEmail
 	 *            the user email
 	 * @throws EntityNotFoundException
+	 *             the entity not found exception
 	 * @throws UserAlreadyInGroupException
+	 *             the user already in group exception
 	 */
 	@Transactional
 	public void joinGroup(Long groupId, String userEmail) throws EntityNotFoundException, UserAlreadyInGroupException {
@@ -80,7 +84,7 @@ public class GroupService {
 		if (user == null) {
 			throw new EntityNotFoundException(UserProfile.class, userEmail);
 		}
-		UserGroup group =null;
+		UserGroup group = null;
 
 		group = ServiceHelper.findOneById(this.groupRepository, groupId, UserGroup.class);
 
@@ -94,6 +98,15 @@ public class GroupService {
 		this.groupRepository.save(group);
 	}
 
+	/**
+	 * Find group by id.
+	 *
+	 * @param id
+	 *            the id
+	 * @return the user group
+	 * @throws EntityNotFoundException
+	 *             the entity not found exception
+	 */
 	@Transactional
 	public UserGroup findGroupById(Long id) throws EntityNotFoundException {
 		UserGroup group = ServiceHelper.findOneById(this.groupRepository, id, UserGroup.class);
@@ -101,6 +114,15 @@ public class GroupService {
 		return group;
 	}
 
+	/**
+	 * Search groups.
+	 *
+	 * @param index
+	 *            the index
+	 * @param keywords
+	 *            the keywords
+	 * @return the page
+	 */
 	@Transactional
 	public Page<UserGroup> searchGroups(int index, String keywords) {
 		List<String> keywordsList = (keywords != null) ? Arrays.asList(keywords.split(" ")) : new ArrayList<>();
@@ -108,10 +130,16 @@ public class GroupService {
 		return this.groupRepository.findAll(GroupFilters.groupKeywordsFilter(keywordsList), PageRequest.of(index, 10));
 	}
 
+	/**
+	 * Find groups by user.
+	 *
+	 * @param email
+	 *            the email
+	 * @return the list
+	 */
 	@Transactional
 	public List<UserGroup> findGroupsByUser(String email) {
 		return this.groupRepository.findByAMember(email);
 	}
-
 
 }

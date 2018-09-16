@@ -12,10 +12,7 @@ import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 import es.udc.jadt.arbitrium.util.pollresult.PollResult;
 import es.udc.jadt.arbitrium.util.pollresult.SimpleResult;
 
-
-
 public class ProposalConfiguration implements PollConfiguration {
-
 
 	private static ProposalConfiguration instance = null;
 
@@ -24,7 +21,6 @@ public class ProposalConfiguration implements PollConfiguration {
 	private static final String NO_OPTION_STRING = "NO";
 
 	private final List<PollOption> defaultOptions;
-
 
 	private ProposalConfiguration() {
 		this.defaultOptions = new ArrayList<PollOption>();
@@ -57,7 +53,8 @@ public class ProposalConfiguration implements PollConfiguration {
 					? vote.getSelectedOptions().get(0)
 					: null;
 
-			if (votedOption == null || !this.defaultOptions.contains(votedOption) || !votedOption.getPoll().equals(poll)) {
+			if (votedOption == null || !this.defaultOptions.contains(votedOption)
+					|| !votedOption.getPoll().equals(poll)) {
 				nullVotes.add(vote);
 				continue;
 			}
@@ -96,8 +93,5 @@ public class ProposalConfiguration implements PollConfiguration {
 
 		return instance;
 	}
-
-
-
 
 }

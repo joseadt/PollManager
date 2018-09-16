@@ -48,7 +48,6 @@ public class BasicPollConfigurationTest extends ConfigurationTest {
 
 		ConfigurationParameters cp = configuration.getConfigurationParameters();
 
-
 		assertNotNull(cp);
 		assertTrue(cp.getIsUserDefinedOptions());
 

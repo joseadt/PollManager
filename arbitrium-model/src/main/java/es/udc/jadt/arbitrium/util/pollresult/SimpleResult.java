@@ -7,11 +7,9 @@ import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 
 public class SimpleResult implements PollResult {
 
-
 	private PollOption winnerOption;
 
 	private Map<PollOption, Integer> results;
-
 
 	public SimpleResult(Map<PollOption, Integer> mapCounter) {
 		this.results = mapCounter;
@@ -27,12 +25,9 @@ public class SimpleResult implements PollResult {
 		}
 	}
 
-
 	public void setResults(Map<PollOption, Integer> results) {
 		this.results = results;
 	}
-
-
 
 	@Override
 	public Map<PollOption, Integer> getResult() {

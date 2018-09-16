@@ -28,10 +28,9 @@ public class SearchPollController {
 		if (Ajax.isAjaxRequest(requestedWith)) {
 			returnedView = returnedView.concat(" :: pollSearchBody");
 		}
-		
+
 		List<Poll> pollList = pollService.findByKeywords((keywords != null) ? keywords : "", false);
 		model.addAttribute("pollList", pollList);
-
 
 		return returnedView;
 	}

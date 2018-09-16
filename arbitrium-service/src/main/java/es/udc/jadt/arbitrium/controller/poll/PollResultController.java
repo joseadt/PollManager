@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 import es.udc.jadt.arbitrium.model.service.poll.PollService;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.service.vote.VoteService;
 import es.udc.jadt.arbitrium.util.generics.Pair;
 import es.udc.jadt.arbitrium.util.pollresult.PollResult;
@@ -42,7 +42,6 @@ public class PollResultController {
 		} catch (EntityNotFoundException e) {
 			model.addAttribute("notFound", Boolean.TRUE);
 		}
-
 
 		return RESULT_VIEW_PAGE;
 	}

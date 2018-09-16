@@ -11,6 +11,6 @@ import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
 
 	List<Discussion> findByUserGroup(UserGroup userGroup);
-	
+
 	List<Discussion> findByUserGroupIn(List<UserGroup> userGroups);
 }

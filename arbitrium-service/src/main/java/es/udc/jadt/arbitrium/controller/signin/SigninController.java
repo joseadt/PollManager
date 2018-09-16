@@ -12,7 +12,7 @@ public class SigninController {
 	public String signin() {
 		// TODO apply ajax
 		return VIEW_NAME;
-		
+
 	}
 
 }

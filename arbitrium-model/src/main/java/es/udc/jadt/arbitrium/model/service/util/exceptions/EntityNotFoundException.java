@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.service.util;
+package es.udc.jadt.arbitrium.model.service.util.exceptions;
 
 public class EntityNotFoundException extends Exception {
 

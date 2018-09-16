@@ -122,7 +122,4 @@ public class PollOption implements Serializable {
 		return this.description;
 	}
 
-
-
-
 }

@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.service.vote.VoteService;
 
 @Controller
 public class VoteController {
-
 
 	private static final String VOTE_VIEW = "vote/showvote";
 

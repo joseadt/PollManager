@@ -67,7 +67,6 @@ public class ProposalConfigurationTest extends ConfigurationTest {
 
 	}
 
-
 	@Override
 	@Test
 	public void getResultsTest() {

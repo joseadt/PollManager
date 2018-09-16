@@ -34,7 +34,7 @@ import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.EndDateInThePastException;
 import es.udc.jadt.arbitrium.model.service.poll.exceptions.UserIsNotTheAuthorException;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.util.SpecificationFilter;
 import es.udc.jadt.arbitrium.model.util.polltype.PollType;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
@@ -70,8 +70,6 @@ public class PollServiceTest {
 	private static UserProfile userProfile;
 
 	private static final UserProfile userProfile2 = new UserProfile(DEFAULT_EMAIL, USER_NAME.concat("1234"), PASSWORD);
-
-
 
 	private final static List<String> options = Arrays.asList("OPTION1", "OPTION2", "OPTION3");
 
@@ -135,10 +133,8 @@ public class PollServiceTest {
 		this.service.createPoll(userProfile.getEmail(), poll);
 	}
 
-
 	@Test
 	public void closePollTest() throws Exception {
-
 
 		poll.setAuthor(userProfile);
 
@@ -183,8 +179,7 @@ public class PollServiceTest {
 
 		this.exception.expect(EntityNotFoundException.class);
 		this.exception.expectMessage(
-				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, poll.getId(),
-						Poll.class.getName()));
+				String.format(EntityNotFoundException.DEFAULT_MESSAGE_FORMAT, poll.getId(), Poll.class.getName()));
 
 		this.service.savePoll(poll, DEFAULT_EMAIL);
 
@@ -193,8 +188,7 @@ public class PollServiceTest {
 	@Test
 	public void savePollUserNotFoundExceptionTest() throws EntityNotFoundException, UserIsNotTheAuthorException {
 		this.exception.expect(EntityNotFoundException.class);
-		this.exception.expectMessage(
-				EntityNotFoundException.messageExample(UserProfile.class, NON_EXISTENT_EMAIL));
+		this.exception.expectMessage(EntityNotFoundException.messageExample(UserProfile.class, NON_EXISTENT_EMAIL));
 		this.service.savePoll(poll, NON_EXISTENT_EMAIL);
 
 	}
@@ -202,11 +196,9 @@ public class PollServiceTest {
 	@Test
 	public void savePollUserIsNotTheAuthor() throws EntityNotFoundException, UserIsNotTheAuthorException {
 
-
 		this.exception.expect(UserIsNotTheAuthorException.class);
 		this.exception.expectMessage(
-				String.format(UserIsNotTheAuthorException.DEFAULT_MESSAGE_FORMAT, userProfile2.getId(),
-						poll.getId()));
+				String.format(UserIsNotTheAuthorException.DEFAULT_MESSAGE_FORMAT, userProfile2.getId(), poll.getId()));
 
 		this.service.savePoll(poll, ANOTHER_EMAIL);
 	}
@@ -218,8 +210,7 @@ public class PollServiceTest {
 		final String keywords = "Nombre rue";
 		final boolean onDescription = false;
 
-		Mockito.when(
-				this.pollRepo.findAll(ArgumentMatchers.<Specification<Poll>>any()))
+		Mockito.when(this.pollRepo.findAll(ArgumentMatchers.<Specification<Poll>>any()))
 				.thenAnswer(new Answer<List<Poll>>() {
 
 					@SuppressWarnings("unchecked")

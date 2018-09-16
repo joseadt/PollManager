@@ -31,7 +31,7 @@ import es.udc.jadt.arbitrium.model.entities.group.GroupRepository;
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
-import es.udc.jadt.arbitrium.model.service.util.EntityNotFoundException;
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 import es.udc.jadt.arbitrium.model.service.util.exceptions.UserAlreadyInGroupException;
 import es.udc.jadt.arbitrium.model.util.SpecificationFilter;
 
@@ -77,8 +77,7 @@ public class GroupServiceTest {
 		this.defaultGroup.setId(DEFAULT_GROUP_ID);
 		this.defaultGroup.setIsPrivate(false);
 
-		this.defaultUser = new UserProfile(DEFAULT_USER_EMAIL, DEFAULT_USER_EMAIL,
-					DEFAULT_PASSWORD);
+		this.defaultUser = new UserProfile(DEFAULT_USER_EMAIL, DEFAULT_USER_EMAIL, DEFAULT_PASSWORD);
 
 		when(this.userRepository.findOneByEmail(DEFAULT_USER_EMAIL)).thenReturn(this.defaultUser);
 		when(this.userRepository.findOneByEmail(not(eq(DEFAULT_USER_EMAIL)))).thenReturn(null);
@@ -175,8 +174,7 @@ public class GroupServiceTest {
 						GroupServiceTest.specification = specification;
 						GroupServiceTest.pageRequest = pageRequest;
 						List<String> keywordsList = Arrays.asList(keywords.split(" "));
-						assertEquals(keywordsList.size(),
-								((List<String>) specification.getArgs()[0]).size());
+						assertEquals(keywordsList.size(), ((List<String>) specification.getArgs()[0]).size());
 						assertTrue(keywordsList.containsAll(((List<String>) specification.getArgs()[0])));
 
 						assertEquals(10, pageRequest.getPageSize());
@@ -188,7 +186,6 @@ public class GroupServiceTest {
 
 		assertNotNull(GroupServiceTest.specification);
 		assertNotNull(GroupServiceTest.pageRequest);
-
 
 	}
 }

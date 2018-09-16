@@ -1,6 +1,5 @@
 package es.udc.jadt.arbitrium.model.entities.poll;
 
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -59,8 +58,7 @@ public class Poll implements Serializable {
 
 	}
 
-	public Poll(UserProfile author, List<PollOption> options, PollType pollType,
-			Instant endDate) {
+	public Poll(UserProfile author, List<PollOption> options, PollType pollType, Instant endDate) {
 
 		this.author = author;
 		for (PollOption option : options) {
@@ -172,7 +170,7 @@ public class Poll implements Serializable {
 
 	public void addOption(PollOption option) {
 		option.setPoll(this);
-		if(this.options==null) {
+		if (this.options == null) {
 			this.options = new ArrayList<>();
 		}
 		this.options.add(option);

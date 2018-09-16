@@ -4,10 +4,12 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
+
 public class ServiceHelper {
 
 	/**
-	 * Helper to maintain the logic in geting an object from database in only one
+	 * Helper to maintain the logic in getting an object from database in only one
 	 * place.
 	 *
 	 * @param <E>
@@ -33,4 +35,5 @@ public class ServiceHelper {
 
 		return optional.orElseThrow(() -> new EntityNotFoundException(entityClass, id));
 	}
+
 }

@@ -22,7 +22,6 @@ public abstract class SpecificationFilter<T> implements Specification<T> {
 
 	private Object[] args;
 
-
 	public Object[] getArgs() {
 		return this.args;
 	}

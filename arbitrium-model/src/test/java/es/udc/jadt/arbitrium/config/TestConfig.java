@@ -59,7 +59,6 @@ public class TestConfig {
 
 		entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
-
 		Properties jpaProperties = new Properties();
 		jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 		jpaProperties.put("hibernate.hbm2ddl.auto", "create");

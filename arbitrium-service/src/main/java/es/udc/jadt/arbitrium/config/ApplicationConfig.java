@@ -23,9 +23,9 @@ class ApplicationConfig {
 	@Bean
 	public LocaleResolver localeResolver() {
 		AcceptHeaderLocaleResolver lr = new AcceptHeaderLocaleResolver();
-	    lr.setDefaultLocale(Locale.US);
+		lr.setDefaultLocale(Locale.US);
 		lr.setSupportedLocales(Arrays.asList(Locale.US, new Locale("es")));
-	    return lr;
+		return lr;
 	}
 
 	@Bean

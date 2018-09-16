@@ -25,21 +25,20 @@ import es.udc.jadt.arbitrium.model.entities.poll.specification.PollFilters;
 @Transactional
 public class PollRepositoryTest {
 
-
 	@Autowired
 	private PollRepository repository;
 
-
 	private static final String DEFAULT_POLL_NAME = "DEFAULT POLL NAME";
+
 	@Test
 	public void FindByKeywordsInNameTest() {
 		Poll poll = new Poll();
 		poll.setName(DEFAULT_POLL_NAME);
 
 		poll = repository.save(poll);
-		
+
 		List<Poll> polls = repository.findAll(PollFilters.pollKeywordsFilter(Arrays.asList("DEFAULT"), false));
-		
+
 		assertTrue(polls.contains(poll));
 	}
 
@@ -50,8 +49,7 @@ public class PollRepositoryTest {
 		poll.setDescription("DEsCriptiON");
 		poll = repository.save(poll);
 
-		List<Poll> polls = repository
-				.findAll(PollFilters.pollKeywordsFilter(Arrays.asList("DEsCr"), true));
+		List<Poll> polls = repository.findAll(PollFilters.pollKeywordsFilter(Arrays.asList("DEsCr"), true));
 
 		assertTrue(polls.contains(poll));
 	}
