@@ -11,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 
 import es.udc.jadt.arbitrium.model.entities.comment.DiscussionComment;
@@ -20,7 +18,6 @@ import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 
 @Entity
-@NamedEntityGraph(name = "discussions.details", attributeNodes = @NamedAttributeNode("comments"))
 public class Discussion {
 
 	@Id
