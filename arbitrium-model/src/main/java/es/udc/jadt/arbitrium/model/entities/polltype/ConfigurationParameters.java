@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.entities.pollconfig;
+package es.udc.jadt.arbitrium.model.entities.polltype;
 
 import java.util.List;
 

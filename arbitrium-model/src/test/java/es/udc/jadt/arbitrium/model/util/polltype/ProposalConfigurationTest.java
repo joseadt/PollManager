@@ -14,8 +14,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
-import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
+import es.udc.jadt.arbitrium.model.entities.polltype.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.entities.vote.Vote;
 import es.udc.jadt.arbitrium.util.pollresult.PollResult;
 import es.udc.jadt.arbitrium.util.polltype.ConfigurationTest;

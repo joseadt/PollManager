@@ -94,10 +94,10 @@ public class PollForm {
 		poll.setPollType(this.pollType);
 		poll.setEndDate(Instant.ofEpochMilli(this.endDate.getTime()));
 		poll.setName(this.title);
-		poll.setConfiguration(this.pollType.getConfiguration().getConfigurationParameters());
 
-		if (!Boolean.TRUE.equals(poll.getConfiguration().getIsUserDefinedOptions())) {
-			this.options = poll.getConfiguration().getDefaultOptions();
+		if (!Boolean.TRUE
+				.equals(poll.getPollType().getConfiguration().getConfigurationParameters().getIsUserDefinedOptions())) {
+			this.options = poll.getPollType().getConfiguration().getConfigurationParameters().getDefaultOptions();
 		}
 		for (PollOption option : this.options) {
 			option.setPoll(poll);

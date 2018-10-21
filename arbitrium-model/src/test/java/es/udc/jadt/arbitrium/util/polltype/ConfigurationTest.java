@@ -2,7 +2,7 @@ package es.udc.jadt.arbitrium.util.polltype;
 
 import static org.junit.Assert.assertEquals;
 
-import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
+import es.udc.jadt.arbitrium.model.entities.polltype.ConfigurationParameters;
 
 public abstract class ConfigurationTest {
 
