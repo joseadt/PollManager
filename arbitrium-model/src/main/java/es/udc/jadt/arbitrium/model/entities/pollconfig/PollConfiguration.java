@@ -16,8 +16,11 @@ import es.udc.jadt.arbitrium.model.entities.poll.Poll;
  * The Class PollConfiguration.
  *
  * Class That maps the configuration of a single poll. It's not refereed to what
- * an user can configure of a poll based in it's poll type, but what the actual
+ * an user can configure of a poll based in it's poll type, but the actual
  * values of the different configurations
+ *
+ * User checkAttributes function to obtain a clear PollConfiguration with the
+ * attributes validated and formated
  *
  * @author JADT
  */
@@ -47,8 +50,9 @@ public class PollConfiguration implements Serializable{
 
 	private Integer maxSelectableOptions;
 
-	public PollConfiguration() {
 
+	public PollConfiguration() {
+		checkAttributes();
 	}
 
 	@Transient
@@ -144,6 +148,38 @@ public class PollConfiguration implements Serializable{
 	 */
 	public void setPollId(Long pollId) {
 		this.pollId = pollId;
+	}
+
+	/**
+	 * Check the attributes of this {@link PollConfiguration}, validates it and
+	 * adapts them
+	 */
+	public PollConfiguration checkAttributes() {
+		if (this.maxVotesPerUser == null) {
+			this.maxVotesPerUser = Integer.valueOf(1);
+		}
+
+		if (this.maxSelectableOptions == null) {
+			this.maxSelectableOptions = this.maxVotesPerUser;
+		}
+
+		if (this.minVotesPerUser == null) {
+			this.minVotesPerUser = Integer.valueOf(1);
+		}
+
+		if (this.minVotesPerUser.compareTo(this.maxVotesPerUser) > 0) {
+			this.minVotesPerUser = this.maxVotesPerUser;
+		}
+
+		if(this.maxVotesPerOption == null) {
+			this.maxVotesPerOption = Integer.valueOf(1);
+		}
+
+		if (this.maxVotesPerOption.compareTo(this.maxVotesPerUser) > 0) {
+			this.maxVotesPerOption = this.maxVotesPerUser;
+		}
+
+		return this;
 	}
 
 }

@@ -29,6 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
+import es.udc.jadt.arbitrium.model.entities.pollconfig.PollConfiguration;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfileRepository;
@@ -117,9 +118,13 @@ public class PollServiceTest {
 
 	@Test
 	public void createPollTest() throws Exception {
-
+		poll.setId(null);
+		PollConfiguration pollConfiguration = new PollConfiguration();
 		Poll returnedPoll = this.service.createPoll(DEFAULT_EMAIL, poll);
 		assertEquals(DEFAULT_ID, returnedPoll.getId());
+		poll.setId(null);
+		Poll anotherPoll = this.service.createPoll(DEFAULT_EMAIL, poll, pollConfiguration, null);
+		assertEquals(DEFAULT_ID, anotherPoll.getId());
 	}
 
 	@Test(expected = EndDateInThePastException.class)

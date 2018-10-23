@@ -15,6 +15,7 @@ import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 import es.udc.jadt.arbitrium.model.entities.poll.PollRepository;
 import es.udc.jadt.arbitrium.model.entities.poll.specification.PollFilters;
+import es.udc.jadt.arbitrium.model.entities.pollconfig.PollConfiguration;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOptionRepository;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
@@ -30,7 +31,6 @@ import es.udc.jadt.arbitrium.util.exceptions.PollAlreadyClosedException;
 import es.udc.jadt.arbitrium.util.exceptions.UserWithoutPermisionException;
 import es.udc.jadt.arbitrium.util.generics.Pair;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PollService.
  *
@@ -154,6 +154,30 @@ public class PollService {
 		poll = this.pollRepository.save(poll);
 
 		return poll;
+	}
+
+	/**
+	 * Creates a poll and assigns to it a Configuration. It will check with the
+	 * pollType and only apply the configuration that that type permits
+	 *
+	 * @param email
+	 * @param poll
+	 * @param configuration
+	 *            {@link PollConfiguration} with the configuration of the poll that
+	 *            you want to apply
+	 * @return
+	 * @throws EntityNotFoundException
+	 * @throws EndDateInThePastException
+	 */
+	@Transactional
+	public Poll createPoll(String email, Poll poll, PollConfiguration configuration, Long groupId)
+			throws EndDateInThePastException, EntityNotFoundException {
+
+		ServiceHelper.adaptPollConfigurationToParameters(configuration,
+				poll.getPollType().getConfigurationParameters());
+
+		poll.setConfiguration(configuration);
+		return this.createPoll(email, poll, groupId);
 	}
 
 	/**
