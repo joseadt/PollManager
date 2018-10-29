@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
 
@@ -41,58 +40,16 @@ public class PollConfiguration implements Serializable{
 	@JoinColumn(name = "poll_config_id")
 	private Poll poll;
 
+	private boolean isMultiSelection;
 
-	private Integer maxVotesPerUser;
-
-	private Integer minVotesPerUser;
-
-	private Integer maxVotesPerOption;
+	private boolean isDotPoll;
 
 	private Integer maxSelectableOptions;
 
 
 	public PollConfiguration() {
-		checkAttributes();
-	}
-
-	@Transient
-	public boolean isMultiSelection() {
-		return (this.maxSelectableOptions == null) ? true : this.maxSelectableOptions.intValue() > 1;
-	}
-
-	/**
-	 * @return the maxSelectableOptions
-	 */
-	public Integer getMaxSelectableOptions() {
-		return this.maxSelectableOptions;
-	}
-
-	/**
-	 * @return the maxVotesPerOption
-	 */
-	public Integer getMaxVotesPerOption() {
-		return this.maxVotesPerOption;
-	}
-
-	/**
-	 * @return the maxVotesPerUser
-	 */
-	public Integer getMaxVotesPerUser() {
-		return this.maxVotesPerUser;
-	}
-
-	/**
-	 * @return the minVotesPerUser
-	 */
-	public Integer getMinVotesPerUser() {
-		return this.minVotesPerUser;
-	}
-
-	/**
-	 * @return the poll
-	 */
-	public Poll getPoll() {
-		return this.poll;
+		this.isMultiSelection = false;
+		this.isDotPoll = false;
 	}
 
 	/**
@@ -102,45 +59,7 @@ public class PollConfiguration implements Serializable{
 		return this.pollId;
 	}
 
-	/**
-	 * @param maxSelectableOptions
-	 *            the maxSelectableOptions to set
-	 */
-	public void setMaxSelectableOptions(Integer maxSelectableOptions) {
-		this.maxSelectableOptions = maxSelectableOptions;
-	}
 
-	/**
-	 * @param maxVotesPerOption
-	 *            the maxVotesPerOption to set
-	 */
-	public void setMaxVotesPerOption(Integer maxVotesPerOption) {
-		this.maxVotesPerOption = maxVotesPerOption;
-	}
-
-	/**
-	 * @param maxVotesPerUser
-	 *            the maxVotesPerUser to set
-	 */
-	public void setMaxVotesPerUser(Integer maxVotesPerUser) {
-		this.maxVotesPerUser = maxVotesPerUser;
-	}
-
-	/**
-	 * @param minVotesPerUser
-	 *            the minVotesPerUser to set
-	 */
-	public void setMinVotesPerUser(Integer minVotesPerUser) {
-		this.minVotesPerUser = minVotesPerUser;
-	}
-
-	/**
-	 * @param poll
-	 *            the poll to set
-	 */
-	public void setPoll(Poll poll) {
-		this.poll = poll;
-	}
 
 	/**
 	 * @param pollId
@@ -150,36 +69,112 @@ public class PollConfiguration implements Serializable{
 		this.pollId = pollId;
 	}
 
+
+
 	/**
-	 * Check the attributes of this {@link PollConfiguration}, validates it and
-	 * adapts them
+	 * @return the poll
 	 */
-	public PollConfiguration checkAttributes() {
-		if (this.maxVotesPerUser == null) {
-			this.maxVotesPerUser = Integer.valueOf(1);
-		}
-
-		if (this.maxSelectableOptions == null) {
-			this.maxSelectableOptions = this.maxVotesPerUser;
-		}
-
-		if (this.minVotesPerUser == null) {
-			this.minVotesPerUser = Integer.valueOf(1);
-		}
-
-		if (this.minVotesPerUser.compareTo(this.maxVotesPerUser) > 0) {
-			this.minVotesPerUser = this.maxVotesPerUser;
-		}
-
-		if(this.maxVotesPerOption == null) {
-			this.maxVotesPerOption = Integer.valueOf(1);
-		}
-
-		if (this.maxVotesPerOption.compareTo(this.maxVotesPerUser) > 0) {
-			this.maxVotesPerOption = this.maxVotesPerUser;
-		}
-
-		return this;
+	public Poll getPoll() {
+		return this.poll;
 	}
+
+
+
+	/**
+	 * @param poll
+	 *            the poll to set
+	 */
+	public void setPoll(Poll poll) {
+		this.poll = poll;
+	}
+
+
+
+	/**
+	 * @return the isMultiSelection
+	 */
+	public boolean isMultiSelection() {
+		return this.isMultiSelection;
+	}
+
+
+
+	/**
+	 * Sets if the poll is MultiSelection. Also checks and corrects the other
+	 * attributes.
+	 *
+	 * @param isMultiSelection
+	 *            the isMultiSelection to set. If true, then isDotPoll will be set
+	 *            to false and maxSelectableOptions to {@code Integer.valueOf(1)}.
+	 *            <p>
+	 *            If false, maxSelectableOptions will be set to
+	 *            {@code Integer.MAX_VALUE} if it's null or equals to
+	 *            {@code Integer.valueOf(1)}
+	 */
+	public void setMultiSelection(boolean isMultiSelection) {
+		this.isMultiSelection = isMultiSelection;
+		if (!this.isMultiSelection) {
+			this.isDotPoll = false;
+			this.maxSelectableOptions = Integer.valueOf(1);
+		} else {
+			if (this.maxSelectableOptions == null || Integer.valueOf(1).equals(this.maxSelectableOptions)) {
+				this.maxSelectableOptions = Integer.MAX_VALUE;
+			}
+		}
+
+
+	}
+
+	/**
+	 * @return the isDotPoll
+	 */
+	public boolean isDotPoll() {
+		return this.isDotPoll;
+	}
+
+	/**
+	 * @param isDotPoll
+	 *            the isDotPoll to set
+	 */
+	public void setDotPoll(boolean isDotPoll) {
+		this.isDotPoll = isDotPoll;
+	}
+
+	/**
+	 * @return the maxSelectableOptions
+	 */
+	public Integer getMaxSelectableOptions() {
+		return this.maxSelectableOptions;
+	}
+
+
+	/**
+	 * Sets if the poll is MultiSelection. Also checks and corrects the other
+	 * attributes.
+	 *
+	 * @param maxSelectableOptions
+	 *            the maxSelectableOptions to set
+	 *            <p>
+	 *            If it's an integer greater than 1 , then isMultiselection will be
+	 *            set to true. If it's 0 isMultiselection will be set to false.
+	 *            <p>
+	 *            if maxSelectableOptions is null or less than 0, then the value
+	 *            that will be set will depend on the current value of
+	 *            isMultiselection
+	 */
+	public void setMaxSelectableOptions(Integer maxSelectableOptions) {
+		if (maxSelectableOptions == null || maxSelectableOptions.intValue() < 0) {
+			if (this.isMultiSelection) {
+				this.maxSelectableOptions = Integer.MAX_VALUE;
+			}else {
+				this.maxSelectableOptions = Integer.valueOf(1);
+			}
+		}else {
+			this.maxSelectableOptions = maxSelectableOptions;
+
+			this.isMultiSelection = maxSelectableOptions.intValue() > 0;
+		}
+	}
+
 
 }

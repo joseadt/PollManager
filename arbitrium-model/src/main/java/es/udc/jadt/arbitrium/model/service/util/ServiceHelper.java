@@ -49,16 +49,13 @@ public class ServiceHelper {
 	public static void adaptPollConfigurationToParameters(PollConfiguration target,
 			ConfigurationParameters parameters) {
 		if (Boolean.FALSE.equals(parameters.getIsMultiSelection())) {
-			final Integer integerOne = Integer.valueOf(1);
-			target.setMaxSelectableOptions(integerOne);
-			target.setMaxVotesPerUser(integerOne);
+			target.setMultiSelection(false);
 		}
 
 		if (parameters.getMaxOptions() != null
 				&& parameters.getMaxOptions().compareTo(target.getMaxSelectableOptions()) < 0) {
 			target.setMaxSelectableOptions(parameters.getMaxOptions());
 		}
-		target.checkAttributes();
 
 	}
 

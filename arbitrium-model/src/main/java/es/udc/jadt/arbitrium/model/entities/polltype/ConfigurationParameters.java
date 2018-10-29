@@ -21,6 +21,8 @@ public class ConfigurationParameters {
 	private Boolean isMultiSelection;
 	private Boolean isUserDefinedOptions;
 
+	private Boolean canBeDotPoll;
+
 	@Transient
 	private List<PollOption> defaultOptions;
 
@@ -72,11 +74,26 @@ public class ConfigurationParameters {
 		}
 	}
 
+	/**
+	 * @return the canBeDotPoll
+	 */
+	public boolean canBeDotPoll() {
+		return (this.canBeDotPoll != null) ? this.canBeDotPoll : true;
+	}
+
+	/**
+	 * @param canBeDotPoll
+	 *            the canBeDotPoll to set
+	 */
+	public void setCanBeDotPoll(Boolean canBeDotPoll) {
+		this.canBeDotPoll = canBeDotPoll;
+	}
+
 	public ConfigurationParameters applyConfiguration(ConfigurationParameters newParameters) {
 		this.setIsMultiSelection(newParameters.getIsMultiSelection());
 		this.setIsUserDefinedOptions(newParameters.getIsUserDefinedOptions());
 		this.setMaxOptions(newParameters.getMaxOptions());
-
+		this.setCanBeDotPoll(newParameters.canBeDotPoll);
 		return this;
 	}
 
