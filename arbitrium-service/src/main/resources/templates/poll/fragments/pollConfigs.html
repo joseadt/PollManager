@@ -9,9 +9,8 @@
 
  	<div class="form-group row">
  	
-     	<input type="text" class="form-control col col-lg-7" id="optionInput" placeholder="Poll Option"/>
-     	<div class="col col-sm-1"></div>
-		<button type="button" class="btn btn-primary col col-lg-auto" id="addButton">+</button>
+     	<input type="text" class="form-control row-sm-7 col" id="optionInput" placeholder="Poll Option"/>
+		<button type="button" class="btn btn-primary row-sm-7 col-sm-auto col-md-auto col-lg-auto" id="addButton">+</button>
 	</div>
 	<div class="form-group" id="addOption">
        	<p th:each="option,stat : ${pollForm.options}">
@@ -48,6 +47,23 @@
 
 
 <div th:fragment ="proposalConfig" id="pollConfigGroup">
+</div>
+
+<div th:fragment="fullConfig" id="pollConfigGroup">
+	<div class="form-group">
+		<div th:if="${typeConfig.canConfigMultiSelection()}">
+			<input id="multiselectionCheckbox" type="checkbox" class="form-check-input"/>
+			<label th:text="#{poll.fragments.pollConfigs.checkbox.multiselection}" class="form-check-label" id="multiselectionLabel" for="multiselectionCheckbox"></label>
+		</div>
+	</div>
+	<div class="form-group col">
+		<div th:if="${typeConfig.canConfigDotPoll()}">
+			<input id="dotPollCheckbox" type="checkbox" class="form-check-input"/>
+			<label th:text="#{poll.fragments.pollConfigs.checkbox.dotPoll}" class="form-check-label" id="dotPollLabel" for="dotPollCheckbox"></label>
+		</div>
+	</div>
+		<div th:if="${typeConfig.isUserDefinedOptions()}" th:include="::pollConfig"></div>
+	
 </div>
 </body>
 </html>

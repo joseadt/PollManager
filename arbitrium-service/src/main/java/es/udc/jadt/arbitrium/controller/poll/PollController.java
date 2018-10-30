@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import es.udc.jadt.arbitrium.model.entities.comment.Comment;
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.poll.Poll;
+import es.udc.jadt.arbitrium.model.entities.pollconfig.PollConfiguration;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.service.group.GroupService;
 import es.udc.jadt.arbitrium.model.service.poll.PollService;
@@ -49,6 +50,8 @@ public class PollController {
 
 	private static final String CONFIG_FRAGMENT_SUFFIX = "Config";
 
+	private static final String GENERIC_CONFIG_FRAGMENT = "poll/fragments/pollConfigs :: fullConfig";
+
 	@Autowired
 	private PollService pollService;
 
@@ -62,7 +65,7 @@ public class PollController {
 	String createPoll(HttpServletRequest request, Model model,
 			@RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
 		model.addAttribute(new PollForm());
-		model.addAttribute("configFragment", getPollTypeFragment(PollType.values()[0]));
+		model.addAttribute("typeConfig", PollType.values()[0].getConfigurationParameters());
 		Principal principal = request.getUserPrincipal();
 		List<UserGroup> userGroups = this.groupService.findGroupsByUser(principal.getName());
 		model.addAttribute("userGroups", userGroups);
@@ -74,15 +77,17 @@ public class PollController {
 	}
 
 	@PostMapping("createpoll")
-	String createPoll(HttpServletRequest request, @Valid @ModelAttribute PollForm pollForm, Errors errors,
+	String createPoll(HttpServletRequest request, Model model, @Valid @ModelAttribute PollForm pollForm, Errors errors,
 			RedirectAttributes ra) throws EntityNotFoundException {
 		if (errors.hasErrors()) {
+			model.addAttribute("typeConfig", pollForm.getPollType().getConfigurationParameters());
 			return CREATE_POLL_VIEW;
 		}
 		Principal principal = request.getUserPrincipal();
 		Poll poll = null;
 		try {
-			poll = this.pollService.createPoll(principal.getName(), pollForm.getPoll(), pollForm.getUserGroup());
+			poll = this.pollService.createPoll(principal.getName(), pollForm.getPoll(), new PollConfiguration(),
+					pollForm.getUserGroup());
 		} catch (EndDateInThePastException e) {
 			return "redirect:/error";
 		}
@@ -173,9 +178,11 @@ public class PollController {
 	@GetMapping("pollconfig/{pollType}")
 	String getConfig(Model model, @PathVariable String pollType) {
 		PollType type = PollType.valueOf(pollType);
-		String pollConfigFragmentName = getPollTypeFragment(type);
+
+		model.addAttribute("typeConfig", type.getConfigurationParameters());
 		model.addAttribute(new PollForm());
-		return POLL_CONFIG_VIEW.concat(" :: ").concat(pollConfigFragmentName);
+
+		return GENERIC_CONFIG_FRAGMENT;
 	}
 
 	private String getPollTypeFragment(PollType pollType) {

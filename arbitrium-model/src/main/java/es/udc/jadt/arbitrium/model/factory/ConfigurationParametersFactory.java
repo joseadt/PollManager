@@ -45,6 +45,7 @@ public final class ConfigurationParametersFactory {
 		ConfigurationParameters config = new ConfigurationParameters();
 
 		config.setIsMultiSelection(Boolean.FALSE);
+		config.setCanBeDotPoll(Boolean.FALSE);
 		config.setIsUserDefinedOptions(Boolean.TRUE);
 		config.setMaxOptions(Integer.valueOf(10));
 
@@ -56,12 +57,12 @@ public final class ConfigurationParametersFactory {
 
 		config.setIsMultiSelection(Boolean.FALSE);
 		config.setIsUserDefinedOptions(Boolean.FALSE);
+		config.setCanBeDotPoll(Boolean.FALSE);
 		config.setDefaultOptions(Arrays.asList(new PollOption(null, "Yes"), new PollOption(null, "No")));
 		config.setMaxOptions(Integer.valueOf(2));
 
 		return config;
 	}
-
 
 
 }

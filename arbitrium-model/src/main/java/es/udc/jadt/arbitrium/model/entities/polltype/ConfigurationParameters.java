@@ -89,6 +89,29 @@ public class ConfigurationParameters {
 		this.canBeDotPoll = canBeDotPoll;
 	}
 
+	/**
+	 * @return if this configuration allows the user to set freely if a poll is a
+	 *         multi selection one.
+	 */
+	public boolean canConfigMultiSelection() {
+		return this.isMultiSelection == null;
+	}
+
+	/**
+	 * @return if the configuration allow the user to add it's own options
+	 */
+	public boolean isUserDefinedOptions() {
+		return (this.isUserDefinedOptions != null) ? this.isUserDefinedOptions.booleanValue() : true;
+	}
+
+	/**
+	 * @return true if the config allows the user to set if the poll uses or not
+	 *         dot-voting system
+	 */
+	public boolean canConfigDotPoll() {
+		return this.canBeDotPoll == null;
+	}
+
 	public ConfigurationParameters applyConfiguration(ConfigurationParameters newParameters) {
 		this.setIsMultiSelection(newParameters.getIsMultiSelection());
 		this.setIsUserDefinedOptions(newParameters.getIsUserDefinedOptions());
@@ -96,5 +119,6 @@ public class ConfigurationParameters {
 		this.setCanBeDotPoll(newParameters.canBeDotPoll);
 		return this;
 	}
+
 
 }

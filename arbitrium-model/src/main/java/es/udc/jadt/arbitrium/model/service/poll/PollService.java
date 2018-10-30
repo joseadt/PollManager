@@ -177,6 +177,7 @@ public class PollService {
 				poll.getPollType().getConfigurationParameters());
 
 		poll.setConfiguration(configuration);
+		configuration.setPoll(poll);
 		return this.createPoll(email, poll, groupId);
 	}
 
