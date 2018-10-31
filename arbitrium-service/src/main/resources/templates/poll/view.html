@@ -21,7 +21,7 @@
 							<hr/>
 							<div class="checkbox" id="options">
 								<p th:each="option,stat : ${poll.options}">
-										<input id="optSelection" name="optSelection" th:value="${option.optionId}" th:type="${poll.configuration.isMultiSelection} ? 'checkbox' : 'radio'"></input>
+										<input id="optSelection" name="optSelection" th:value="${option.optionId}" th:type="${poll.configuration.isMultiSelection()} ? 'checkbox' : 'radio'"></input>
 										<label th:text="${option.description}" th:for="${'chk_box' + option.optionId}"></label>
 								</p>
 							</div>

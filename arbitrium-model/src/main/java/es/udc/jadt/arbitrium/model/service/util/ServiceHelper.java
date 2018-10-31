@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import es.udc.jadt.arbitrium.model.entities.pollconfig.PollConfiguration;
+import es.udc.jadt.arbitrium.model.entities.polltype.ConfigurationParameters;
 import es.udc.jadt.arbitrium.model.service.util.exceptions.EntityNotFoundException;
 
 public class ServiceHelper {
@@ -34,6 +36,27 @@ public class ServiceHelper {
 		Optional<E> optional = repository.findById(id);
 
 		return optional.orElseThrow(() -> new EntityNotFoundException(entityClass, id));
+	}
+
+	/**
+	 * Adapt poll configuration based on poll type parameters.
+	 *
+	 * @param target
+	 *            the target
+	 * @param parameters
+	 *            the parameters
+	 */
+	public static void adaptPollConfigurationToParameters(PollConfiguration target,
+			ConfigurationParameters parameters) {
+		if (Boolean.FALSE.equals(parameters.getIsMultiSelection())) {
+			target.setMultiSelection(false);
+		}
+
+		if (parameters.getMaxOptions() != null
+				&& parameters.getMaxOptions().compareTo(target.getMaxSelectableOptions()) < 0) {
+			target.setMaxSelectableOptions(parameters.getMaxOptions());
+		}
+
 	}
 
 }

@@ -1,4 +1,4 @@
-package es.udc.jadt.arbitrium.model.entities.pollconfig;
+package es.udc.jadt.arbitrium.model.entities.polltype;
 
 import java.util.List;
 
@@ -20,6 +20,8 @@ public class ConfigurationParameters {
 
 	private Boolean isMultiSelection;
 	private Boolean isUserDefinedOptions;
+
+	private Boolean canBeDotPoll;
 
 	@Transient
 	private List<PollOption> defaultOptions;
@@ -72,12 +74,51 @@ public class ConfigurationParameters {
 		}
 	}
 
+	/**
+	 * @return the canBeDotPoll
+	 */
+	public boolean canBeDotPoll() {
+		return (this.canBeDotPoll != null) ? this.canBeDotPoll : true;
+	}
+
+	/**
+	 * @param canBeDotPoll
+	 *            the canBeDotPoll to set
+	 */
+	public void setCanBeDotPoll(Boolean canBeDotPoll) {
+		this.canBeDotPoll = canBeDotPoll;
+	}
+
+	/**
+	 * @return if this configuration allows the user to set freely if a poll is a
+	 *         multi selection one.
+	 */
+	public boolean canConfigMultiSelection() {
+		return this.isMultiSelection == null;
+	}
+
+	/**
+	 * @return if the configuration allow the user to add it's own options
+	 */
+	public boolean isUserDefinedOptions() {
+		return (this.isUserDefinedOptions != null) ? this.isUserDefinedOptions.booleanValue() : true;
+	}
+
+	/**
+	 * @return true if the config allows the user to set if the poll uses or not
+	 *         dot-voting system
+	 */
+	public boolean canConfigDotPoll() {
+		return this.canBeDotPoll == null;
+	}
+
 	public ConfigurationParameters applyConfiguration(ConfigurationParameters newParameters) {
 		this.setIsMultiSelection(newParameters.getIsMultiSelection());
 		this.setIsUserDefinedOptions(newParameters.getIsUserDefinedOptions());
 		this.setMaxOptions(newParameters.getMaxOptions());
-
+		this.setCanBeDotPoll(newParameters.canBeDotPoll);
 		return this;
 	}
+
 
 }

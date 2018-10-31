@@ -1,5 +1,8 @@
 package es.udc.jadt.arbitrium.model.util.polltype;
 
+import es.udc.jadt.arbitrium.model.entities.polltype.ConfigurationParameters;
+import es.udc.jadt.arbitrium.model.factory.ConfigurationParametersFactory;
+
 public enum PollType {
 
 	POLL("POLL", BasicPollConfiguration.getInstance()),
@@ -30,6 +33,10 @@ public enum PollType {
 
 	public String getName() {
 		return this.name;
+	}
+
+	public ConfigurationParameters getConfigurationParameters() {
+		return ConfigurationParametersFactory.getConfigutacionParameters(this);
 	}
 
 }

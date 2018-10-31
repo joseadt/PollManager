@@ -48,10 +48,10 @@
                 </select>
             </div>
         </div>
-        
-        <div id="pollConfigGroup" th:insert="poll/fragments/pollConfigs :: ${configFragment}" th:fragment="pollConfigGroup">
+        <hr>
+        <div id="pollConfigGroup" th:insert="poll/fragments/pollConfigs :: fullConfig" th:fragment="pollConfigGroup">
         </div>
-       	
+       	<hr>
        
         <div class="form-group">
             <div class="col-lg-offset-auto col-lg-auto">

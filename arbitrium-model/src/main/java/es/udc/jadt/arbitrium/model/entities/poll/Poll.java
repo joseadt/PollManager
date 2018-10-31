@@ -17,13 +17,18 @@ import javax.persistence.OneToOne;
 
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.participantsgroup.ParticipantsGroup;
-import es.udc.jadt.arbitrium.model.entities.pollconfig.ConfigurationParameters;
+import es.udc.jadt.arbitrium.model.entities.pollconfig.PollConfiguration;
 import es.udc.jadt.arbitrium.model.entities.polloption.PollOption;
 import es.udc.jadt.arbitrium.model.entities.userprofile.UserProfile;
 import es.udc.jadt.arbitrium.model.util.polltype.PollType;
 
 @Entity
 public class Poll implements Serializable {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 8067839513660484495L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,7 +54,7 @@ public class Poll implements Serializable {
 	private List<ParticipantsGroup> participantsGroups;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private ConfigurationParameters configuration;
+	private PollConfiguration configuration;
 
 	@ManyToOne
 	private UserGroup userGroup;
@@ -145,11 +150,11 @@ public class Poll implements Serializable {
 		this.participantsGroups = participantsGroups;
 	}
 
-	public ConfigurationParameters getConfiguration() {
+	public PollConfiguration getConfiguration() {
 		return this.configuration;
 	}
 
-	public void setConfiguration(ConfigurationParameters configuration) {
+	public void setConfiguration(PollConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
