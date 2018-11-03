@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import es.udc.jadt.arbitrium.model.entities.discussion.Discussion;
 import es.udc.jadt.arbitrium.model.entities.group.UserGroup;
 import es.udc.jadt.arbitrium.model.entities.participantsgroup.ParticipantsGroup;
 import es.udc.jadt.arbitrium.model.entities.pollconfig.PollConfiguration;
@@ -58,6 +59,9 @@ public class Poll implements Serializable {
 
 	@ManyToOne
 	private UserGroup userGroup;
+
+	@ManyToOne
+	private Discussion discussion;
 
 	public Poll() {
 
@@ -180,4 +184,20 @@ public class Poll implements Serializable {
 		}
 		this.options.add(option);
 	}
+
+	/**
+	 * @return the discussion
+	 */
+	public Discussion getDiscussion() {
+		return this.discussion;
+	}
+
+	/**
+	 * @param discussion
+	 *            the discussion to set
+	 */
+	public void setDiscussion(Discussion discussion) {
+		this.discussion = discussion;
+	}
+
 }
